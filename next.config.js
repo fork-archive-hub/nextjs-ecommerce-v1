@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = () => {
-	const env = {};
+	let env = {};
 
 	if (process.env.NODE_ENV === 'development') {
 		env = {

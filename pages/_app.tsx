@@ -5,13 +5,21 @@ import type { AppType } from 'next/dist/shared/lib/utils';
 import superjson from 'superjson';
 import { SessionProvider } from 'next-auth/react';
 import '../styles/globals.css';
+import Head from 'next/head';
 
 const MyApp: AppType = ({
 	Component,
 	pageProps: { session, ...pageProps },
 }) => {
+	// const getLayout = Component.getLayout || ((page) => page);
+	// getLayout
+
 	return (
-		<SessionProvider session={session}>
+		/*getLayout*/ <SessionProvider session={session}>
+			<Head>
+				<meta name='color-scheme' content='light dark' />
+				<meta name='supported-color-schemes' content='light dark' />
+			</Head>
 			<Component {...pageProps} />
 		</SessionProvider>
 	);

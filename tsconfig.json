@@ -16,11 +16,12 @@
 		"incremental": true,
 		"baseUrl": ".",
 		"paths": {
+			"@components/*": ["components/*"],
 			"@libs/*": ["libs/*"],
 			"@pages/*": ["pages/*"],
 			"@server/*": ["server/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+	"include": ["next-env.d.ts", "types/auth.d.ts", "**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules"]
 }

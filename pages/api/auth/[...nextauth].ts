@@ -36,6 +36,67 @@ export const authOptions: NextAuthOptions = {
 		//   },
 		// }),
 	],
+	callbacks: {
+		/*
+		jwt: async ({ token, user }) => {
+			if (user) {
+				const profileData = await prisma.user.findUnique({
+					where: {
+						id: user.id,
+					},
+					select: {
+						bio: true,
+					},
+				});
+
+				(user as typeof user & { bio?: string | null }).bio = profileData?.bio;
+			}
+
+			// token.userRole = 'admin';
+
+			console.log('user', user);
+			return Promise.resolve(token);
+		},
+		session: async ({ session, user }) => {
+			return Promise.resolve(session);
+		},
+		*/
+		session: async ({ session, token, user }) => {
+			// if (user?.id) {
+			// 	const profileData = await prisma.user.findUnique({
+			// 		where: {
+			// 			id: user.id,
+			// 		},
+			// 		select: {
+			// 			bio: true,
+			// 		},
+			// 	});
+
+			// 	(session as unknown as any).user.bio = profileData?.bio;
+			// 	// (user as typeof user & { bio?: string | null })
+			// }
+
+			if (
+				'createdAt' in user &&
+				'role' in user &&
+				(user.role === 'ADMIN' || user.role === 'USER')
+			) {
+				session.user.role = user.role;
+				session.user.createdAt =
+					user.createdAt as typeof session.user.createdAt;
+				// (user as typeof user & { bio?: string | null })
+			}
+
+			console.log('session', session);
+			console.log('token', token);
+			console.log('user', user);
+			return session;
+		},
+		jwt: async ({ token, user, account, profile, isNewUser }) => {
+			console.log('token', token);
+			return token;
+		},
+	},
 };
 
 export default NextAuth(authOptions);
