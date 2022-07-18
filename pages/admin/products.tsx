@@ -1,7 +1,23 @@
 import Tooltip from '@components/common/Tooltip';
 import { trpc } from '@libs/trpc';
 import AdminLayout from 'components/Layouts/admin';
-import { FormEvent, Fragment, useId, useState } from 'react';
+import {
+	ColumnDef,
+	flexRender,
+	getCoreRowModel,
+	// RowModel,
+	// Table,
+	useReactTable,
+} from '@tanstack/react-table';
+import {
+	FormEvent,
+	Fragment,
+	useEffect,
+	useId,
+	useMemo,
+	useState,
+} from 'react';
+import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 
 const valuesInit: () => {
 	title: string;
@@ -26,7 +42,9 @@ const CreateProduct = ({
 }: {
 	initValues?: Partial<ReturnType<typeof valuesInit>>;
 }) => {
-	const createProductMutation = trpc.useMutation(['products.createProduct']);
+	const createProductMutation = trpc.useMutation([
+		'admin.products.createProduct',
+	]);
 
 	const fields1Id = useId();
 	const [values, setValues] = useState({
@@ -270,39 +288,198 @@ const CreateProduct = ({
 	);
 };
 
+const columns: ColumnDef<
+	{
+		id: string;
+		title: string;
+		price: number;
+		image: string;
+		brand: string;
+		description: string;
+		status: string | null;
+		countInStock: number;
+		createdAt: Date;
+		updatedAt: Date;
+	},
+	unknown
+>[] = [
+	{
+		// Header: 'Id',
+		accessorKey: 'id',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Title',
+		accessorKey: 'title',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Price',
+		accessorKey: 'price',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Image',
+		accessorKey: 'image',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Brand',
+		accessorKey: 'brand',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Description',
+		accessorKey: 'description',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Status',
+		accessorKey: 'status',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'CountInStock',
+		accessorKey: 'countInStock',
+		cell: (info) => <>{info.getValue()}</>,
+	},
+	{
+		// Header: 'Created At',
+		accessorKey: 'createdAt',
+		cell: (info) => <>{new Date(info.getValue()).toLocaleString()}</>,
+	},
+	{
+		// Header: 'Updated At',
+		accessorKey: 'updatedAt',
+		cell: (info) => <>{new Date(info.getValue()).toLocaleString()}</>,
+	},
+];
+
 const ProductsHome = () => {
+	const [{ currentColorMode }, dispatch] = useSharedAdminDashboardState();
 	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
 		useState(false);
+	const [isEnabled, setIsEnabled] = useState(true);
+	const products = trpc.useQuery(['products.all'], {
+		initialData: [],
+		enabled: isEnabled,
+	});
+
+	console.log('products.data', products.data);
+
+	const data = useMemo(
+		() => (!products.data ? [] : products.data),
+		[products.data]
+	);
+
+	const table = useReactTable({
+		columns,
+		data,
+		getCoreRowModel: getCoreRowModel(),
+	});
+	// const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+	// 	table;
+
+	useEffect(() => setIsEnabled(false), []);
 
 	return (
-		<AdminLayout>
-			<main className='p-4 w-full'>
-				<header>
-					<h1>Products Page</h1>
-				</header>
-				<div>
-					<button
-						onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
-					>
-						Create A new product?
-					</button>
-					{isCreateProductModalVisible && (
-						<CreateProduct
-							initValues={{
-								title: '',
-								price: 0,
-								image: '',
-								brand: '',
-								description: '',
-								status: 'HIDDEN',
-								countInStock: 0,
-							}}
-						/>
-					)}
-				</div>
-			</main>
-		</AdminLayout>
+		<main className='p-4 w-full'>
+			<header>
+				<h1>Products Page</h1>
+			</header>
+			<div>
+				<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
+					Create A new product?
+				</button>
+				{isCreateProductModalVisible && (
+					<CreateProduct
+						initValues={{
+							title: '',
+							price: 0,
+							image: '',
+							brand: '',
+							description: '',
+							status: 'HIDDEN',
+							countInStock: 0,
+						}}
+					/>
+				)}
+			</div>
+			<div className='max-w-full overflow-x-auto'>
+				<table
+					className='border border-solid border-collapse'
+					style={{ borderColor: currentColorMode }}
+				>
+					<thead>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<tr
+								key={headerGroup.id}
+								className='hover:bg-zinc-200 dark:hover:bg-zinc-800'
+							>
+								{headerGroup.headers.map((header) => (
+									<th
+										key={header.id}
+										className='border border-solid p-2 text-center'
+										style={{
+											backgroundColor: currentColorMode,
+											borderColor: currentColorMode,
+										}}
+									>
+										{header.isPlaceholder
+											? null
+											: flexRender(
+													header.column.columnDef.header,
+													header.getContext()
+											  )}
+									</th>
+								))}
+							</tr>
+						))}
+					</thead>
+					<tbody>
+						{table.getRowModel().rows.map((row) => (
+							<tr
+								key={row.id}
+								className='hover:bg-zinc-200 dark:hover:bg-zinc-800 odd:bg-neutral-100 dark:odd:bg-neutral-900'
+							>
+								{row.getVisibleCells().map((cell) => (
+									<td
+										key={cell.id}
+										className='border border-solid p-2 text-center'
+										style={{ borderColor: currentColorMode }}
+									>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</td>
+								))}
+							</tr>
+						))}
+					</tbody>
+					{/* <tfoot>
+          {table.getFooterGroups().map(footerGroup => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot> */}
+				</table>
+			</div>
+		</main>
 	);
 };
 
-export default ProductsHome;
+const PHP = () => (
+	<AdminLayout>
+		<ProductsHome />
+	</AdminLayout>
+);
+
+export default PHP;
