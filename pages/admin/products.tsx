@@ -18,11 +18,13 @@ import {
 	useState,
 } from 'react';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
+import DynamicModal from '@components/common/Modal/Dynamic';
+import CustomNextImage from '@components/common/CustomNextImage';
 
 const valuesInit: () => {
 	title: string;
 	price: number;
-	image: string;
+	images: string[];
 	brand: string;
 	description: string;
 	status: 'VISIBLE' | 'HIDDEN';
@@ -30,7 +32,7 @@ const valuesInit: () => {
 } = () => ({
 	title: '',
 	price: 0,
-	image: '',
+	images: [''],
 	brand: '',
 	description: '',
 	status: 'VISIBLE',
@@ -68,9 +70,9 @@ const CreateProduct = ({
 			},
 		},
 		{
-			label: 'image',
+			label: 'images',
 			input: {
-				id: fields1Id + 'image',
+				id: fields1Id + 'images',
 			},
 		},
 		{
@@ -184,10 +186,7 @@ const CreateProduct = ({
 									onChange={(event) => {
 										setValues((prev) => ({
 											...prev,
-											[event.target.name]:
-												event.target.type === 'number'
-													? parseFloat(event.target.value)
-													: event.target.value,
+											[event.target.name]: event.target.value,
 										}));
 									}}
 									// value={values[(field.input.name || field.label) as keyof typeof values]}
@@ -224,11 +223,7 @@ const CreateProduct = ({
 										[event.target.name]: event.target.value,
 									}));
 								}}
-								value={
-									values[
-										(field.textarea.name || field.label) as keyof typeof values
-									]
-								}
+								value={(values as any)[field.textarea.name || field.label]}
 								className='px-2 py-1 rounded-sm w-full'
 							/>
 						</label>
@@ -251,11 +246,19 @@ const CreateProduct = ({
 									[event.target.name]:
 										event.target.type === 'number'
 											? parseFloat(event.target.value)
+											: field.label === 'images'
+											? event.target.value.split(/\s{1,}/g)
 											: event.target.value,
 								}));
 							}}
 							value={
-								values[(field.input.name || field.label) as keyof typeof values]
+								field.label === 'images'
+									? (values as any)[
+											(field.input.name || field.label) as keyof typeof values
+									  ].join(' ')
+									: values[
+											(field.input.name || field.label) as keyof typeof values
+									  ]
 							}
 							className='px-2 py-1 rounded-sm w-full'
 						/>
@@ -293,7 +296,13 @@ const columns: ColumnDef<
 		id: string;
 		title: string;
 		price: number;
-		image: string;
+		images: {
+			image: {
+				id: string;
+				src: string;
+				alt: string | null;
+			};
+		}[];
 		brand: string;
 		description: string;
 		status: string | null;
@@ -304,54 +313,72 @@ const columns: ColumnDef<
 	unknown
 >[] = [
 	{
-		// Header: 'Id',
-		accessorKey: 'id',
-		cell: (info) => <>{info.getValue()}</>,
-	},
-	{
 		// Header: 'Title',
 		accessorKey: 'title',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'Price',
 		accessorKey: 'price',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'Image',
-		accessorKey: 'image',
-		cell: (info) => <>{info.getValue()}</>,
+		accessorKey: 'images',
+		cell: (info) => {
+			const t = info.getValue();
+
+			return info
+				.getValue<
+					{
+						image: {
+							id: string;
+							src: string;
+							alt?: string | null;
+						};
+					}[]
+				>()
+				.map((item) => (
+					<CustomNextImage
+						key={item.image.id}
+						src={item.image.src}
+						alt={item.image.alt || ''}
+						className='w-20 h-20 object-contain'
+						width={80}
+						height={80}
+					/>
+				));
+		},
 	},
 	{
 		// Header: 'Brand',
 		accessorKey: 'brand',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'Description',
 		accessorKey: 'description',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'Status',
 		accessorKey: 'status',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'CountInStock',
 		accessorKey: 'countInStock',
-		cell: (info) => <>{info.getValue()}</>,
+		cell: (info) => <p>{info.getValue()}</p>,
 	},
 	{
 		// Header: 'Created At',
 		accessorKey: 'createdAt',
-		cell: (info) => <>{new Date(info.getValue()).toLocaleString()}</>,
+		cell: (info) => <p>{new Date(info.getValue()).toLocaleString()}</p>,
 	},
 	{
 		// Header: 'Updated At',
 		accessorKey: 'updatedAt',
-		cell: (info) => <>{new Date(info.getValue()).toLocaleString()}</>,
+		cell: (info) => <p>{new Date(info.getValue()).toLocaleString()}</p>,
 	},
 ];
 
@@ -365,8 +392,6 @@ const ProductsHome = () => {
 		enabled: isEnabled,
 	});
 
-	console.log('products.data', products.data);
-
 	const data = useMemo(
 		() => (!products.data ? [] : products.data),
 		[products.data]
@@ -377,8 +402,6 @@ const ProductsHome = () => {
 		data,
 		getCoreRowModel: getCoreRowModel(),
 	});
-	// const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-	// 	table;
 
 	useEffect(() => setIsEnabled(false), []);
 
@@ -391,19 +414,32 @@ const ProductsHome = () => {
 				<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
 					Create A new product?
 				</button>
-				{isCreateProductModalVisible && (
-					<CreateProduct
-						initValues={{
-							title: '',
-							price: 0,
-							image: '',
-							brand: '',
-							description: '',
-							status: 'HIDDEN',
-							countInStock: 0,
-						}}
-					/>
-				)}
+				<DynamicModal
+					isVisible={isCreateProductModalVisible}
+					handleIsVisible={() =>
+						setIsCreateProductModalVisible((prev) => !prev)
+					}
+					containerElem={{
+						className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
+						style: {
+							width: '98%',
+						},
+					}}
+				>
+					<Fragment key='body'>
+						<CreateProduct
+							initValues={{
+								title: '',
+								price: 0,
+								images: [''],
+								brand: '',
+								description: '',
+								status: 'VISIBLE',
+								countInStock: 0,
+							}}
+						/>
+					</Fragment>
+				</DynamicModal>
 			</div>
 			<div className='max-w-full overflow-x-auto'>
 				<table

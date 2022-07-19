@@ -10,9 +10,11 @@
 	width: fit-content;
 	transition: opacity ease-in var(--tooltip-opacity-transform-duration, 300ms)
 		var(--tooltip-opacity-transform-delay, 100ms);
+	pointer-events: none;
 }
 #tooltip.isVisible {
 	opacity: 1;
+	pointer-events: auto;
 	transition: opacity ease-in var(--tooltip-opacity-transform-duration, 300ms);
 }
 

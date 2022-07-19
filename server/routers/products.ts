@@ -14,7 +14,17 @@ export const productsRouter = createRouter()
 					id: true,
 					title: true,
 					price: true,
-					image: true,
+					images: {
+						select: {
+							image: {
+								select: {
+									id: true,
+									src: true,
+									alt: true,
+								},
+							},
+						},
+					},
 					brand: true,
 					description: true,
 					status: true,
@@ -22,6 +32,9 @@ export const productsRouter = createRouter()
 					createdAt: true,
 					updatedAt: true,
 				},
+				// include: {
+				// 	images: true,
+				// },
 			});
 		},
 	})

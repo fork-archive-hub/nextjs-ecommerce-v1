@@ -108,7 +108,7 @@ const SideNavbar = () => {
 
 	return (
 		<>
-			<div className='px-2 pb-10 h-screen  overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto w-72 sidebar'>
+			<div className='px-2 pb-10 h-screen  overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto w-72 min-w-fit sidebar'>
 				{/* <div className='w-72 sidebar'> */}
 				{/* fixed dark:bg-secondary-dark-bg bg-white */}
 				{/* {isSideMenuActive && (

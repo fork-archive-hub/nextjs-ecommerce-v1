@@ -86,14 +86,9 @@ export const authOptions: NextAuthOptions = {
 					user.createdAt as typeof session.user.createdAt;
 				// (user as typeof user & { bio?: string | null })
 			}
-
-			console.log('session', session);
-			console.log('token', token);
-			console.log('user', user);
 			return session;
 		},
 		jwt: async ({ token, user, account, profile, isNewUser }) => {
-			console.log('token', token);
 			return token;
 		},
 	},

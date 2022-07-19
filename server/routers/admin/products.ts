@@ -6,17 +6,6 @@ import { TRPCError } from '@trpc/server';
 
 export const adminProductsRouter = createRouter()
 	.middleware(async ({ ctx, next }) => {
-		/*
-  const session = await unstable_getServerSession(req, res, authOptions)
-  if (session) {
-    // Signed in
-    console.log("Session", JSON.stringify(session, null, 2))
-  } else {
-    // Not Signed in
-    res.status(401)
-  }
-  res.end()
-		*/
 		if (!ctx.session?.user?.role || ctx.session.user.role !== 'ADMIN')
 			throw new TRPCError({ code: 'UNAUTHORIZED' });
 
@@ -26,7 +15,7 @@ export const adminProductsRouter = createRouter()
 		// validate input with Zod
 		input: z.object({
 			title: z.string().min(2),
-			image: z.string(), // .isURL,
+			images: z.array(z.string()), // .isURL,
 			brand: z.string().min(2),
 			description: z.string().min(25),
 			status: z
@@ -36,11 +25,25 @@ export const adminProductsRouter = createRouter()
 			countInStock: z.number().refine((data) => data >= 0),
 		}),
 		async resolve({ ctx, input }) {
-			// use your ORM of choice
+			// const imagesCreated = await ctx.prisma.image.createMany({
+			// 	data: input.images.map(item => ({
+			// 		src: item
+			// 	}))
+			// });
+			const imagesCreated = await ctx.prisma.$transaction(
+				input.images.map((item) =>
+					ctx.prisma.image.create({ data: { src: item } })
+				)
+			);
+
 			const productCreated = await ctx.prisma.product.create({
 				data: {
 					title: input.title,
-					image: input.image,
+					// images: {
+					// 	createMany: {
+					// 		data: imagesCreated.map((item) => ({ imageId: item.src })),
+					// 	},
+					// },
 					brand: input.brand,
 					description: input.description,
 					status: input.status,
@@ -48,6 +51,25 @@ export const adminProductsRouter = createRouter()
 					countInStock: input.countInStock,
 				},
 			});
+
+			const productCreatedId = productCreated.id;
+
+			const t = await ctx.prisma.imagesOnProduct.createMany({
+				data: /*{
+					productId: productCreatedId,
+					imageId: imagesCreated[0].src,
+				},
+				*/ imagesCreated.map((item) => ({
+					productId: productCreatedId,
+					imageId: item.id,
+				})),
+			});
+
+			// ctx.prisma.image.createMany({
+			// 	data: input.images.map(item => ({
+			// 		src: item
+			// 	}))
+			// })
 
 			// console.log('productCreated');
 			// console.dir(productCreated);

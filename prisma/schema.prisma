@@ -89,7 +89,7 @@ model ShippingAddress {
 	address                      String
 	postalCode                   String
   createdAt                    DateTime  @default(now())
-  user                         User      @relation(fields: [userId], references: [id])
+  user                         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                       String
   orderShippingAddress         Order[]
 }
@@ -102,12 +102,20 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Image {
+  id           String             @id @default(cuid())
+  src          String
+  alt          String?
+  categories   ImagesOnCategory[]
+  products     ImagesOnProduct[]
+}
+
 model Product {
   id               String        @id @default(cuid())
   title            String
   // name             String
   price            Float
-  image            String
+  // image            String
   brand            String
   description      String
   status           String?
@@ -122,24 +130,44 @@ model Product {
 
   // categories       Category[]  // @relation(references: [id])
   categories        CategoriesOnProducts[]
-  productOnOrder    ProductsOnOrder[]
+  orders            ProductsOnOrder[]
+  images            ImagesOnProduct[]
+}
+
+model ImagesOnProduct {
+  image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId       String
+  product      Product    @relation(fields: [productId], references: [id])
+  productId    String
+  createdAt     DateTime    @default(now())
+
+  @@id([imageId, productId])
 }
 
 model Category {
   id            String        @id @default(cuid())
   name          String
-  // products      Product[]  // @relation(references: [id])
-  products CategoriesOnProducts[]
-  image         String?
+  createdAt     DateTime    @default(now())
+  products      CategoriesOnProducts[]
+  images        ImagesOnCategory[]
 }
 
-model CategoriesOnProducts {
-  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId     String
+model ImagesOnCategory {
+  image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId       String
   category      Category    @relation(fields: [categoryId], references: [id])
   categoryId    String
   createdAt     DateTime    @default(now())
-  // assignedBy String
+
+  @@id([imageId, categoryId])
+}
+
+model CategoriesOnProducts {
+  product       Product     @relation(fields: [productId], references: [id])
+  productId     String
+  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    String
+  createdAt     DateTime    @default(now())
 
   @@id([productId, categoryId])
 }
@@ -153,7 +181,7 @@ model Order {
 	paidAt                DateTime?
 	deliveredAt           DateTime?
 	paymentMethod         String
-  orderProducts         ProductsOnOrder[]
+  products              ProductsOnOrder[]
   shippingAddress       ShippingAddress      @relation(fields: [shippingAddressId], references: [id])
   shippingAddressId     String
   paymentResult         PaymentResult?
@@ -164,17 +192,18 @@ model PaymentResult {
 	status                String
 	updateAt              String
 	email                 String
-  order                 Order               @relation(fields: [orderId], references: [id])
+  order                 Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId               String              @unique
 }
 
 model ProductsOnOrder {
-  id               String        @id @default(cuid())
 	quantity         Int
 	pricePerProduct  Float
   createdAt        DateTime      @default(now())
   product          Product       @relation(fields: [productId], references: [id])
   productId        String
-  order            Order         @relation(fields: [orderId], references: [id])
+  order            Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId          String
+
+  @@id([productId, orderId])
 }

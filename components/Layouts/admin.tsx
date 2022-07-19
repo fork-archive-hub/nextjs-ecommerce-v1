@@ -65,8 +65,12 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 		setIsSideMenuActive(dispatch, !isSideMenuActive);
 
 	useEffect(() => {
-		if (status === 'loading' || status === 'unauthenticated') return;
-		if (!session?.user || session?.user.role !== 'ADMIN') {
+		if (status === 'loading') return;
+		if (
+			status === 'unauthenticated' ||
+			!session?.user ||
+			session?.user.role !== 'ADMIN'
+		) {
 			router.push('/');
 		}
 	}, [router, session?.user, session?.user.role, status]);
