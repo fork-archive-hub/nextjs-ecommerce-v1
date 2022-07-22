@@ -437,7 +437,7 @@ const ProductsAddedListTable = () => {
 	if (productsAddedListData.length === 0) return <></>;
 
 	return (
-		<div className='max-w-full overflow-x-auto mb-12'>
+		<div className='max-w-full w-11/12 overflow-x-auto mb-12'>
 			<header>
 				<h2 className='text-4xl font-bold mb-2'>Added Products</h2>
 			</header>
@@ -532,7 +532,7 @@ const ProductsRemovedListTable = () => {
 	if (productsRemovedListData.length === 0) return <></>;
 
 	return (
-		<div className='max-w-full overflow-x-auto mb-12'>
+		<div className='max-w-full w-11/12 overflow-x-auto mb-12'>
 			<header>
 				<h2 className='text-4xl font-bold mb-2'>Removed Products</h2>
 			</header>
@@ -625,7 +625,7 @@ const ProductsListTable = () => {
 	});
 
 	return (
-		<div className='max-w-full overflow-x-auto'>
+		<div className='max-w-full w-11/12 overflow-x-auto'>
 			<table
 				className='border border-solid border-collapse'
 				style={{ borderColor: currentColorMode }}
