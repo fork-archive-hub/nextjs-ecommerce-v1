@@ -44,10 +44,10 @@ const MainNavbar = () => {
 	const handleToggleIsMenuActive = () =>
 		setIsSideMenuActive(dispatch, !isSideMenuActive);
 	return (
-		<header className='flex justify-between w-full py-2 px-4'>
+		<header className='flex justify-between items-center w-full h-14 px-4'>
 			<Link href='/'>logo</Link>
 			<nav>
-				<ul className='flex'>
+				<ul className='flex items-center'>
 					<li className='mx-2'>
 						<NavButton
 							title='Menu'

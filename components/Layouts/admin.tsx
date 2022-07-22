@@ -113,7 +113,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<MainNavbar />
-			<div className='flex'>
+			<div className='flex w-full h-full'>
 				<SideNavbar />
 				{children}
 			</div>
