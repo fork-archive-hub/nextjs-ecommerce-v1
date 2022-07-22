@@ -68,20 +68,20 @@ const columns = [
 	}),
 	columnHelper.accessor('images', {
 		cell: (info) => {
-			const t = info.renderValue();
+			const data = info.renderValue<IProduct['images']>();
 
-			return info
-				.renderValue<IProduct['images']>()
-				.map((item) => (
-					<CustomNextImage
-						key={item.image.id}
-						src={item.image.src}
-						alt={item.image.alt || ''}
-						className='w-20 h-20 object-contain'
-						width={80}
-						height={80}
-					/>
-				));
+			if (!data) return <></>;
+
+			return data.map((item) => (
+				<CustomNextImage
+					key={item.image.id}
+					src={item.image.src}
+					alt={item.image.alt || ''}
+					className='w-20 h-20 object-contain'
+					width={80}
+					height={80}
+				/>
+			));
 		},
 	}),
 	columnHelper.accessor('brand', {
