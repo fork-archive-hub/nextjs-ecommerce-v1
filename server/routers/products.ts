@@ -3,12 +3,11 @@ import { z } from 'zod';
 
 export const productsRouter = createRouter()
 	.query('all', {
-		input: z
-			.object({
-				lastItemCreatedAt: z.string(),
-			})
-			.optional(),
-		async resolve({ ctx }) {
+		input: z.object({
+			limit: z.number(),
+			lastItemCreatedAt: z.string().optional(),
+		}),
+		async resolve({ ctx, input }) {
 			return await ctx.prisma.product.findMany({
 				select: {
 					id: true,
@@ -35,6 +34,7 @@ export const productsRouter = createRouter()
 				// include: {
 				// 	images: true,
 				// },
+				take: input.limit,
 			});
 		},
 	})

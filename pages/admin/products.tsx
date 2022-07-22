@@ -20,6 +20,11 @@ import {
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import DynamicModal from '@components/common/Modal/Dynamic';
 import CustomNextImage from '@components/common/CustomNextImage';
+import {
+	SharedAdminDashboardProductsListStateProvider,
+	useSharedAdminDashboardProductsListState,
+} from 'contexts/AdminDashboard/Products/List';
+import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 
 const valuesInit: () => {
 	title: string;
@@ -44,6 +49,8 @@ const CreateProduct = ({
 }: {
 	initValues?: Partial<ReturnType<typeof valuesInit>>;
 }) => {
+	const [{ added: addedProducts }, productsDispatch] =
+		useSharedAdminDashboardProductsListState();
 	const createProductMutation = trpc.useMutation([
 		'admin.products.createProduct',
 	]);
@@ -125,6 +132,28 @@ const CreateProduct = ({
 
 		createProductMutation.mutate(values);
 	};
+
+	useEffect(() => {
+		if (createProductMutation.isSuccess /*&& createProductMutation.is*/) {
+			productsDispatch({
+				type: EAdminDashboardProductsListContextConsts.ADD,
+				payload: {
+					type: 'ONE',
+					product: {
+						...createProductMutation.data,
+						images: [],
+					},
+					options: {
+						type: 'ADDED',
+					},
+				},
+			});
+		}
+	}, [
+		createProductMutation.data,
+		createProductMutation.isSuccess,
+		productsDispatch,
+	]);
 
 	return (
 		<form
@@ -382,19 +411,17 @@ const columns: ColumnDef<
 	},
 ];
 
-const ProductsHome = () => {
-	const [{ currentColorMode }, dispatch] = useSharedAdminDashboardState();
-	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
-		useState(false);
-	const [isEnabled, setIsEnabled] = useState(true);
-	const products = trpc.useQuery(['products.all'], {
-		initialData: [],
-		enabled: isEnabled,
-	});
+const ProductsAddedListTable = () => {
+	const [
+		{
+			added: { data: productsAddedListData },
+		},
+	] = useSharedAdminDashboardProductsListState();
+	const [{ currentColorMode }] = useSharedAdminDashboardState();
 
 	const data = useMemo(
-		() => (!products.data ? [] : products.data),
-		[products.data]
+		() => (productsAddedListData ? productsAddedListData : []),
+		[productsAddedListData]
 	);
 
 	const table = useReactTable({
@@ -403,7 +430,308 @@ const ProductsHome = () => {
 		getCoreRowModel: getCoreRowModel(),
 	});
 
-	useEffect(() => setIsEnabled(false), []);
+	if (productsAddedListData.length === 0) return <></>;
+
+	return (
+		<div className='max-w-full overflow-x-auto mb-12'>
+			<header>
+				<h2 className='text-4xl font-bold mb-2'>Added Products</h2>
+			</header>
+			<table
+				className='border border-solid border-collapse'
+				style={{ borderColor: currentColorMode }}
+			>
+				<thead>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr
+							key={headerGroup.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800'
+						>
+							{headerGroup.headers.map((header) => (
+								<th
+									key={header.id}
+									className='border border-solid p-2 text-center'
+									style={{
+										backgroundColor: currentColorMode,
+										borderColor: currentColorMode,
+									}}
+								>
+									{header.isPlaceholder
+										? null
+										: flexRender(
+												header.column.columnDef.header,
+												header.getContext()
+										  )}
+								</th>
+							))}
+						</tr>
+					))}
+				</thead>
+				<tbody>
+					{table.getRowModel().rows.map((row) => (
+						<tr
+							key={row.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800 odd:bg-neutral-100 dark:odd:bg-neutral-900'
+						>
+							{row.getVisibleCells().map((cell) => (
+								<td
+									key={cell.id}
+									className='border border-solid p-2 text-center'
+									style={{ borderColor: currentColorMode }}
+								>
+									{flexRender(cell.column.columnDef.cell, cell.getContext())}
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+				{/* <tfoot>
+		{table.getFooterGroups().map(footerGroup => (
+			<tr key={footerGroup.id}>
+				{footerGroup.headers.map(header => (
+					<th key={header.id}>
+						{header.isPlaceholder
+							? null
+							: flexRender(
+									header.column.columnDef.footer,
+									header.getContext()
+								)}
+					</th>
+				))}
+			</tr>
+		))}
+	</tfoot> */}
+			</table>
+		</div>
+	);
+};
+
+const ProductsRemovedListTable = () => {
+	const [
+		{
+			removed: { data: productsRemovedListData },
+		},
+	] = useSharedAdminDashboardProductsListState();
+	const [{ currentColorMode }] = useSharedAdminDashboardState();
+
+	const data = useMemo(
+		() => (productsRemovedListData ? productsRemovedListData : []),
+		[productsRemovedListData]
+	);
+
+	const table = useReactTable({
+		columns,
+		data,
+		getCoreRowModel: getCoreRowModel(),
+	});
+
+	if (productsRemovedListData.length === 0) return <></>;
+
+	return (
+		<div className='max-w-full overflow-x-auto mb-12'>
+			<header>
+				<h2 className='text-4xl font-bold mb-2'>Removed Products</h2>
+			</header>
+			<table
+				className='border border-solid border-collapse'
+				style={{ borderColor: currentColorMode }}
+			>
+				<thead>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr
+							key={headerGroup.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800'
+						>
+							{headerGroup.headers.map((header) => (
+								<th
+									key={header.id}
+									className='border border-solid p-2 text-center'
+									style={{
+										backgroundColor: currentColorMode,
+										borderColor: currentColorMode,
+									}}
+								>
+									{header.isPlaceholder
+										? null
+										: flexRender(
+												header.column.columnDef.header,
+												header.getContext()
+										  )}
+								</th>
+							))}
+						</tr>
+					))}
+				</thead>
+				<tbody>
+					{table.getRowModel().rows.map((row) => (
+						<tr
+							key={row.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800 odd:bg-neutral-100 dark:odd:bg-neutral-900'
+						>
+							{row.getVisibleCells().map((cell) => (
+								<td
+									key={cell.id}
+									className='border border-solid p-2 text-center'
+									style={{ borderColor: currentColorMode }}
+								>
+									{flexRender(cell.column.columnDef.cell, cell.getContext())}
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+				{/* <tfoot>
+		{table.getFooterGroups().map(footerGroup => (
+			<tr key={footerGroup.id}>
+				{footerGroup.headers.map(header => (
+					<th key={header.id}>
+						{header.isPlaceholder
+							? null
+							: flexRender(
+									header.column.columnDef.footer,
+									header.getContext()
+								)}
+					</th>
+				))}
+			</tr>
+		))}
+	</tfoot> */}
+			</table>
+		</div>
+	);
+};
+
+const ProductsListTable = () => {
+	const [
+		{
+			list: { data: productsListData, page },
+		},
+	] = useSharedAdminDashboardProductsListState();
+	const [{ currentColorMode }] = useSharedAdminDashboardState();
+
+	const data = useMemo(
+		() => (productsListData[page.index] ? productsListData[page.index] : []),
+		[page.index, productsListData]
+	);
+
+	const table = useReactTable({
+		columns,
+		data,
+		getCoreRowModel: getCoreRowModel(),
+	});
+
+	return (
+		<div className='max-w-full overflow-x-auto'>
+			<table
+				className='border border-solid border-collapse'
+				style={{ borderColor: currentColorMode }}
+			>
+				<thead>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr
+							key={headerGroup.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800'
+						>
+							{headerGroup.headers.map((header) => (
+								<th
+									key={header.id}
+									className='border border-solid p-2 text-center'
+									style={{
+										backgroundColor: currentColorMode,
+										borderColor: currentColorMode,
+									}}
+								>
+									{header.isPlaceholder
+										? null
+										: flexRender(
+												header.column.columnDef.header,
+												header.getContext()
+										  )}
+								</th>
+							))}
+						</tr>
+					))}
+				</thead>
+				<tbody>
+					{table.getRowModel().rows.map((row) => (
+						<tr
+							key={row.id}
+							className='hover:bg-zinc-200 dark:hover:bg-zinc-800 odd:bg-neutral-100 dark:odd:bg-neutral-900'
+						>
+							{row.getVisibleCells().map((cell) => (
+								<td
+									key={cell.id}
+									className='border border-solid p-2 text-center'
+									style={{ borderColor: currentColorMode }}
+								>
+									{flexRender(cell.column.columnDef.cell, cell.getContext())}
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+				{/* <tfoot>
+		{table.getFooterGroups().map(footerGroup => (
+			<tr key={footerGroup.id}>
+				{footerGroup.headers.map(header => (
+					<th key={header.id}>
+						{header.isPlaceholder
+							? null
+							: flexRender(
+									header.column.columnDef.footer,
+									header.getContext()
+								)}
+					</th>
+				))}
+			</tr>
+		))}
+	</tfoot> */}
+			</table>
+		</div>
+	);
+};
+
+const ProductsHome = () => {
+	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
+		useState(false);
+	const [
+		{
+			list: { data: productsListData, orderBy, page, filterBy },
+		},
+		productsDispatch,
+	] = useSharedAdminDashboardProductsListState();
+	const [isEnabled, setIsEnabled] = useState(true);
+	const productsFetch = trpc.useQuery(
+		[
+			'products.all',
+			{
+				limit: page.limit,
+			},
+		],
+		{
+			initialData: [],
+			enabled: isEnabled,
+		}
+	);
+
+	useEffect(() => {
+		if (isEnabled && productsFetch.isSuccess && productsFetch.isFetched) {
+			productsDispatch({
+				type: EAdminDashboardProductsListContextConsts.ADD,
+				payload: {
+					type: 'MANY',
+					products: productsFetch.data,
+				},
+			});
+			setIsEnabled(false);
+		}
+	}, [
+		isEnabled,
+		productsDispatch,
+		productsFetch.data,
+		productsFetch.isFetched,
+		productsFetch.isSuccess,
+	]);
 
 	return (
 		<main className='p-4 w-full'>
@@ -440,73 +768,9 @@ const ProductsHome = () => {
 						/>
 					</Fragment>
 				</DynamicModal>
-			</div>
-			<div className='max-w-full overflow-x-auto'>
-				<table
-					className='border border-solid border-collapse'
-					style={{ borderColor: currentColorMode }}
-				>
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr
-								key={headerGroup.id}
-								className='hover:bg-zinc-200 dark:hover:bg-zinc-800'
-							>
-								{headerGroup.headers.map((header) => (
-									<th
-										key={header.id}
-										className='border border-solid p-2 text-center'
-										style={{
-											backgroundColor: currentColorMode,
-											borderColor: currentColorMode,
-										}}
-									>
-										{header.isPlaceholder
-											? null
-											: flexRender(
-													header.column.columnDef.header,
-													header.getContext()
-											  )}
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{table.getRowModel().rows.map((row) => (
-							<tr
-								key={row.id}
-								className='hover:bg-zinc-200 dark:hover:bg-zinc-800 odd:bg-neutral-100 dark:odd:bg-neutral-900'
-							>
-								{row.getVisibleCells().map((cell) => (
-									<td
-										key={cell.id}
-										className='border border-solid p-2 text-center'
-										style={{ borderColor: currentColorMode }}
-									>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-					{/* <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot> */}
-				</table>
+				<ProductsAddedListTable />
+				<ProductsRemovedListTable />
+				<ProductsListTable />
 			</div>
 		</main>
 	);
@@ -514,7 +778,9 @@ const ProductsHome = () => {
 
 const PHP = () => (
 	<AdminLayout>
-		<ProductsHome />
+		<SharedAdminDashboardProductsListStateProvider>
+			<ProductsHome />
+		</SharedAdminDashboardProductsListStateProvider>
 	</AdminLayout>
 );
 
