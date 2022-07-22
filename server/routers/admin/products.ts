@@ -16,6 +16,7 @@ export const adminProductsRouter = createRouter()
 		input: z.object({
 			title: z.string().min(2),
 			images: z.array(z.string()), // .isURL,
+			categories: z.array(z.string()), // .isURL,
 			brand: z.string().min(2),
 			description: z.string().min(25),
 			status: z
@@ -36,6 +37,23 @@ export const adminProductsRouter = createRouter()
 				)
 			);
 
+			const categoriesCreated = await ctx.prisma.$transaction(
+				input.categories.map((item) =>
+					ctx.prisma.category.upsert({
+						where: {
+							name: item, // input.categories[0],
+						},
+						create: {
+							name: item, // input.categories[0],
+						},
+						update: {
+							count: { increment: 1 },
+						},
+					})
+				)
+			);
+
+
 			const productCreated = await ctx.prisma.product.create({
 				data: {
 					title: input.title,
@@ -54,41 +72,30 @@ export const adminProductsRouter = createRouter()
 
 			const productCreatedId = productCreated.id;
 
-			const t = await ctx.prisma.imagesOnProduct.createMany({
-				data: /*{
-					productId: productCreatedId,
-					imageId: imagesCreated[0].src,
-				},
-				*/ imagesCreated.map((item) => ({
+			const imagesOnProduct = await ctx.prisma.imagesOnProduct.createMany({
+				data: imagesCreated.map((item) => ({
 					productId: productCreatedId,
 					imageId: item.id,
 				})),
 			});
 
-			// ctx.prisma.image.createMany({
-			// 	data: input.images.map(item => ({
-			// 		src: item
-			// 	}))
-			// })
+			const categoriesOnProduct =
+				await ctx.prisma.categoriesOnProducts.createMany({
+					data: categoriesCreated.map((item) => ({
+						productId: productCreatedId,
+						categoryId: item.id,
+					})),
+				});
 
-			// console.log('productCreated');
-			// console.dir(productCreated);
-			/*
-				productCreated
-				{
-					id: 'cl5pfqxp40000gcndfmtzso3f',
-					title: 'Test',
-					price: 10,
-					image: 'https://pbs.twimg.com/profile_images/1498641868397191170/6qW2XkuI_400x400.png',
-					brand: 'test',
-					description: 'A product test 12345678910\n12345678910\n12345678910\n12345678910',
-					status: 'VISIBLE',
-					countInStock: 5,
-					createdAt: 2022-07-17T14:51:03.054Z,
-					updatedAt: 2022-07-17T14:51:03.072Z
-				}
-			*/
 
-			return productCreated;
+			return {
+				...productCreated,
+				images: imagesCreated.map((image) => ({
+					image,
+				})),
+				categories: categoriesCreated.map((category) => ({
+					category,
+				})),
+			};
 		},
 	});

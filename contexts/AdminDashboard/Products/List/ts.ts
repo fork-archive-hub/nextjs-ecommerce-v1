@@ -2,24 +2,57 @@ import { EAdminDashboardProductsListContextConsts } from './constants';
 
 export type TInitialStateScreenSize = number;
 
-interface IProduct {
+const t = {
+	id: '',
+	title: '',
+	price: 0,
+	images: [],
+	brand: '',
+	description: '',
+	categories: [],
+	status: 'VISIBLE',
+	countInStock: 0,
+	createdAt: new Date().toUTCString(),
+	updatedAt: new Date().toUTCString(),
+};
+
+export type IProduct = {
+	id: string;
 	title: string;
 	price: number;
-	images: {
-		image: {
-			id: string;
-			src: string;
-			alt: string | null;
-		};
-	}[];
+	images:
+		| {
+				image: {
+					id: string;
+					src: string;
+					alt: string | null;
+				};
+		  }[]
+		| null;
 	brand: string;
 	description: string;
+	categories: {
+		category: {
+			images:
+				| {
+						image: {
+							id: string;
+							src: string;
+							alt: string | null;
+						};
+				  }[]
+				| null;
+			id: string;
+			createdAt: Date;
+			count: number;
+			name: string;
+		};
+	}[];
 	status: string | null;
 	countInStock: number;
-	id: string;
 	createdAt: Date;
 	updatedAt: Date;
-}
+};
 
 interface IOrderBy {
 	by: 'createdAt' | 'updatedAt' | 'countInStock' | 'title' | 'price' | 'brand';

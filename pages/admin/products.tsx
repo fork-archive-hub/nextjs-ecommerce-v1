@@ -3,6 +3,7 @@ import { trpc } from '@libs/trpc';
 import AdminLayout from 'components/Layouts/admin';
 import {
 	ColumnDef,
+	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
 	// RowModel,
@@ -25,11 +26,13 @@ import {
 	useSharedAdminDashboardProductsListState,
 } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
+import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
 
 const valuesInit: () => {
 	title: string;
 	price: number;
 	images: string[];
+	categories: string[];
 	brand: string;
 	description: string;
 	status: 'VISIBLE' | 'HIDDEN';
@@ -40,17 +43,83 @@ const valuesInit: () => {
 	images: [''],
 	brand: '',
 	description: '',
+	categories: [''],
 	status: 'VISIBLE',
 	countInStock: 0,
 });
+
+const columnHelper = createColumnHelper<IProduct>();
+const columns = [
+	columnHelper.accessor('title', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('price', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+
+	columnHelper.accessor('categories', {
+		cell: (info) => {
+			const t = info.renderValue();
+
+			return info
+				.renderValue<IProduct['categories']>()
+				.map((item) => <p key={item.category.id}>{item.category.name}</p>);
+		},
+	}),
+	columnHelper.accessor('images', {
+		cell: (info) => {
+			const t = info.renderValue();
+
+			return info
+				.renderValue<IProduct['images']>()
+				.map((item) => (
+					<CustomNextImage
+						key={item.image.id}
+						src={item.image.src}
+						alt={item.image.alt || ''}
+						className='w-20 h-20 object-contain'
+						width={80}
+						height={80}
+					/>
+				));
+		},
+	}),
+	columnHelper.accessor('brand', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('description', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('status', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('countInStock', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('createdAt', {
+		cell: (info) => (
+			<p>
+				{info.renderValue() &&
+					new Date(info.renderValue() || 0).toLocaleString()}
+			</p>
+		),
+	}),
+	columnHelper.accessor('updatedAt', {
+		cell: (info) => (
+			<p>
+				{info.renderValue() &&
+					new Date(info.renderValue() || 0).toLocaleString()}
+			</p>
+		),
+	}),
+];
 
 const CreateProduct = ({
 	initValues = {},
 }: {
 	initValues?: Partial<ReturnType<typeof valuesInit>>;
 }) => {
-	const [{ added: addedProducts }, productsDispatch] =
-		useSharedAdminDashboardProductsListState();
+	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const createProductMutation = trpc.useMutation([
 		'admin.products.createProduct',
 	]);
@@ -67,6 +136,13 @@ const CreateProduct = ({
 			input: {
 				id: fields1Id + 'title',
 				name: 'title',
+			},
+		},
+		{
+			label: 'categories',
+			input: {
+				id: fields1Id + 'categories',
+				name: 'categories',
 			},
 		},
 		{
@@ -141,7 +217,16 @@ const CreateProduct = ({
 					type: 'ONE',
 					product: {
 						...createProductMutation.data,
-						images: [],
+						// images: [],
+						categories: createProductMutation.data.categories.map(
+							(item: { category: any }) => ({
+								...item,
+								category: {
+									...item.category,
+									images: null,
+								},
+							})
+						),
 					},
 					options: {
 						type: 'ADDED',
@@ -275,13 +360,13 @@ const CreateProduct = ({
 									[event.target.name]:
 										event.target.type === 'number'
 											? parseFloat(event.target.value)
-											: field.label === 'images'
+											: field.label === 'images' || field.label === 'categories'
 											? event.target.value.split(/\s{1,}/g)
 											: event.target.value,
 								}));
 							}}
 							value={
-								field.label === 'images'
+								field.label === 'images' || field.label === 'categories'
 									? (values as any)[
 											(field.input.name || field.label) as keyof typeof values
 									  ].join(' ')
@@ -319,97 +404,6 @@ const CreateProduct = ({
 		</form>
 	);
 };
-
-const columns: ColumnDef<
-	{
-		id: string;
-		title: string;
-		price: number;
-		images: {
-			image: {
-				id: string;
-				src: string;
-				alt: string | null;
-			};
-		}[];
-		brand: string;
-		description: string;
-		status: string | null;
-		countInStock: number;
-		createdAt: Date;
-		updatedAt: Date;
-	},
-	unknown
->[] = [
-	{
-		// Header: 'Title',
-		accessorKey: 'title',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'Price',
-		accessorKey: 'price',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'Image',
-		accessorKey: 'images',
-		cell: (info) => {
-			const t = info.getValue();
-
-			return info
-				.getValue<
-					{
-						image: {
-							id: string;
-							src: string;
-							alt?: string | null;
-						};
-					}[]
-				>()
-				.map((item) => (
-					<CustomNextImage
-						key={item.image.id}
-						src={item.image.src}
-						alt={item.image.alt || ''}
-						className='w-20 h-20 object-contain'
-						width={80}
-						height={80}
-					/>
-				));
-		},
-	},
-	{
-		// Header: 'Brand',
-		accessorKey: 'brand',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'Description',
-		accessorKey: 'description',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'Status',
-		accessorKey: 'status',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'CountInStock',
-		accessorKey: 'countInStock',
-		cell: (info) => <p>{info.getValue()}</p>,
-	},
-	{
-		// Header: 'Created At',
-		accessorKey: 'createdAt',
-		cell: (info) => <p>{new Date(info.getValue()).toLocaleString()}</p>,
-	},
-	{
-		// Header: 'Updated At',
-		accessorKey: 'updatedAt',
-		cell: (info) => <p>{new Date(info.getValue()).toLocaleString()}</p>,
-	},
-];
 
 const ProductsAddedListTable = () => {
 	const [
@@ -759,7 +753,8 @@ const ProductsHome = () => {
 							initValues={{
 								title: '',
 								price: 0,
-								images: [''],
+								images: [],
+								categories: [],
 								brand: '',
 								description: '',
 								status: 'VISIBLE',

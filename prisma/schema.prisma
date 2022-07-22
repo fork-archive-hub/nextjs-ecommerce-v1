@@ -145,9 +145,10 @@ model ImagesOnProduct {
 }
 
 model Category {
-  id            String        @id @default(cuid())
-  name          String
-  createdAt     DateTime    @default(now())
+  id            String                  @id @default(cuid())
+  name          String                  @unique
+  createdAt     DateTime                @default(now())
+  count         Int                     @default(1)
   products      CategoriesOnProducts[]
   images        ImagesOnCategory[]
 }

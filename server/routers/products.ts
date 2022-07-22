@@ -24,6 +24,29 @@ export const productsRouter = createRouter()
 							},
 						},
 					},
+					categories: {
+						select: {
+							category: {
+								select: {
+									id: true,
+									name: true,
+									count: true,
+									createdAt: true,
+									images: {
+										select: {
+											image: {
+												select: {
+													id: true,
+													src: true,
+													alt: true,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
 					brand: true,
 					description: true,
 					status: true,
@@ -31,9 +54,6 @@ export const productsRouter = createRouter()
 					createdAt: true,
 					updatedAt: true,
 				},
-				// include: {
-				// 	images: true,
-				// },
 				take: input.limit,
 			});
 		},
