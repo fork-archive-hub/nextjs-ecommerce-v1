@@ -47,7 +47,24 @@ export const productsRouter = createRouter()
 							},
 						},
 					},
-					brand: true,
+					brand: {
+						select: {
+							id: true,
+							createdAt: true,
+							name: true,
+							images: {
+								select: {
+									image: {
+										select: {
+											id: true,
+											src: true,
+											alt: true,
+										},
+									},
+								},
+							},
+						},
+					},
 					description: true,
 					status: true,
 					countInStock: true,

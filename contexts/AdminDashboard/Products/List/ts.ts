@@ -29,7 +29,20 @@ export type IProduct = {
 				};
 		  }[]
 		| null;
-	brand: string;
+	brand: {
+		id: string;
+		name: string;
+		createdAt: Date;
+		images:
+			| {
+					image: {
+						id: string;
+						src: string;
+						alt: string | null;
+					};
+			  }[]
+			| null;
+	} | null;
 	description: string;
 	categories: {
 		category: {

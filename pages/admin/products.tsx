@@ -85,7 +85,12 @@ const columns = [
 		},
 	}),
 	columnHelper.accessor('brand', {
-		cell: (info) => <p>{info.renderValue()}</p>,
+		cell: (info) => {
+			const data = info.renderValue();
+
+			if (!data) return;
+			return <p>{data.name}</p>;
+		},
 	}),
 	columnHelper.accessor('description', {
 		cell: (info) => <p>{info.renderValue()}</p>,
@@ -211,6 +216,7 @@ const CreateProduct = ({
 
 	useEffect(() => {
 		if (createProductMutation.isSuccess /*&& createProductMutation.is*/) {
+			// createProductMutation.data.brand.;
 			productsDispatch({
 				type: EAdminDashboardProductsListContextConsts.ADD,
 				payload: {
@@ -227,6 +233,10 @@ const CreateProduct = ({
 								},
 							})
 						),
+						brand: {
+							...createProductMutation.data.brand,
+							images: null,
+						},
 					},
 					options: {
 						type: 'ADDED',

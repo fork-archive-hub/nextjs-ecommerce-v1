@@ -102,31 +102,52 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Image {
+model ProductBrand {
   id           String             @id @default(cuid())
-  src          String
-  alt          String?
-  categories   ImagesOnCategory[]
-  products     ImagesOnProduct[]
+  name         String             @unique
+  createdAt    DateTime           @default(now())
+  product      Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    String             @unique
+  images       ImagesOnProductBrand[]
+}
+
+model ImagesOnProductBrand {
+  image             Image           @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId           String
+  productBrand      ProductBrand    @relation(fields: [productBrandId], references: [id])
+  productBrandId    String
+  createdAt         DateTime        @default(now())
+
+  @@id([imageId, productBrandId])
+}
+
+model Image {
+  id                       String             @id @default(cuid())
+  src                      String
+  alt                      String?
+  categories               ImagesOnCategory[]
+  products                 ImagesOnProduct[]
+  imagesOnProductBrand     ImagesOnProductBrand[]
 }
 
 model Product {
-  id               String        @id @default(cuid())
+  id               String                      @id @default(cuid())
   title            String
   // name             String
   price            Float
   // image            String
-  brand            String
+  // brand            String
   description      String
-  status           String?
+  status           String
   countInStock     Int
   // currentInventory Int
   // authenticity        Int?
   // returnPolicy        Int?
   // warranty       Int?
 	// rating: number;
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  brand             ProductBrand?
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
 
   // categories       Category[]  // @relation(references: [id])
   categories        CategoriesOnProducts[]
@@ -208,3 +229,5 @@ model ProductsOnOrder {
 
   @@id([productId, orderId])
 }
+
+// DELETE FROM "ProductBrand"; DELETE FROM "ImagesOnProductBrand"; DELETE FROM "Image"; DELETE FROM "Product"; DELETE FROM "ImagesOnProduct"; DELETE FROM "Category"; DELETE FROM "ImagesOnCategory"; DELETE FROM "CategoriesOnProducts"; DELETE FROM "Order"; DELETE FROM "PaymentResult"; DELETE FROM "ProductsOnOrder";
