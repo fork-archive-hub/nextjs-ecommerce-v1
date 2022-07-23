@@ -9,9 +9,45 @@ import ProductsAddedTable from './Tables/Added';
 import ProductsMainTable from './Tables/Main';
 import ProductsRemovedTable from './Tables/Removed';
 
-const AdminProducts = () => {
+const CreateProductButton = () => {
 	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
 		useState(false);
+
+	return (
+		<>
+			<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
+				Create A new product?
+			</button>
+			<DynamicModal
+				isVisible={isCreateProductModalVisible}
+				handleIsVisible={() => setIsCreateProductModalVisible((prev) => !prev)}
+				containerElem={{
+					className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
+					style: {
+						width: '98%',
+					},
+				}}
+			>
+				<Fragment key='body'>
+					<CreateProduct
+						initValues={{
+							title: '',
+							price: 0,
+							images: [],
+							categories: [],
+							brand: '',
+							description: '',
+							status: 'VISIBLE',
+							countInStock: 0,
+						}}
+					/>
+				</Fragment>
+			</DynamicModal>
+		</>
+	);
+};
+
+const AdminProducts = () => {
 	const [
 		{
 			list: { data: productsListData, orderBy, page, filterBy },
@@ -21,7 +57,7 @@ const AdminProducts = () => {
 	const [isEnabled, setIsEnabled] = useState(true);
 	const productsFetch = trpc.useQuery(
 		[
-			'products.all',
+			'admin.products.all',
 			{
 				limit: page.limit,
 			},
@@ -57,36 +93,7 @@ const AdminProducts = () => {
 				<h1>Products Page</h1>
 			</header>
 			<div>
-				<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
-					Create A new product?
-				</button>
-				<DynamicModal
-					isVisible={isCreateProductModalVisible}
-					handleIsVisible={() =>
-						setIsCreateProductModalVisible((prev) => !prev)
-					}
-					containerElem={{
-						className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
-						style: {
-							width: '98%',
-						},
-					}}
-				>
-					<Fragment key='body'>
-						<CreateProduct
-							initValues={{
-								title: '',
-								price: 0,
-								images: [],
-								categories: [],
-								brand: '',
-								description: '',
-								status: 'VISIBLE',
-								countInStock: 0,
-							}}
-						/>
-					</Fragment>
-				</DynamicModal>
+				<CreateProductButton />
 				<ProductsAddedTable />
 				<ProductsRemovedTable />
 				<ProductsMainTable />

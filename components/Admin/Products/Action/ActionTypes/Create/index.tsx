@@ -133,14 +133,16 @@ const CreateProduct = ({
 							(item: { category: any }) => ({
 								...item,
 								category: {
-									...item.category,
 									images: null,
+									...item.category,
 								},
 							})
 						),
 						brand: {
-							...createProductMutation.data.brand,
-							images: null,
+							brand: {
+								images: null,
+								...createProductMutation.data.brand,
+							},
 						},
 					},
 					options: {

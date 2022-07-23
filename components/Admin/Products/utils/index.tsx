@@ -49,7 +49,7 @@ export const productTableDefaultColumns = [
 			const data = info.renderValue();
 
 			if (!data) return;
-			return <p>{data.name}</p>;
+			return <p>{data.brand.name}</p>;
 		},
 	}),
 	columnHelper.accessor('categories', {
@@ -58,7 +58,7 @@ export const productTableDefaultColumns = [
 
 			return info
 				.renderValue<IProduct['categories']>()
-				.map((item) => <p key={item.category.id}>{item.category.name}</p>);
+				.map((item) => <p key={item.category.name}>{item.category.name}</p>);
 		},
 	}),
 	columnHelper.accessor('createdAt', {

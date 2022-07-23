@@ -82,6 +82,14 @@ model Profile {
   updatedAt             DateTime               @default(now())
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model ShippingAddress {
   id                           String    @id @default(cuid())
 	country                      String
@@ -94,58 +102,59 @@ model ShippingAddress {
   orderShippingAddress         Order[]
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+model Brand {
+  // id                String                       @id @default(cuid())
+  name              String                       @id
+  createdAt         DateTime                     @default(now())
+  images            ImagesOnBrand[]
+  brandOnProducts   BrandOnProducts[]
 }
 
-model ProductBrand {
-  id           String             @id @default(cuid())
-  name         String             @unique
-  createdAt    DateTime           @default(now())
-  product      Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId    String             @unique
-  images       ImagesOnProductBrand[]
+model BrandOnProducts {
+  product      Product                      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    String                       @unique
+  brand        Brand                        @relation(fields: [brandName], references: [name], onDelete: Cascade)
+  brandName         String                       
+  createdAt    DateTime                     @default(now())
+
+  @@id([productId, brandName])
 }
 
-model ImagesOnProductBrand {
+model ImagesOnBrand {
   image             Image           @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId           String
-  productBrand      ProductBrand    @relation(fields: [productBrandId], references: [id])
-  productBrandId    String
+  brand             Brand           @relation(fields: [brandName], references: [name])
+  brandName           String
   createdAt         DateTime        @default(now())
 
-  @@id([imageId, productBrandId])
+  @@id([imageId, brandName])
 }
 
 model Image {
-  id                       String             @id @default(cuid())
-  src                      String
-  alt                      String?
-  categories               ImagesOnCategory[]
-  products                 ImagesOnProduct[]
-  imagesOnProductBrand     ImagesOnProductBrand[]
+  id                          String                      @id @default(cuid())
+  src                         String
+  alt                         String?
+  categories                  ImagesOnCategory[]
+  products                    ImagesOnProduct[]
+  imagesOnBrand     ImagesOnBrand[]
 }
 
 model Product {
-  id               String                      @id @default(cuid())
-  title            String
+  id                String                      @id @default(cuid())
+  title             String
   // name             String
-  price            Float
+  price             Float
   // image            String
   // brand            String
-  description      String
-  status           String
-  countInStock     Int
+  description       String
+  status            String
+  countInStock      Int
   // currentInventory Int
   // authenticity        Int?
   // returnPolicy        Int?
   // warranty       Int?
 	// rating: number;
-  brand             ProductBrand?
+  brand             BrandOnProducts?
   createdAt         DateTime                   @default(now())
   updatedAt         DateTime                   @updatedAt
 
@@ -158,16 +167,16 @@ model Product {
 model ImagesOnProduct {
   image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId       String
-  product      Product    @relation(fields: [productId], references: [id])
-  productId    String
+  product       Product     @relation(fields: [productId], references: [id])
+  productId     String
   createdAt     DateTime    @default(now())
 
   @@id([imageId, productId])
 }
 
 model Category {
-  id            String                  @id @default(cuid())
-  name          String                  @unique
+  // id            String                  @id @default(cuid())
+  name          String                  @id
   createdAt     DateTime                @default(now())
   count         Int                     @default(1)
   products      CategoriesOnProducts[]
@@ -175,23 +184,23 @@ model Category {
 }
 
 model ImagesOnCategory {
-  image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId       String
-  category      Category    @relation(fields: [categoryId], references: [id])
-  categoryId    String
-  createdAt     DateTime    @default(now())
+  image           Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId         String
+  category        Category    @relation(fields: [categoryName], references: [name])
+  categoryName    String
+  createdAt       DateTime    @default(now())
 
-  @@id([imageId, categoryId])
+  @@id([imageId, categoryName])
 }
 
 model CategoriesOnProducts {
   product       Product     @relation(fields: [productId], references: [id])
   productId     String
-  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId    String
+  category      Category    @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+  categoryName    String
   createdAt     DateTime    @default(now())
 
-  @@id([productId, categoryId])
+  @@id([productId, categoryName])
 }
 
 model Order {
@@ -230,4 +239,4 @@ model ProductsOnOrder {
   @@id([productId, orderId])
 }
 
-// DELETE FROM "ProductBrand"; DELETE FROM "ImagesOnProductBrand"; DELETE FROM "Image"; DELETE FROM "Product"; DELETE FROM "ImagesOnProduct"; DELETE FROM "Category"; DELETE FROM "ImagesOnCategory"; DELETE FROM "CategoriesOnProducts"; DELETE FROM "Order"; DELETE FROM "PaymentResult"; DELETE FROM "ProductsOnOrder";
+// DELETE FROM "ShippingAddress"; DELETE FROM "Brand"; DELETE FROM "BrandOnProducts"; DELETE FROM "ImagesOnBrand"; DELETE FROM "Image"; DELETE FROM "Product"; DELETE FROM "ImagesOnProduct"; DELETE FROM "Category"; DELETE FROM "ImagesOnCategory"; DELETE FROM "CategoriesOnProducts"; DELETE FROM "Order"; DELETE FROM "PaymentResult"; DELETE FROM "ProductsOnOrder"; 

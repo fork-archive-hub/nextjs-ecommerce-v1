@@ -29,20 +29,6 @@ export type IProduct = {
 				};
 		  }[]
 		| null;
-	brand: {
-		id: string;
-		name: string;
-		createdAt: Date;
-		images:
-			| {
-					image: {
-						id: string;
-						src: string;
-						alt: string | null;
-					};
-			  }[]
-			| null;
-	} | null;
 	description: string;
 	categories: {
 		category: {
@@ -55,12 +41,27 @@ export type IProduct = {
 						};
 				  }[]
 				| null;
-			id: string;
+			name: string;
 			createdAt: Date;
 			count: number;
-			name: string;
 		};
 	}[];
+
+	brand: {
+		brand: {
+			images:
+				| {
+						image: {
+							id: string;
+							src: string;
+							alt: string | null;
+						};
+				  }[]
+				| null;
+			name: string;
+			createdAt: Date;
+		};
+	} | null;
 	status: string | null;
 	countInStock: number;
 	createdAt: Date;
