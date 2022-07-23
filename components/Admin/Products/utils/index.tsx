@@ -2,23 +2,17 @@ import CustomNextImage from '@components/common/CustomNextImage';
 import { createColumnHelper } from '@tanstack/react-table';
 import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
 
-const columnHelper = createColumnHelper<IProduct>();
+const columnHelper = createColumnHelper<
+	IProduct & {
+		mutate: {
+			data: IProduct;
+			type: ('UPDATE' | 'DELETE')[];
+		};
+	}
+>();
 export const productTableDefaultColumns = [
-	columnHelper.accessor('title', {
+	columnHelper.accessor('status', {
 		cell: (info) => <p>{info.renderValue()}</p>,
-	}),
-	columnHelper.accessor('price', {
-		cell: (info) => <p>{info.renderValue()}</p>,
-	}),
-
-	columnHelper.accessor('categories', {
-		cell: (info) => {
-			const t = info.renderValue();
-
-			return info
-				.renderValue<IProduct['categories']>()
-				.map((item) => <p key={item.category.id}>{item.category.name}</p>);
-		},
 	}),
 	columnHelper.accessor('images', {
 		cell: (info) => {
@@ -38,6 +32,18 @@ export const productTableDefaultColumns = [
 			));
 		},
 	}),
+	columnHelper.accessor('title', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('price', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('countInStock', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
+	columnHelper.accessor('description', {
+		cell: (info) => <p>{info.renderValue()}</p>,
+	}),
 	columnHelper.accessor('brand', {
 		cell: (info) => {
 			const data = info.renderValue();
@@ -46,14 +52,14 @@ export const productTableDefaultColumns = [
 			return <p>{data.name}</p>;
 		},
 	}),
-	columnHelper.accessor('description', {
-		cell: (info) => <p>{info.renderValue()}</p>,
-	}),
-	columnHelper.accessor('status', {
-		cell: (info) => <p>{info.renderValue()}</p>,
-	}),
-	columnHelper.accessor('countInStock', {
-		cell: (info) => <p>{info.renderValue()}</p>,
+	columnHelper.accessor('categories', {
+		cell: (info) => {
+			const t = info.renderValue();
+
+			return info
+				.renderValue<IProduct['categories']>()
+				.map((item) => <p key={item.category.id}>{item.category.name}</p>);
+		},
 	}),
 	columnHelper.accessor('createdAt', {
 		cell: (info) => (
@@ -70,5 +76,17 @@ export const productTableDefaultColumns = [
 					new Date(info.renderValue() || 0).toLocaleString()}
 			</p>
 		),
+	}),
+	columnHelper.accessor('mutate', {
+		cell: (info) => {
+			const data = info.renderValue();
+
+			return (
+				<>
+					{data?.type.includes('DELETE') && <></>}
+					{data?.type.includes('UPDATE') && <></>}
+				</>
+			);
+		},
 	}),
 ];
