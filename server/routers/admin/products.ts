@@ -160,7 +160,7 @@ export const adminProductsRouter = createRouter()
 
 			const productCreatedId = productCreated.id;
 
-			const brandCreated = await ctx.prisma.brand.upsert({
+			const brandUpserted = await ctx.prisma.brand.upsert({
 				where: {
 					name: input.brand,
 				},
@@ -168,7 +168,7 @@ export const adminProductsRouter = createRouter()
 					name: input.brand,
 					// productId: productCreatedId,
 				},
-				update: {},
+				update: { count: { increment: 1 } },
 				select: {
 					// id: true,
 					createdAt: true,
@@ -178,7 +178,7 @@ export const adminProductsRouter = createRouter()
 
 			const brandOnProductCreated = await ctx.prisma.brandOnProducts.create({
 				data: {
-					brandName: brandCreated.name,
+					brandName: brandUpserted.name,
 					productId: productCreatedId,
 				},
 			});
@@ -208,71 +208,100 @@ export const adminProductsRouter = createRouter()
 				categories: categoriesCreated.map((category) => ({
 					category,
 				})),
-				brand: brandCreated,
+				brand: brandUpserted,
 			};
 		},
 	})
 	.mutation('updateProduct', {
-		input: z
-			.object({
-				productId: z.string(),
-				basicData: z
-					.object({
-						title: z.string().min(2).optional(),
-						description: z.string().min(25).optional(),
-						status: z
-							.string()
-							.refine((data) => data === 'VISIBLE' || data === 'HIDDEN')
-							.optional(),
-						price: z
-							.number()
-							.refine((data) => data >= 0)
-							.optional(),
-						countInStock: z
-							.number()
-							.refine((data) => data >= 0)
-							.optional(),
-					})
-					.optional(),
-				// categories: z.array(z.string()), // .isURL,
-				// brand: z.string().min(2),
-				images: z
-					.object({
-						addedLinks: z.array(z.string()).optional(),
-						removedIds: z.array(z.string()).optional(),
-					})
-					.optional(),
-				categories: z
-					.object({
-						addedNames: z.array(z.string()).optional(),
-						removedIds: z.array(z.string()).optional(),
-					})
-					.optional(),
-				brand: z.string().min(2),
-			})
-			.optional(),
+		input: z.object({
+			productId: z.string(),
+			basicData: z
+				.object({
+					title: z.string().min(2).optional(),
+					description: z.string().min(25).optional(),
+					status: z
+						.string()
+						.refine((data) => data === 'VISIBLE' || data === 'HIDDEN')
+						.optional(),
+					price: z
+						.number()
+						.refine((data) => data >= 0)
+						.optional(),
+					countInStock: z
+						.number()
+						.refine((data) => data >= 0)
+						.optional(),
+				})
+				.optional(),
+			// categories: z.array(z.string()), // .isURL,
+			// brand: z.string().min(2),
+			images: z
+				.object({
+					addedLinks: z.array(z.string()).optional(),
+					removedIds: z.array(z.string()).optional(),
+				})
+				.optional(),
+			categories: z
+				.object({
+					addedNames: z.array(z.string()).optional(),
+					removedNames: z.array(z.string()).optional(),
+				})
+				.optional(),
+			brand: z
+				.object({
+					old: z.string().min(2),
+					new: z.string().min(2),
+				})
+				.optional(),
+		}),
 		resolve: async ({ ctx, input }) => {
-			if (input?.basicData) {
-				const basicData = await ctx.prisma.product.update({
-					data: {
-						...input.basicData,
-					},
-					where: {
-						id: input.productId,
-					},
-				});
+			let isProductUpdated = false;
 
-				console.log('basicData', basicData);
-			}
+			let basicData:
+				| {
+						status: string;
+						title: string;
+						price: number;
+						description: string;
+						countInStock: number;
+						updatedAt: Date;
+				  }
+				| undefined = undefined;
+
+			let categoriesUpserted:
+				| {
+						name: string;
+						createdAt: Date;
+						count: number;
+				  }[]
+				| undefined;
+
+			let imagesCreated:
+				| {
+						id: string;
+						src: string;
+						alt: string | null;
+				  }[]
+				| undefined;
+
+			let brandUpserted:
+				| {
+						createdAt: Date;
+						name: string;
+				  }
+				| undefined;
 
 			if (input?.images) {
 				if (input.images.addedLinks) {
 					const addedLinks = uniqueArrItems(input.images.addedLinks);
 
 					if (addedLinks.length !== 0) {
-						const imagesCreated = await ctx.prisma.$transaction(
+						imagesCreated = await ctx.prisma.$transaction(
 							input.images.addedLinks.map((src) =>
-								ctx.prisma.image.create({ data: { src } })
+								ctx.prisma.image.create({
+									data: { src },
+									select: { id: true, src: true, alt: true },
+								})
 							)
 						);
 
@@ -285,18 +314,25 @@ export const adminProductsRouter = createRouter()
 							}
 						);
 
+						if (!isProductUpdated) isProductUpdated = true;
+
 						console.log('imagesCreated', imagesCreated);
 						console.log('imagesOnProduct', imagesOnProduct);
 					}
 				}
 				if (input.images.removedIds && input.images.removedIds?.length !== 0) {
-					const imagesDeleted = await ctx.prisma.image.deleteMany({
+					const imagesDeleted = await ctx.prisma.imagesOnProduct.deleteMany({
 						where: {
-							id: {
+							imageId: {
 								in: input.images.removedIds,
+							},
+							AND: {
+								productId: input.productId,
 							},
 						},
 					});
+
+					if (!isProductUpdated) isProductUpdated = true;
 
 					console.log('imagesDeleted', imagesDeleted);
 				}
@@ -310,7 +346,7 @@ export const adminProductsRouter = createRouter()
 					const addedNames = uniqueArrItems(input.categories.addedNames);
 
 					if (addedNames.length !== 0) {
-						const categoriesCreated = await ctx.prisma.$transaction(
+						categoriesUpserted = await ctx.prisma.$transaction(
 							input.categories.addedNames.map((name) =>
 								ctx.prisma.category.upsert({
 									create: { name },
@@ -324,44 +360,114 @@ export const adminProductsRouter = createRouter()
 
 						const categoriesOnProduct =
 							await ctx.prisma.categoriesOnProducts.createMany({
-								data: categoriesCreated.map((item) => ({
+								data: categoriesUpserted.map((item) => ({
 									productId: input.productId, // productCreatedId,
 									categoryName: item.name,
 								})),
 							});
 
-						console.log('categoriesCreated', categoriesCreated);
+						if (!isProductUpdated) isProductUpdated = true;
+
+						console.log('categoriesUpserted', categoriesUpserted);
 						console.log('categoriesOnProduct', categoriesOnProduct);
 					}
 				}
 
 				if (
-					input.categories.removedIds &&
-					input.categories.removedIds?.length !== 0
+					input.categories.removedNames &&
+					input.categories.removedNames?.length !== 0
 				) {
-					const categoriesDeleted = await ctx.prisma.image.deleteMany({
-						where: {
-							id: {
-								in: input.categories.removedIds,
+					const categoriesOnProductDeleted =
+						await ctx.prisma.categoriesOnProducts.deleteMany({
+							where: {
+								categoryName: { in: input.categories.removedNames },
+								AND: { productId: { equals: input.productId } },
 							},
-						},
-					});
+						});
 
-					console.log('categoriesDeleted', categoriesDeleted);
-				}
-
-				if (input.brand) {
-					const brandUpdated = await ctx.prisma.brandOnProducts.update({
-						data: {
-							brandName: input.brand,
-						},
+					const categoriesDecremented = await ctx.prisma.category.updateMany({
 						where: {
-							productId: input.productId,
+							name: { in: input.categories.removedNames },
 						},
+						data: { count: { decrement: 1 } },
 					});
 
-					console.log('brandUpdated', brandUpdated);
+					if (!isProductUpdated) isProductUpdated = true;
+
+					console.log('categoriesOnProductDeleted', categoriesOnProductDeleted);
+					console.log('categoriesDecremented', categoriesDecremented);
 				}
 			}
+
+			if (input.brand) {
+				const brandUpdated = await ctx.prisma.brand.update({
+					where: { name: input.brand.old },
+					data: { count: { decrement: 1 } },
+				});
+
+				brandUpserted = await ctx.prisma.brand.upsert({
+					where: {
+						name: input.brand.new,
+					},
+					create: {
+						name: input.brand.new,
+						// productId: productCreatedId,
+					},
+					update: { count: { increment: 1 } },
+					select: {
+						// id: true,
+						createdAt: true,
+						name: true,
+					},
+				});
+				const brandOnProductsUpdated = await ctx.prisma.brandOnProducts.update({
+					data: { brandName: input.brand.new },
+					where: {
+						productId_brandName: {
+							productId: input.productId,
+							brandName: input.brand.old,
+						},
+					},
+				});
+
+				if (!isProductUpdated) isProductUpdated = true;
+
+				console.log('brandUpdated', brandUpdated);
+				console.log('brandUpserted', brandUpserted);
+				console.log('brandOnProductsUpdated', brandOnProductsUpdated);
+			}
+
+			if (input?.basicData || isProductUpdated) {
+				basicData = await ctx.prisma.product.update({
+					data: {
+						...(input.basicData || {}),
+						updatedAt: new Date(),
+					},
+					where: {
+						id: input.productId,
+					},
+					select: {
+						title: true,
+						price: true,
+						description: true,
+						status: true,
+						countInStock: true,
+						updatedAt: true,
+					},
+				});
+
+				if (!isProductUpdated) isProductUpdated = true;
+				console.log('basicData', basicData);
+			}
+
+			return {
+				newData: {
+					basicData,
+					categoriesUpserted,
+					imagesCreated,
+					brandUpserted,
+				},
+				isProductUpdated,
+			};
 		},
 	});

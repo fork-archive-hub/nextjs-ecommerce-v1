@@ -1,20 +1,8 @@
+import { Dispatch } from 'react';
+import { InferMutationOutput } from 'utils/trpc/types';
 import { EAdminDashboardProductsListContextConsts } from './constants';
 
 export type TInitialStateScreenSize = number;
-
-const t = {
-	id: '',
-	title: '',
-	price: 0,
-	images: [],
-	brand: '',
-	description: '',
-	categories: [],
-	status: 'VISIBLE',
-	countInStock: 0,
-	createdAt: new Date().toUTCString(),
-	updatedAt: new Date().toUTCString(),
-};
 
 export type IProduct = {
 	id: string;
@@ -130,4 +118,16 @@ type IActionAdd = ISetReducerAction<
 	  }
 >;
 
-export type IReducerActions = IActionAdd;
+type TUpdateAction = ISetReducerAction<
+	EAdminDashboardProductsListContextConsts.UPDATE,
+	{
+		currentPageIndex: number;
+		productId: string;
+	} & InferMutationOutput<'admin.products.updateProduct'>
+>;
+
+export type IReducerActions = IActionAdd | TUpdateAction;
+
+export type TProductListDispatch =
+	| Dispatch<IReducerActions>
+	| ((value: IReducerActions) => void);

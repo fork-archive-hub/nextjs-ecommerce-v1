@@ -1,6 +1,9 @@
 import CustomNextImage from '@components/common/CustomNextImage';
+import DynamicModal from '@components/common/Modal/Dynamic';
 import { createColumnHelper } from '@tanstack/react-table';
 import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { useState, Fragment } from 'react';
+import UpdateProduct from '../Action/ActionTypes/Update';
 
 const columnHelper = createColumnHelper<
 	IProduct & {
@@ -83,10 +86,51 @@ export const productTableDefaultColumns = [
 
 			return (
 				<>
-					{data?.type.includes('DELETE') && <></>}
+					{data?.type.includes('DELETE') && (
+						<UpdateProductButton
+							productData={
+								data.data as Omit<IProduct, 'status'> & {
+									status: 'VISIBLE' | 'HIDDEN';
+								}
+							}
+						/>
+					)}
 					{data?.type.includes('UPDATE') && <></>}
 				</>
 			);
 		},
 	}),
 ];
+
+const UpdateProductButton = ({
+	productData,
+}: {
+	productData: Omit<IProduct, 'status'> & {
+		status: 'VISIBLE' | 'HIDDEN';
+	};
+}) => {
+	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
+		useState(false);
+
+	return (
+		<>
+			<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
+				Update
+			</button>
+			<DynamicModal
+				isVisible={isCreateProductModalVisible}
+				handleIsVisible={() => setIsCreateProductModalVisible((prev) => !prev)}
+				containerElem={{
+					className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
+					style: {
+						width: '98%',
+					},
+				}}
+			>
+				<Fragment key='body'>
+					<UpdateProduct productData={productData} />
+				</Fragment>
+			</DynamicModal>
+		</>
+	);
+};
