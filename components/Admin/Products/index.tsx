@@ -50,7 +50,7 @@ const CreateProductButton = () => {
 const AdminProducts = () => {
 	const [
 		{
-			list: { data: productsListData, orderBy, page, filterBy },
+			mainList: { data: productsListData, orderBy, page, filterBy },
 		},
 		productsDispatch,
 	] = useSharedAdminDashboardProductsListState();

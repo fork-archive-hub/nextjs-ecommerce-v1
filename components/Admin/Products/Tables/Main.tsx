@@ -7,7 +7,7 @@ import { productTableDefaultColumns } from '../utils';
 const ProductsMainTable = () => {
 	const [
 		{
-			list: { data: productsListData, page },
+			mainList: { data: productsListData, page },
 		},
 	] = useSharedAdminDashboardProductsListState();
 

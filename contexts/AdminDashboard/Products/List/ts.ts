@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { InferMutationOutput } from 'utils/trpc/types';
+import { InferMutationInput, InferMutationOutput } from 'utils/trpc/types';
 import { EAdminDashboardProductsListContextConsts } from './constants';
 
 export type TInitialStateScreenSize = number;
@@ -62,7 +62,7 @@ interface IOrderBy {
 }
 
 export type TInitialState = {
-	list: {
+	mainList: {
 		data: IProduct[][];
 		page: {
 			index: 0;
@@ -118,11 +118,22 @@ type IActionAdd = ISetReducerAction<
 	  }
 >;
 
+type TAdminProductsUpdateProductInput =
+	InferMutationInput<'admin.products.updateProduct'>;
+
 type TUpdateAction = ISetReducerAction<
 	EAdminDashboardProductsListContextConsts.UPDATE,
 	{
 		currentPageIndex: number;
 		productId: string;
+		removed: {
+			categoriesNames: NonNullable<
+				TAdminProductsUpdateProductInput['categories']
+			>['removedNames'];
+			imagesIds: NonNullable<
+				TAdminProductsUpdateProductInput['images']
+			>['removedIds'];
+		};
 	} & InferMutationOutput<'admin.products.updateProduct'>
 >;
 

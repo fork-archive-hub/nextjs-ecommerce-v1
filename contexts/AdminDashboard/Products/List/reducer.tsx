@@ -1,6 +1,6 @@
 import { EAdminDashboardProductsListContextConsts } from './constants';
 import { stateInit } from './initialState';
-import { TInitialState, IReducerActions } from './ts';
+import { TInitialState, IReducerActions, IProduct } from './ts';
 
 export const reducer = (
 	state = stateInit(),
@@ -26,14 +26,14 @@ export const reducer = (
 						},
 					};
 			} else {
-				let listData: typeof state.list.data = [];
+				let listData: typeof state.mainList.data = [];
 				if (actionPayload.options?.reset) listData = [actionPayload.products];
-				else listData = [...state.list.data, actionPayload.products];
+				else listData = [...state.mainList.data, actionPayload.products];
 
 				return {
 					...state,
-					list: {
-						...state.list,
+					mainList: {
+						...state.mainList,
 						data: listData,
 					},
 				};
@@ -43,73 +43,157 @@ export const reducer = (
 		}
 
 		case EAdminDashboardProductsListContextConsts.UPDATE: {
-			const { productId, newData, isProductUpdated, currentPageIndex } =
-				action.payload;
+			const {
+				productId,
+				newData,
+				isProductUpdated,
+				removed,
+				currentPageIndex,
+			} = action.payload;
 
-			let targetedProduct = state.list.data[currentPageIndex].find(
-				(product) => product.id === productId
-			);
+			if (!isProductUpdated) return state;
 
-			if (targetedProduct) {
+			let targetedProduct: IProduct | undefined;
+			const productCoordinates = {
+				mainList: {
+					page: -1,
+					pageItem: -1,
+				},
+				addedList: {
+					index: -1,
+				},
+			};
+
+			state.mainList.data.find((page, pageIndex) => {
+				targetedProduct = page.find((product, productIndex) => {
+					if (product.id === productId) {
+						productCoordinates.mainList.pageItem = productIndex;
+						return true;
+					}
+					return false;
+				});
+
+				if (!!targetedProduct) productCoordinates.mainList.page = pageIndex;
+
+				return !!targetedProduct;
+			});
+
+			state.added.data.find((product, productIndex) => {
+				if (product.id === productId) {
+					productCoordinates.addedList.index = productIndex;
+					if (!targetedProduct) targetedProduct = product;
+					return !!targetedProduct;
+				}
+			});
+
+			if (!targetedProduct) return state;
+			targetedProduct;
+
+			if (newData.basicData) {
 				targetedProduct = {
 					...targetedProduct,
-					...(() => {
-						if (!newData.basicData) return {};
-
-						return {
-							status: newData.basicData.status,
-							title: newData.basicData.title,
-							price: newData.basicData.price,
-							description: newData.basicData.description,
-							countInStock: newData.basicData.countInStock,
-							updatedAt: newData.basicData.updatedAt,
-						};
-					})(),
-					...(() => {
-						if (!newData.brandUpserted) return {};
-
-						const brand = (targetedProduct.brand || { brand: { images: null } })
-							.brand;
-
-						return {
-							brand: {
-								brand: {
-									...brand,
-									...newData.brandUpserted,
-								},
-							},
-						};
-					})(),
-					...(() => {
-						if (!newData.imagesCreated) return {};
-
-						const images = targetedProduct.images || [];
-
-						return {
-							images: [
-								...images,
-								...newData.imagesCreated.map((item) => ({ image: item })),
-							],
-						};
-					})(),
-					...(() => {
-						if (!newData.categoriesUpserted) return {};
-
-						const categories = targetedProduct.categories || [];
-
-						return {
-							categories: [
-								...categories,
-								...newData.categoriesUpserted.map((item) => ({
-									category: { ...item, images: null },
-								})),
-							],
-						};
-					})(),
+					status: newData.basicData.status,
+					title: newData.basicData.title,
+					price: newData.basicData.price,
+					description: newData.basicData.description,
+					countInStock: newData.basicData.countInStock,
+					updatedAt: newData.basicData.updatedAt,
 				};
 			}
 
-			return state;
+			if (newData.brandUpserted) {
+				const brand = (targetedProduct.brand || { brand: { images: null } })
+					.brand;
+
+				targetedProduct = {
+					...targetedProduct,
+					brand: {
+						brand: {
+							...brand,
+							...newData.brandUpserted,
+						},
+					},
+				};
+			}
+
+			if (newData.imagesCreated) {
+				let images = targetedProduct.images || [];
+				const removedImagesIds = removed.imagesIds;
+
+				if (Array.isArray(removedImagesIds) && removedImagesIds.length !== 0) {
+					images = images.filter(
+						(item) => !removedImagesIds.includes(item.image.id)
+					);
+				}
+
+				targetedProduct = {
+					...targetedProduct,
+					images: [
+						...images,
+						...newData.imagesCreated.map((item) => ({ image: item })),
+					],
+				};
+			}
+
+			if (newData.categoriesUpserted) {
+				let categories = targetedProduct.categories || [];
+				const removedCategoriesNames = removed.categoriesNames;
+
+				if (
+					Array.isArray(removedCategoriesNames) &&
+					removedCategoriesNames.length !== 0
+				) {
+					categories = categories.filter(
+						(item) => !removedCategoriesNames.includes(item.category.name)
+					);
+				}
+
+				targetedProduct = {
+					...targetedProduct,
+					categories: [
+						...categories,
+						...newData.categoriesUpserted.map((item) => ({
+							category: { ...item, images: null },
+						})),
+					],
+				};
+			}
+
+			if (!targetedProduct) return state;
+
+			return {
+				...state,
+				mainList:
+					productCoordinates.mainList.page === -1
+						? state.mainList
+						: {
+								...state.mainList,
+								data: state.mainList.data.map((page, pageIndex) => {
+									if (pageIndex === productCoordinates.mainList.page) {
+										return page.map((product, productIndex) => {
+											if (productIndex === productCoordinates.mainList.pageItem)
+												return targetedProduct as IProduct;
+
+											return product;
+										});
+									}
+
+									return page;
+								}),
+						  },
+				added:
+					productCoordinates.addedList.index === -1
+						? state.added
+						: {
+								...state.added,
+								data: state.added.data.map((product, productIndex) => {
+									if (productCoordinates.addedList.index === productIndex)
+										return targetedProduct as IProduct;
+
+									return product;
+								}),
+						  },
+			};
 		}
 
 		default: {
