@@ -1,69 +1,73 @@
+import { InferQueryOutput } from './../../../../utils/trpc/types';
 import { Dispatch } from 'react';
 import { InferMutationInput, InferMutationOutput } from 'utils/trpc/types';
 import { EAdminDashboardProductsListContextConsts } from './constants';
 
 export type TInitialStateScreenSize = number;
 
-export type IProduct = {
-	id: string;
-	title: string;
-	price: number;
-	images:
-		| {
-				image: {
-					id: string;
-					src: string;
-					alt: string | null;
-				};
-		  }[]
-		| null;
-	description: string;
-	categories: {
-		category: {
-			images:
-				| {
-						image: {
-							id: string;
-							src: string;
-							alt: string | null;
-						};
-				  }[]
-				| null;
-			name: string;
-			createdAt: Date;
-			count: number;
-		};
-	}[];
+// export type IProduct = {
+// 	id: string;
+// 	title: string;
+// 	price: number;
+// 	images:
+// 		| {
+// 				image: {
+// 					id: string;
+// 					src: string;
+// 					alt: string | null;
+// 				};
+// 		  }[]
+// 		| null;
+// 	description: string;
+// 	categories: {
+// 		category: {
+// 			images:
+// 				| {
+// 						image: {
+// 							id: string;
+// 							src: string;
+// 							alt: string | null;
+// 						};
+// 				  }[]
+// 				| null;
+// 			name: string;
+// 			createdAt: Date;
+// 			count: number;
+// 		};
+// 	}[];
 
-	brand: {
-		brand: {
-			images:
-				| {
-						image: {
-							id: string;
-							src: string;
-							alt: string | null;
-						};
-				  }[]
-				| null;
-			name: string;
-			createdAt: Date;
-		};
-	} | null;
-	status: string | null;
-	countInStock: number;
-	createdAt: Date;
-	updatedAt: Date;
-};
+// 	brand: {
+// 		brand: {
+// 			images:
+// 				| {
+// 						image: {
+// 							id: string;
+// 							src: string;
+// 							alt: string | null;
+// 						};
+// 				  }[]
+// 				| null;
+// 			name: string;
+// 			createdAt: Date;
+// 		};
+// 	} | null;
+// 	status: string | null;
+// 	countInStock: number;
+// 	createdAt: Date;
+// 	updatedAt: Date;
+// };
 
 interface IOrderBy {
 	by: 'createdAt' | 'updatedAt' | 'countInStock' | 'title' | 'price' | 'brand';
 	dir: 'ASC' | 'DESC';
 }
 
+export type IAdminDashboardProducts = InferQueryOutput<'admin.products.all'>;
+export type IAdminDashboardProduct = IAdminDashboardProducts[0];
+
 export type TInitialState = {
 	mainList: {
-		data: IProduct[][];
+		data: IAdminDashboardProducts[];
 		page: {
 			index: 0;
 			orderBy: IOrderBy;
@@ -87,10 +91,10 @@ export type TInitialState = {
 		};
 	};
 	added: {
-		data: IProduct[];
+		data: IAdminDashboardProducts;
 	};
 	removed: {
-		data: IProduct[];
+		data: IAdminDashboardProducts;
 	};
 };
 
@@ -103,14 +107,14 @@ type IActionAdd = ISetReducerAction<
 	EAdminDashboardProductsListContextConsts.ADD,
 	| {
 			type: 'MANY';
-			products: IProduct[];
+			products: IAdminDashboardProducts;
 			options?: {
 				reset?: boolean;
 			};
 	  }
 	| {
 			type: 'ONE';
-			product: IProduct;
+			product: IAdminDashboardProduct;
 			options: {
 				reset?: boolean;
 				type: 'ADDED' | 'REMOVED';
@@ -124,7 +128,6 @@ type TAdminProductsUpdateProductInput =
 type TUpdateAction = ISetReducerAction<
 	EAdminDashboardProductsListContextConsts.UPDATE,
 	{
-		currentPageIndex: number;
 		productId: string;
 		removed: {
 			categoriesNames: NonNullable<

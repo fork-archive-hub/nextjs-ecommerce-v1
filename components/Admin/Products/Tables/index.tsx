@@ -1,12 +1,12 @@
 import { flexRender, Table } from '@tanstack/react-table';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
 
 interface IProps {
 	table: Table<
-		IProduct & {
+		IAdminDashboardProduct & {
 			mutate: {
-				data: IProduct;
+				data: IAdminDashboardProduct;
 				type: ('UPDATE' | 'DELETE')[];
 			};
 		}

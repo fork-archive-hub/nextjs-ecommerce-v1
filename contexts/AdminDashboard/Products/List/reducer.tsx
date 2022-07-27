@@ -1,6 +1,6 @@
 import { EAdminDashboardProductsListContextConsts } from './constants';
 import { stateInit } from './initialState';
-import { TInitialState, IReducerActions, IProduct } from './ts';
+import { TInitialState, IReducerActions, IAdminDashboardProduct } from './ts';
 
 export const reducer = (
 	state = stateInit(),
@@ -43,17 +43,11 @@ export const reducer = (
 		}
 
 		case EAdminDashboardProductsListContextConsts.UPDATE: {
-			const {
-				productId,
-				newData,
-				isProductUpdated,
-				removed,
-				currentPageIndex,
-			} = action.payload;
+			const { productId, newData, isProductUpdated, removed } = action.payload;
 
 			if (!isProductUpdated) return state;
 
-			let targetedProduct: IProduct | undefined;
+			let targetedProduct: IAdminDashboardProduct | undefined;
 			const productCoordinates = {
 				mainList: {
 					page: -1,
@@ -102,7 +96,7 @@ export const reducer = (
 			}
 
 			if (newData.brandUpserted) {
-				const brand = (targetedProduct.brand || { brand: { images: null } })
+				const brand = (targetedProduct.brand || { brand: { images: [] } })
 					.brand;
 
 				targetedProduct = {
@@ -153,7 +147,7 @@ export const reducer = (
 					categories: [
 						...categories,
 						...newData.categoriesUpserted.map((item) => ({
-							category: { ...item, images: null },
+							category: { ...item, images: [] },
 						})),
 					],
 				};
@@ -172,7 +166,7 @@ export const reducer = (
 									if (pageIndex === productCoordinates.mainList.page) {
 										return page.map((product, productIndex) => {
 											if (productIndex === productCoordinates.mainList.pageItem)
-												return targetedProduct as IProduct;
+												return targetedProduct as IAdminDashboardProduct;
 
 											return product;
 										});
@@ -188,7 +182,7 @@ export const reducer = (
 								...state.added,
 								data: state.added.data.map((product, productIndex) => {
 									if (productCoordinates.addedList.index === productIndex)
-										return targetedProduct as IProduct;
+										return targetedProduct as IAdminDashboardProduct;
 
 									return product;
 								}),

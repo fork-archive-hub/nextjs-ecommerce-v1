@@ -1,14 +1,15 @@
 import CustomNextImage from '@components/common/CustomNextImage';
 import DynamicModal from '@components/common/Modal/Dynamic';
 import { createColumnHelper } from '@tanstack/react-table';
-import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
+import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
 import { useState, Fragment } from 'react';
 import UpdateProduct from '../Action/ActionTypes/Update';
 
 const columnHelper = createColumnHelper<
-	IProduct & {
+	IAdminDashboardProduct & {
 		mutate: {
-			data: IProduct;
+			data: IAdminDashboardProduct;
 			type: ('UPDATE' | 'DELETE')[];
 		};
 	}
@@ -19,7 +20,7 @@ export const productTableDefaultColumns = [
 	}),
 	columnHelper.accessor('images', {
 		cell: (info) => {
-			const data = info.renderValue<IProduct['images']>();
+			const data = info.renderValue<IAdminDashboardProduct['images']>();
 
 			if (!data) return <></>;
 
@@ -60,7 +61,7 @@ export const productTableDefaultColumns = [
 			const t = info.renderValue();
 
 			return info
-				.renderValue<IProduct['categories']>()
+				.renderValue<IAdminDashboardProduct['categories']>()
 				.map((item) => <p key={item.category.name}>{item.category.name}</p>);
 		},
 	}),
@@ -89,7 +90,7 @@ export const productTableDefaultColumns = [
 					{data?.type.includes('DELETE') && (
 						<UpdateProductButton
 							productData={
-								data.data as Omit<IProduct, 'status'> & {
+								data.data as Omit<IAdminDashboardProduct, 'status'> & {
 									status: 'VISIBLE' | 'HIDDEN';
 								}
 							}
@@ -105,16 +106,21 @@ export const productTableDefaultColumns = [
 const UpdateProductButton = ({
 	productData,
 }: {
-	productData: Omit<IProduct, 'status'> & {
+	productData: Omit<IAdminDashboardProduct, 'status'> & {
 		status: 'VISIBLE' | 'HIDDEN';
 	};
 }) => {
+	const [{ currentColorMode }] = useSharedAdminDashboardState();
 	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
 		useState(false);
 
 	return (
 		<>
-			<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
+			<button
+				className='px-2 py-1 m-1 rounded'
+				style={{ backgroundColor: currentColorMode }}
+				onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
+			>
 				Update
 			</button>
 			<DynamicModal

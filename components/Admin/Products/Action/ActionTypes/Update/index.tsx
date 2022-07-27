@@ -1,8 +1,17 @@
 import Tooltip from '@components/common/Tooltip';
 import { trpc } from '@libs/trpc';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
-import { IProduct } from 'contexts/AdminDashboard/Products/List/ts';
-import { useId, useState, FormEvent, useEffect, Fragment, useRef } from 'react';
+import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
+import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import {
+	useId,
+	useState,
+	FormEvent,
+	useEffect,
+	Fragment,
+	useRef,
+	useMemo,
+} from 'react';
 import { arrRemovedAndAdded } from 'utils/arrays';
 import { InferMutationInput } from 'utils/trpc/types';
 
@@ -38,28 +47,48 @@ const valuesInit: () => IValues = () => ({
 const UpdateProduct = ({
 	productData,
 }: {
-	productData: Omit<IProduct, 'status'> & { status: 'VISIBLE' | 'HIDDEN' };
+	productData: Omit<IAdminDashboardProduct, 'status'> & {
+		status: 'VISIBLE' | 'HIDDEN';
+	};
 }) => {
 	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const updateProductMutation = trpc.useMutation([
 		'admin.products.updateProduct',
 	]);
 
-	const initValuesRef = useRef<IValues>({
-		title: productData.title,
-		price: productData.price,
-		images: !productData.images
-			? []
-			: productData.images.map((item) => item.image.src),
-		brand: !productData.brand ? '' : productData.brand.brand.name,
-		description: productData.description,
-		categories: !productData.categories
-			? []
-			: productData.categories.map((item) => item.category.name),
-		status: productData.status,
-		countInStock: productData.countInStock,
+	const removedRef = useRef<{
+		categoriesNames: string[] | undefined;
+		imagesIds: string[] | undefined;
+	}>({
+		categoriesNames: undefined,
+		imagesIds: undefined,
 	});
-	const initValues = initValuesRef.current;
+	const initValues = useMemo(
+		() => ({
+			title: productData.title,
+			price: productData.price,
+			images: !productData.images
+				? []
+				: productData.images.map((item) => item.image.src),
+			brand: !productData.brand ? '' : productData.brand.brand.name,
+			description: productData.description,
+			categories: !productData.categories
+				? []
+				: productData.categories.map((item) => item.category.name),
+			status: productData.status,
+			countInStock: productData.countInStock,
+		}),
+		[
+			productData.brand,
+			productData.categories,
+			productData.countInStock,
+			productData.description,
+			productData.images,
+			productData.price,
+			productData.status,
+			productData.title,
+		]
+	);
 	const productId = productData.id;
 
 	const fields1Id = useId();
@@ -194,6 +223,7 @@ const UpdateProduct = ({
 
 			if (removedNames.length !== 0) {
 				categories.removedNames = removedNames;
+				removedRef.current.categoriesNames = removedNames;
 				if (!productDataUpdated.categories)
 					productDataUpdated.categories = true;
 			}
@@ -224,6 +254,7 @@ const UpdateProduct = ({
 				}
 				if (imagesRemovedIds.length !== 0) {
 					images.removedIds = imagesRemovedIds;
+					removedRef.current.imagesIds = imagesRemovedIds;
 					if (!productDataUpdated.images) productDataUpdated.images = true;
 				}
 			}
@@ -275,39 +306,29 @@ const UpdateProduct = ({
 
 			// };
 			updateProductMutation.data;
-			// productsDispatch({
-			// 	type: EAdminDashboardProductsListContextConsts.ADD,
-			// 	payload: {
-			// 		type: 'ONE',
-			// 		product: {
-			// 			...updateProductMutation.data,
-			// 			// images: [],
-			// 			categories: updateProductMutation.data.categories.map(
-			// 				(item: { category: any }) => ({
-			// 					...item,
-			// 					category: {
-			// 						images: null,
-			// 						...item.category,
-			// 					},
-			// 				})
-			// 			),
-			// 			brand: {
-			// 				brand: {
-			// 					images: null,
-			// 					...updateProductMutation.data.brand,
-			// 				},
-			// 			},
-			// 		},
-			// 		options: {
-			// 			type: 'ADDED',
-			// 		},
-			// 	},
-			// });
+			productsDispatch({
+				type: EAdminDashboardProductsListContextConsts.UPDATE,
+				payload: {
+					isProductUpdated: updateProductMutation.data.isProductUpdated,
+					newData: updateProductMutation.data.newData,
+					productId: productData.id,
+					removed: {
+						categoriesNames: removedRef.current.categoriesNames,
+						imagesIds: removedRef.current.imagesIds,
+					},
+				},
+			});
+
+			removedRef.current = {
+				categoriesNames: undefined,
+				imagesIds: undefined,
+			};
 		}
 	}, [
 		updateProductMutation.data,
 		updateProductMutation.isSuccess,
 		productsDispatch,
+		productData.id,
 	]);
 
 	return (
