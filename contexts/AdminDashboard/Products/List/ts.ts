@@ -139,8 +139,12 @@ type TUpdateAction = ISetReducerAction<
 		};
 	} & InferMutationOutput<'admin.products.updateProduct'>
 >;
+type TDeleteAction = ISetReducerAction<
+	EAdminDashboardProductsListContextConsts.DELETE,
+	{ productId: string }
+>;
 
-export type IReducerActions = IActionAdd | TUpdateAction;
+export type IReducerActions = IActionAdd | TUpdateAction | TDeleteAction;
 
 export type TProductListDispatch =
 	| Dispatch<IReducerActions>

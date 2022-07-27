@@ -350,7 +350,7 @@ const UpdateProduct = ({
 				</button>
 				<span className='p-1'></span>
 				<Tooltip
-					content={`Init the form inputs to where it was at the begging ex: ${JSON.stringify(
+					content={`Init the form inputs to where it was at the beginning ex: ${JSON.stringify(
 						{ ...valuesInit, ...initValues }
 					)}`}
 					position='bottomCenter'

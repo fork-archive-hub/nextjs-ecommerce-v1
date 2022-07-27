@@ -2,17 +2,17 @@
 	position: relative;
 }
 
-#tooltip {
+.tooltip {
 	opacity: 0;
 	position: absolute;
 	background: black;
 	color: white;
 	width: fit-content;
+	pointer-events: none;
 	transition: opacity ease-in var(--tooltip-opacity-transform-duration, 300ms)
 		var(--tooltip-opacity-transform-delay, 100ms);
-	pointer-events: none;
 }
-#tooltip.isVisible {
+.tooltip.isVisible {
 	opacity: 1;
 	pointer-events: auto;
 	transition: opacity ease-in var(--tooltip-opacity-transform-duration, 300ms);

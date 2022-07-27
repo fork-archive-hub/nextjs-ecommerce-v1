@@ -1,5 +1,5 @@
 import { trpc } from '@libs/trpc';
-import { Fragment, useEffect, useState } from 'react';
+import { CSSProperties, Fragment, useEffect, useState } from 'react';
 import DynamicModal from '@components/common/Modal/Dynamic';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
@@ -8,14 +8,20 @@ import CreateProduct from './Action/ActionTypes/Create';
 import ProductsAddedTable from './Tables/Added';
 import ProductsMainTable from './Tables/Main';
 import ProductsRemovedTable from './Tables/Removed';
+import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 
 const CreateProductButton = () => {
+	const [{ currentColorMode }] = useSharedAdminDashboardState();
 	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
 		useState(false);
 
 	return (
 		<>
-			<button onClick={() => setIsCreateProductModalVisible((prev) => !prev)}>
+			<button
+				className='text-xl px-4 py-2 my-1 font-bold hover:filter hover:brightness-95  bold' // 'focus:bg-white focus:text-black'
+				style={{ backgroundColor: currentColorMode }}
+				onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
+			>
 				Create A new product?
 			</button>
 			<DynamicModal

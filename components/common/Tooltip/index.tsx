@@ -217,6 +217,7 @@ const Tooltip: FC<IProps> = ({
 			tooltipRef.current.classList.add(classes.isVisible);
 			varsRef.current.contentContainer.mouse.enter = true;
 			varsRef.current.contentContainer.mouse.leave = false;
+			tooltipRef.current.style.pointerEvents = 'auto';
 
 			if (windowCollision) return handleWindowCollision();
 		};
@@ -283,7 +284,7 @@ const Tooltip: FC<IProps> = ({
 			<div
 				ref={tooltipRef}
 				role='tooltip'
-				className={isVisible ? classes.isVisible : ''}
+				className={`${classes.tooltip} ${isVisible ? classes.isVisible : ''}`}
 				id={classes.tooltip}
 				style={tooltipStylePosition_Map[position]}
 				onMouseEnter={() => {
@@ -323,6 +324,7 @@ const Tooltip: FC<IProps> = ({
 						varsRef.current.contentContainer.mouse.leave &&
 						!varsRef.current.tooltip.mouse.enter
 					) {
+						tooltipRef.current.style.pointerEvents = 'none';
 						varsRef.current.contentContainer.mouse.enter = false;
 						varsRef.current.contentContainer.mouse.leave = false;
 					}

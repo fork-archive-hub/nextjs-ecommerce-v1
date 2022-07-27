@@ -239,5 +239,3 @@ model ProductsOnOrder {
 
   @@id([productId, orderId])
 }
-
-// DELETE FROM "ShippingAddress"; DELETE FROM "Brand"; DELETE FROM "BrandOnProducts"; DELETE FROM "ImagesOnBrand"; DELETE FROM "Image"; DELETE FROM "Product"; DELETE FROM "ImagesOnProduct"; DELETE FROM "Category"; DELETE FROM "ImagesOnCategory"; DELETE FROM "CategoriesOnProducts"; DELETE FROM "Order"; DELETE FROM "PaymentResult"; DELETE FROM "ProductsOnOrder"; 

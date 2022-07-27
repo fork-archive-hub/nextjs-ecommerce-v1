@@ -7,7 +7,7 @@ interface IProps {
 		IAdminDashboardProduct & {
 			mutate: {
 				data: IAdminDashboardProduct;
-				type: ('UPDATE' | 'DELETE')[];
+				type?: ('UPDATE' | 'DELETE')[];
 			};
 		}
 	>;

@@ -16,14 +16,13 @@ const ProductsRemovedTable = () => {
 		[productsRemovedListData]
 	);
 
-	const type: ('UPDATE' | 'DELETE')[] = ['UPDATE', 'DELETE'];
+	// const type: ('UPDATE' | 'DELETE')[] = ['UPDATE', 'DELETE'];
 
 	const table = useReactTable({
 		columns: productTableDefaultColumns,
 		data: data.map((item) => ({
 			...item,
 			mutate: {
-				type,
 				data: item,
 			},
 		})),

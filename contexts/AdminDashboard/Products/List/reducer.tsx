@@ -190,6 +190,75 @@ export const reducer = (
 			};
 		}
 
+		case EAdminDashboardProductsListContextConsts.DELETE: {
+			const { productId } = action.payload;
+			let targetedProduct: IAdminDashboardProduct | undefined;
+			const productCoordinates = {
+				mainList: {
+					page: -1,
+					pageItem: -1,
+				},
+				addedList: {
+					index: -1,
+				},
+			};
+
+			state.mainList.data.find((page, pageIndex) => {
+				targetedProduct = page.find((product, productIndex) => {
+					if (product.id === productId) {
+						productCoordinates.mainList.pageItem = productIndex;
+						return true;
+					}
+					return false;
+				});
+
+				if (!!targetedProduct) productCoordinates.mainList.page = pageIndex;
+
+				return !!targetedProduct;
+			});
+
+			state.added.data.find((product, productIndex) => {
+				if (product.id === productId) {
+					productCoordinates.addedList.index = productIndex;
+					if (!targetedProduct) targetedProduct = product;
+					return !!targetedProduct;
+				}
+			});
+
+			if (!targetedProduct) return state;
+
+			const newMainList = {
+				...state.mainList,
+				data: [...state.mainList.data],
+			};
+
+			return {
+				...state,
+				mainList:
+					productCoordinates.mainList.page === -1
+						? state.mainList
+						: {
+								...state.mainList,
+								data: state.mainList.data.map((page, pageIndex) =>
+									page.filter((product) => product.id !== productId)
+								),
+						  },
+				added:
+					productCoordinates.addedList.index === -1
+						? state.added
+						: {
+								...state.added,
+								data: state.added.data.filter(
+									(product) => product.id !== productId
+								),
+						  },
+				removed: {
+					...state.removed,
+					data: [targetedProduct, ...state.removed.data],
+				},
+			};
+		}
+
 		default: {
 			return state;
 		}

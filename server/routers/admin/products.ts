@@ -476,6 +476,12 @@ export const adminProductsRouter = createRouter()
 			productId: z.string(),
 		}),
 		resolve: async ({ ctx, input }) => {
+			/*
+			Invalid `prisma.product.delete()` invocation:
+
+
+  Foreign key constraint failed on the field: `ImagesOnProduct_productId_fkey (index)`
+			*/
 			const productBrandAndCategories =
 				await ctx.prisma.product.findFirstOrThrow({
 					select: {
