@@ -508,7 +508,7 @@ export const adminProductsRouter = createRouter()
 				});
 				console.log('brandUpdated', brandUpdated);
 			}
-			if (categories) {
+			if (categories.length !== 0) {
 				const categoriesUpdated = await ctx.prisma.category.updateMany({
 					where: { name: { in: categories } },
 					data: { count: { decrement: 1 } },
