@@ -168,7 +168,7 @@ model Product {
 model ImagesOnProduct {
   image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId       String
-  product       Product     @relation(fields: [productId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId     String
   createdAt     DateTime    @default(now())
 
@@ -195,11 +195,11 @@ model ImagesOnCategory {
 }
 
 model CategoriesOnProducts {
-  product       Product     @relation(fields: [productId], references: [id])
-  productId     String
-  category      Category    @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+  product         Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       String
+  category        Category    @relation(fields: [categoryName], references: [name], onDelete: Cascade)
   categoryName    String
-  createdAt     DateTime    @default(now())
+  createdAt       DateTime    @default(now())
 
   @@id([productId, categoryName])
 }

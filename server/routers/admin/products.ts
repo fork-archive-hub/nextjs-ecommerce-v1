@@ -470,4 +470,56 @@ export const adminProductsRouter = createRouter()
 				isProductUpdated,
 			};
 		},
+	})
+	.mutation('deleteProduct', {
+		input: z.object({
+			productId: z.string(),
+		}),
+		resolve: async ({ ctx, input }) => {
+			const productBrandAndCategories =
+				await ctx.prisma.product.findFirstOrThrow({
+					select: {
+						id: true,
+						brand: {
+							select: {
+								brandName: true,
+							},
+						},
+						categories: {
+							select: {
+								categoryName: true,
+							},
+						},
+					},
+					where: {
+						id: input.productId,
+					},
+				});
+
+			const productId = productBrandAndCategories.id;
+			const brandName = productBrandAndCategories.brand?.brandName;
+			const categories = productBrandAndCategories.categories.map(
+				(item) => item.categoryName
+			);
+			if (brandName) {
+				const brandUpdated = await ctx.prisma.brand.updateMany({
+					where: { name: { in: brandName } },
+					data: { count: { decrement: 1 } },
+				});
+				console.log('brandUpdated', brandUpdated);
+			}
+			if (categories) {
+				const categoriesUpdated = await ctx.prisma.category.updateMany({
+					where: { name: { in: categories } },
+					data: { count: { decrement: 1 } },
+				});
+				console.log('categoriesUpdated', categoriesUpdated);
+			}
+			if (productId) {
+				const productDeleted = await ctx.prisma.product.delete({
+					where: { id: productId },
+				});
+				console.log('productDeleted', productDeleted);
+			}
+		},
 	});
