@@ -4,17 +4,26 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
 import { useState, Fragment } from 'react';
+import {
+	checkProductObjStatusOrThrow,
+	checkProductStatusOrThrow,
+} from 'utils/core/product';
+import CreateProductButton from '../Action/ActionTypes/Create/Button';
 import DeleteProduct from '../Action/ActionTypes/Delete';
 import UpdateProduct from '../Action/ActionTypes/Update';
 
-const columnHelper = createColumnHelper<
-	IAdminDashboardProduct & {
-		mutate: {
-			data: IAdminDashboardProduct;
-			type?: ('UPDATE' | 'DELETE')[];
+export type TCreateColumnHelper = IAdminDashboardProduct & {
+	mutate: {
+		data: IAdminDashboardProduct;
+		type?: {
+			UPDATE?: boolean;
+			DELETE?: boolean;
+			RETURN_REMOVED_PRODUCT?: boolean;
 		};
-	}
->();
+	};
+};
+
+const columnHelper = createColumnHelper<TCreateColumnHelper>();
 export const productTableDefaultColumns = [
 	columnHelper.accessor('status', {
 		cell: (info) => <p>{info.renderValue()}</p>,
@@ -86,29 +95,40 @@ export const productTableDefaultColumns = [
 		cell: (info) => {
 			const data = info.renderValue();
 
-			if (!data?.type || !Array.isArray(data.type) || data.type.length === 0)
-				return <></>;
+			if (!data?.type) return <></>;
 
 			return (
 				<>
-					{data.type.includes('UPDATE') && (
+					{data.type?.UPDATE && (
 						<>
 							<UpdateProductButton
-								productData={
-									data.data as Omit<IAdminDashboardProduct, 'status'> & {
-										status: 'VISIBLE' | 'HIDDEN';
-									}
-								}
+								productData={checkProductObjStatusOrThrow(data.data)}
 							/>
 						</>
 					)}
-					{data.type.includes('DELETE') && (
+					{data.type?.DELETE && (
 						<DeleteProductButton
-							productData={
-								data.data as Omit<IAdminDashboardProduct, 'status'> & {
-									status: 'VISIBLE' | 'HIDDEN';
-								}
-							}
+							productData={checkProductObjStatusOrThrow(data.data)}
+						/>
+					)}
+					{data.type?.RETURN_REMOVED_PRODUCT && (
+						<CreateProductButton
+							buttonText='Return?'
+							CreateProductInitValues={{
+								title: data.data.title,
+								price: data.data.price,
+								images: data.data.images.map((item) => item.image.src),
+								brand: data.data.brand?.brand.name || '',
+								description: data.data.description,
+								categories: data.data.categories.map(
+									(item) => item.category.name
+								),
+								status: checkProductStatusOrThrow(data.data.status),
+								countInStock: data.data.countInStock,
+							}}
+							originListType='REMOVED'
+							removedProductOldId={data.data.id}
+							closeModalOnSuccessfulSubmission
 						/>
 					)}
 				</>

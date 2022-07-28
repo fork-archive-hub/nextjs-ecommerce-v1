@@ -23,6 +23,9 @@ const ProductsRemovedTable = () => {
 		data: data.map((item) => ({
 			...item,
 			mutate: {
+				type: {
+					RETURN_REMOVED_PRODUCT: true,
+				},
 				data: item,
 			},
 		})),

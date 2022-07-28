@@ -1,57 +1,12 @@
 import { trpc } from '@libs/trpc';
-import { CSSProperties, Fragment, useEffect, useState } from 'react';
-import DynamicModal from '@components/common/Modal/Dynamic';
+import { useEffect, useState } from 'react';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 
-import CreateProduct from './Action/ActionTypes/Create';
 import ProductsAddedTable from './Tables/Added';
 import ProductsMainTable from './Tables/Main';
 import ProductsRemovedTable from './Tables/Removed';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-
-const CreateProductButton = () => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
-	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
-		useState(false);
-
-	return (
-		<>
-			<button
-				className='text-xl px-4 py-2 my-1 font-bold hover:filter hover:brightness-95  bold' // 'focus:bg-white focus:text-black'
-				style={{ backgroundColor: currentColorMode }}
-				onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
-			>
-				Create A new product?
-			</button>
-			<DynamicModal
-				isVisible={isCreateProductModalVisible}
-				handleIsVisible={() => setIsCreateProductModalVisible((prev) => !prev)}
-				containerElem={{
-					className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
-					style: {
-						width: '98%',
-					},
-				}}
-			>
-				<Fragment key='body'>
-					<CreateProduct
-						initValues={{
-							title: '',
-							price: 0,
-							images: [],
-							categories: [],
-							brand: '',
-							description: '',
-							status: 'VISIBLE',
-							countInStock: 0,
-						}}
-					/>
-				</Fragment>
-			</DynamicModal>
-		</>
-	);
-};
+import CreateProductButton from './Action/ActionTypes/Create/Button';
 
 const AdminProducts = () => {
 	const [

@@ -26,8 +26,14 @@ const valuesInit: () => {
 
 const CreateProduct = ({
 	initValues = {},
+	originListType,
+	removedProductOldId,
+	handleCloseModalOnSuccessfulSubmission,
 }: {
 	initValues?: Partial<ReturnType<typeof valuesInit>>;
+	originListType?: 'REMOVED';
+	removedProductOldId?: string;
+	handleCloseModalOnSuccessfulSubmission?: () => void;
 }) => {
 	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const createProductMutation = trpc.useMutation([
@@ -147,14 +153,21 @@ const CreateProduct = ({
 					},
 					options: {
 						type: 'ADDED',
+						originListType,
+						removedProductOldId,
 					},
 				},
 			});
+			if (typeof handleCloseModalOnSuccessfulSubmission === 'function')
+				handleCloseModalOnSuccessfulSubmission();
 		}
 	}, [
 		createProductMutation.data,
 		createProductMutation.isSuccess,
+		handleCloseModalOnSuccessfulSubmission,
+		originListType,
 		productsDispatch,
+		removedProductOldId,
 	]);
 
 	return (

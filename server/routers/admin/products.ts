@@ -315,9 +315,6 @@ export const adminProductsRouter = createRouter()
 						);
 
 						if (!isProductUpdated) isProductUpdated = true;
-
-						console.log('imagesCreated', imagesCreated);
-						console.log('imagesOnProduct', imagesOnProduct);
 					}
 				}
 				if (input.images.removedIds && input.images.removedIds?.length !== 0) {
@@ -333,8 +330,6 @@ export const adminProductsRouter = createRouter()
 					});
 
 					if (!isProductUpdated) isProductUpdated = true;
-
-					console.log('imagesDeleted', imagesDeleted);
 				}
 			}
 
@@ -367,9 +362,6 @@ export const adminProductsRouter = createRouter()
 							});
 
 						if (!isProductUpdated) isProductUpdated = true;
-
-						console.log('categoriesUpserted', categoriesUpserted);
-						console.log('categoriesOnProduct', categoriesOnProduct);
 					}
 				}
 
@@ -393,9 +385,6 @@ export const adminProductsRouter = createRouter()
 					});
 
 					if (!isProductUpdated) isProductUpdated = true;
-
-					console.log('categoriesOnProductDeleted', categoriesOnProductDeleted);
-					console.log('categoriesDecremented', categoriesDecremented);
 				}
 			}
 
@@ -431,10 +420,6 @@ export const adminProductsRouter = createRouter()
 				});
 
 				if (!isProductUpdated) isProductUpdated = true;
-
-				console.log('brandUpdated', brandUpdated);
-				console.log('brandUpserted', brandUpserted);
-				console.log('brandOnProductsUpdated', brandOnProductsUpdated);
 			}
 
 			if (input?.basicData || isProductUpdated) {
@@ -457,7 +442,6 @@ export const adminProductsRouter = createRouter()
 				});
 
 				if (!isProductUpdated) isProductUpdated = true;
-				console.log('basicData', basicData);
 			}
 
 			return {
@@ -512,20 +496,19 @@ export const adminProductsRouter = createRouter()
 					where: { name: { in: brandName } },
 					data: { count: { decrement: 1 } },
 				});
-				console.log('brandUpdated', brandUpdated);
 			}
 			if (categories.length !== 0) {
 				const categoriesUpdated = await ctx.prisma.category.updateMany({
 					where: { name: { in: categories } },
 					data: { count: { decrement: 1 } },
 				});
-				console.log('categoriesUpdated', categoriesUpdated);
 			}
 			if (productId) {
 				const productDeleted = await ctx.prisma.product.delete({
 					where: { id: productId },
 				});
-				console.log('productDeleted', productDeleted);
 			}
+
+			return { deletedId: productId };
 		},
 	});

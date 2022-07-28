@@ -17,6 +17,17 @@ export const reducer = (
 						added: {
 							data: [...state.added.data, actionPayload.product],
 						},
+						removed:
+							actionPayload.options.originListType === 'REMOVED' &&
+							actionPayload.options.removedProductOldId
+								? {
+										...state.removed,
+										data: state.removed.data.filter(
+											(item) =>
+												item.id !== actionPayload.options.removedProductOldId
+										),
+								  }
+								: state.removed,
 					};
 				} else if (actionPayload.options.type === 'REMOVED')
 					return {
@@ -45,7 +56,7 @@ export const reducer = (
 		case EAdminDashboardProductsListContextConsts.UPDATE: {
 			const { productId, newData, isProductUpdated, removed } = action.payload;
 
-			if (!isProductUpdated) return state;
+			if (!isProductUpdated || typeof productId !== 'string') return state;
 
 			let targetedProduct: IAdminDashboardProduct | undefined;
 			const productCoordinates = {
@@ -76,12 +87,11 @@ export const reducer = (
 				if (product.id === productId) {
 					productCoordinates.addedList.index = productIndex;
 					if (!targetedProduct) targetedProduct = product;
-					return !!targetedProduct;
+					return !!targetedProduct && !productCoordinates.mainList.page;
 				}
 			});
 
 			if (!targetedProduct) return state;
-			targetedProduct;
 
 			if (newData.basicData) {
 				targetedProduct = {
@@ -192,6 +202,9 @@ export const reducer = (
 
 		case EAdminDashboardProductsListContextConsts.DELETE: {
 			const { productId } = action.payload;
+
+			if (typeof productId !== 'string') return state;
+
 			let targetedProduct: IAdminDashboardProduct | undefined;
 			const productCoordinates = {
 				mainList: {
@@ -221,16 +234,16 @@ export const reducer = (
 				if (product.id === productId) {
 					productCoordinates.addedList.index = productIndex;
 					if (!targetedProduct) targetedProduct = product;
-					return !!targetedProduct;
+					return !!targetedProduct && !productCoordinates.mainList.page;
 				}
 			});
 
 			if (!targetedProduct) return state;
 
-			const newMainList = {
-				...state.mainList,
-				data: [...state.mainList.data],
-			};
+			// const newMainList = {
+			// 	...state.mainList,
+			// 	data: [...state.mainList.data],
+			// };
 
 			return {
 				...state,

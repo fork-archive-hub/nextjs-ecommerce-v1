@@ -54,7 +54,6 @@ export const authOptions: NextAuthOptions = {
 
 			// token.userRole = 'admin';
 
-			console.log('user', user);
 			return Promise.resolve(token);
 		},
 		session: async ({ session, user }) => {

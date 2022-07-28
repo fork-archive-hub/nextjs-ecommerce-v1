@@ -8,12 +8,6 @@ const Home: NextPage = () => {
 
 	const { data: session, status } = useSession();
 
-	console.group('session');
-	console.dir(session?.user.role);
-	console.dir(session);
-	console.dir(status);
-	console.groupEnd();
-
 	return (
 		<>
 			<Head>

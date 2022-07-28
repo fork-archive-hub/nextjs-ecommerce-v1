@@ -118,6 +118,8 @@ type IActionAdd = ISetReducerAction<
 			options: {
 				reset?: boolean;
 				type: 'ADDED' | 'REMOVED';
+				originListType?: 'REMOVED';
+				removedProductOldId?: string;
 			};
 	  }
 >;

@@ -16,14 +16,15 @@ const ProductsAddedTable = () => {
 		[productsAddedListData]
 	);
 
-	const type: ('UPDATE' | 'DELETE')[] = ['UPDATE', 'DELETE'];
-
 	const table = useReactTable({
 		columns: productTableDefaultColumns,
 		data: data.map((item) => ({
 			...item,
 			mutate: {
-				type,
+				type: {
+					UPDATE: true,
+					DELETE: true,
+				},
 				data: item,
 			},
 		})),

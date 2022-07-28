@@ -275,18 +275,6 @@ const UpdateProduct = ({
 		} else if (!toUpdate) toUpdate = true;
 
 		if (toUpdate) {
-			console.group('productDataUpdated');
-			console.log(productDataUpdated);
-			console.groupEnd();
-
-			console.group('new values');
-			console.log('productId', productId);
-			console.log('basicData', basicData);
-			console.log('brand', brand);
-			console.log('categories', categories);
-			console.log('images', images);
-			console.groupEnd();
-
 			updateProductMutation.mutate({
 				// values
 				productId,

@@ -3,7 +3,7 @@ import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
-import { CSSProperties, Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
 interface IProps {
 	productData: Omit<IAdminDashboardProduct, 'status'> & {
@@ -20,7 +20,12 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 	const isLoading = deleteProduct.isLoading && !deleteProduct.isSuccess;
 
 	useEffect(() => {
-		if (deleteProduct.isSuccess && !isLoading) {
+		if (
+			deleteProduct.isSuccess &&
+			deleteProduct.data &&
+			deleteProduct?.data?.deletedId === productData.id &&
+			!isLoading
+		) {
 			productsDispatch({
 				type: EAdminDashboardProductsListContextConsts.DELETE,
 				payload: {
@@ -28,7 +33,14 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 				},
 			});
 		}
-	}, [deleteProduct.isSuccess, isLoading, productData.id, productsDispatch]);
+	}, [
+		deleteProduct.data,
+		deleteProduct?.data?.deletedId,
+		deleteProduct.isSuccess,
+		isLoading,
+		productData.id,
+		productsDispatch,
+	]);
 
 	return (
 		<div className='flex flex-col items-center justify-center gap-1'>
@@ -36,7 +48,7 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 			<div className='flex items-center justify-center'>
 				<button
 					className='px-3 py-1 m-1 rounded font-bold hover:filter hover:drop-shadow-sm hover:brightness-90'
-					style={{ backgroundColor: currentColorMode}}
+					style={{ backgroundColor: currentColorMode }}
 					disabled={isLoading}
 					onClick={() => deleteProduct.mutate({ productId: productData.id })}
 				>
@@ -45,7 +57,7 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 				<span className='mx-1' />
 				<button
 					className='px-3 py-1 m-1 rounded font-bold hover:filter hover:drop-shadow-sm hover:brightness-90'
-					style={{ backgroundColor: currentColorMode}}
+					style={{ backgroundColor: currentColorMode }}
 					disabled={isLoading}
 					onClick={() => setIsModalVisible((prev) => !prev)}
 				>

@@ -1,16 +1,10 @@
 import { flexRender, Table } from '@tanstack/react-table';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { TCreateColumnHelper } from '../utils';
 
 interface IProps {
-	table: Table<
-		IAdminDashboardProduct & {
-			mutate: {
-				data: IAdminDashboardProduct;
-				type?: ('UPDATE' | 'DELETE')[];
-			};
-		}
-	>;
+	table: Table<TCreateColumnHelper>;
 }
 
 const Table = ({ table }: IProps) => {
