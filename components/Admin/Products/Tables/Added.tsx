@@ -34,11 +34,13 @@ const ProductsAddedTable = () => {
 	if (productsAddedListData.length === 0) return <></>;
 
 	return (
-		<div className='max-w-full overflow-x-auto mb-12'>
+		<div className='max-w-full mb-12'>
 			<header>
 				<h2 className='text-4xl font-bold mb-2'>Added Products</h2>
 			</header>
-			<Table table={table} />
+			<div className='overflow-x-auto max-w-full'>
+				<Table table={table} />
+			</div>
 		</div>
 	);
 };

@@ -32,8 +32,10 @@ const ProductsMainTable = () => {
 	});
 
 	return (
-		<div className='max-w-full overflow-x-auto'>
-			<Table table={table} />
+		<div className='max-w-full'>
+			<div className="overflow-x-auto max-w-full">
+				<Table table={table} />
+			</div>
 		</div>
 	);
 };
