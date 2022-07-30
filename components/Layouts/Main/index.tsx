@@ -53,9 +53,7 @@ const Layout = ({ children }: IProps) => {
 			document.body.classList.add('light');
 		}
 	}, [dispatch]);
-	console.log('- currentThemeMode', currentThemeMode);
 	useEffect(() => {
-		console.log('currentThemeMode', currentThemeMode);
 		const currentMetaColorScheme = document.querySelector(
 			'meta[name=color-scheme]'
 		);

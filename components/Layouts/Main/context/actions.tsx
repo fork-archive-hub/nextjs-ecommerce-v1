@@ -13,9 +13,6 @@ export const setThemeMode = (
 		},
 	});
 
-	console.log('currentThemeMode', currentThemeMode);
-
-	console.log(localStorage.getItem('currentThemeMode'));
 	if (localStorage.getItem('currentThemeMode') !== currentThemeMode)
 		localStorage.setItem('currentThemeMode', currentThemeMode);
 };
