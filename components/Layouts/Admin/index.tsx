@@ -64,7 +64,6 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 		},
 		dispatch,
 	] = useSharedAdminDashboardState();
-	const [{ mainNavHeight }] = useSharedMainState();
 
 	// const handleToggleIsMenuActive = () =>
 	// 	setIsSideMenuActive(dispatch, !isSideMenuActive);
@@ -105,7 +104,6 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 			<MainNavbar />
 			<div
 				className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'
-				style={{ marginTop: mainNavHeight }}
 			>
 				<SideNavbar />
 				{children}
