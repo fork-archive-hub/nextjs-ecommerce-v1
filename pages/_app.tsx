@@ -6,6 +6,7 @@ import superjson from 'superjson';
 import { SessionProvider } from 'next-auth/react';
 import '../styles/globals.css';
 import Head from 'next/head';
+import MainLayout from '@components/Layouts/Main';
 
 const MyApp: AppType = ({
 	Component,
@@ -20,7 +21,9 @@ const MyApp: AppType = ({
 				<meta name='color-scheme' content='light dark' />
 				<meta name='supported-color-schemes' content='light dark' />
 			</Head>
-			<Component {...pageProps} />
+			<MainLayout>
+				<Component {...pageProps} />
+			</MainLayout>
 		</SessionProvider>
 	);
 };

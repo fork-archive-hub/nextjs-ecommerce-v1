@@ -32,13 +32,13 @@ import {
 	RiContactsLine,
 	// RiStockLine
 } from 'react-icons/ri';
+import { useSharedMainState } from '@components/Layouts/Main/context';
 
 const SideNavbar = () => {
 	const router = useRouter();
-	// const [isActive, setIsActive] = useState(true);
-	// const currentColorMode = '#03C9D7';
-	const [{ currentColorMode, isSideMenuActive, screenSize }, dispatch] =
+	const [{ isSideMenuActive, screenSize }, dispatch] =
 		useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 
 	const handleCloseSideBar = () => {
 		if (screenSize !== undefined && screenSize <= 900) {
@@ -108,7 +108,7 @@ const SideNavbar = () => {
 
 	return (
 		<>
-			<div className='px-2 pb-10 h-screen  overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto w-72 min-w-fit sidebar'>
+			<div className='pb-10 h-screen overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto sidebar min-w-48'> {/* w-72 min-w-max */}
 				{/* <div className='w-72 sidebar'> */}
 				{/* fixed dark:bg-secondary-dark-bg bg-white */}
 				{/* {isSideMenuActive && (
@@ -122,11 +122,15 @@ const SideNavbar = () => {
 							<SiShopware /> <span>Shoppy</span>
 						</a>
 					</Link>
+					<span className='mx-1' />
 					<Tooltip content='Menu' position='bottomCenter'>
 						<button
 							type='button'
 							onClick={() => setIsSideMenuActive(dispatch, !isSideMenuActive)}
-							style={{ color: currentColorMode }}
+							style={{
+								color: currentBgColorMode,
+								backgroundColor: currentFontColorMode,
+							}}
 							className='text-xl rounded-full p-3 hover:bg-light-gray mt-4 block md:hidden'
 						>
 							<MdOutlineCancel />
@@ -147,7 +151,8 @@ const SideNavbar = () => {
 										<a
 											onClick={handleCloseSideBar}
 											style={{
-												backgroundColor: isActive ? currentColorMode : '',
+												backgroundColor: isActive ? currentBgColorMode : '',
+												color: isActive ? currentFontColorMode : '',
 											}}
 											className={isActive ? activeLink : normalLink}
 										>

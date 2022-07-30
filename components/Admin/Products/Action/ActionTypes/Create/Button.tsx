@@ -1,5 +1,5 @@
 import DynamicModal from '@components/common/Modal/Dynamic';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
+import { useSharedMainState } from '@components/Layouts/Main/context';
 import { useState, Fragment } from 'react';
 import CreateProduct from '.';
 
@@ -16,7 +16,7 @@ const CreateProductButton = ({
 	removedProductOldId?: string;
 	closeModalOnSuccessfulSubmission?: boolean; //  | (() => void)
 }) => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
 		useState(false);
 	const handleCloseModalOnSuccessfulSubmission =
@@ -28,7 +28,10 @@ const CreateProductButton = ({
 		<>
 			<button
 				className='text-xl px-4 py-2 my-1 font-bold hover:filter hover:brightness-95  bold' // 'focus:bg-white focus:text-black'
-				style={{ backgroundColor: currentColorMode }}
+				style={{
+					backgroundColor: currentBgColorMode,
+					color: currentFontColorMode,
+				}}
 				onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
 			>
 				{buttonText}

@@ -1,5 +1,5 @@
+import { useSharedMainState } from '@components/Layouts/Main/context';
 import { trpc } from '@libs/trpc';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const deleteProduct = trpc.useMutation('admin.products.deleteProduct');
 
@@ -48,7 +48,10 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 			<div className='flex items-center justify-center'>
 				<button
 					className='px-3 py-1 m-1 rounded font-bold hover:filter hover:drop-shadow-sm hover:brightness-90'
-					style={{ backgroundColor: currentColorMode }}
+					style={{
+						backgroundColor: currentBgColorMode,
+						color: currentFontColorMode,
+					}}
 					disabled={isLoading}
 					onClick={() => deleteProduct.mutate({ productId: productData.id })}
 				>
@@ -57,7 +60,10 @@ const DeleteProduct = ({ productData, setIsModalVisible }: IProps) => {
 				<span className='mx-1' />
 				<button
 					className='px-3 py-1 m-1 rounded font-bold hover:filter hover:drop-shadow-sm hover:brightness-90'
-					style={{ backgroundColor: currentColorMode }}
+					style={{
+						backgroundColor: currentBgColorMode,
+						color: currentFontColorMode,
+					}}
 					disabled={isLoading}
 					onClick={() => setIsModalVisible((prev) => !prev)}
 				>

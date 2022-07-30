@@ -4,51 +4,8 @@ import {
 	IInitialState,
 	IReducerActions,
 	TInitialStateScreenSize,
-	TSetIsClicked,
+	// TSetIsClicked,
 } from './ts';
-
-export const setThemeMode = (
-	dispatch: Dispatch<IReducerActions>,
-	currentThemeMode: IInitialState['currentThemeMode']
-) => {
-	dispatch({
-		type: EAppContextConsts.SET_CURRENT_THEME_MODE,
-		payload: {
-			currentThemeMode,
-		},
-	});
-
-	if (localStorage.getItem('themeMode') !== currentThemeMode)
-		localStorage.setItem('themeMode', currentThemeMode);
-};
-
-export const setColorMode = (
-	dispatch: Dispatch<IReducerActions>,
-	currentColorMode: IInitialState['currentColorMode']
-) => {
-	// setCurrentColor(currentColorMode);
-	dispatch({
-		type: EAppContextConsts.SET_CURRENT_COLOR_MODE,
-		payload: {
-			currentColorMode,
-		},
-	});
-
-	if (localStorage.getItem('colorMode') !== currentColorMode)
-		localStorage.setItem('colorMode', currentColorMode);
-};
-
-export const setThemeSettings = (
-	dispatch: Dispatch<IReducerActions>,
-	themeSettings: IInitialState['themeSettings']
-) => {
-	dispatch({
-		type: EAppContextConsts.SET_THEME_SETTINGS,
-		payload: {
-			themeSettings,
-		},
-	});
-};
 
 export const setScreenSize = (
 	dispatch: Dispatch<IReducerActions>,
@@ -78,8 +35,8 @@ export const handleIsClick = (
 	dispatch: Dispatch<IReducerActions>,
 	{
 		isClickedItem,
-		isClickedState,
-	}: {
+	}: // isClickedState,
+	{
 		isClickedItem: keyof IInitialState['isClicked'];
 		isClickedState: IInitialState['isClicked'][keyof IInitialState['isClicked']];
 	}

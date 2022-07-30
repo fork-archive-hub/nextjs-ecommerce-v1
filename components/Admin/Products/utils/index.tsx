@@ -1,5 +1,6 @@
 import CustomNextImage from '@components/common/CustomNextImage';
 import DynamicModal from '@components/common/Modal/Dynamic';
+import { useSharedMainState } from '@components/Layouts/Main/context';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
@@ -144,14 +145,17 @@ const UpdateProductButton = ({
 		status: 'VISIBLE' | 'HIDDEN';
 	};
 }) => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	return (
 		<>
 			<button
 				className='px-2 py-1 m-1 rounded'
-				style={{ backgroundColor: currentColorMode }}
+				style={{
+					backgroundColor: currentBgColorMode,
+					color: currentFontColorMode,
+				}}
 				onClick={() => setIsModalVisible((prev) => !prev)}
 			>
 				Update
@@ -181,14 +185,17 @@ const DeleteProductButton = ({
 		status: 'VISIBLE' | 'HIDDEN';
 	};
 }) => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	return (
 		<>
 			<button
 				className='px-2 py-1 m-1 rounded'
-				style={{ backgroundColor: currentColorMode }}
+				style={{
+					backgroundColor: currentBgColorMode,
+					color: currentFontColorMode,
+				}}
 				onClick={() => setIsModalVisible((prev) => !prev)}
 			>
 				Delete

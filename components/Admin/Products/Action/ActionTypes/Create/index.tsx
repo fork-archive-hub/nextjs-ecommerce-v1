@@ -1,5 +1,6 @@
 import Tooltip from '@components/common/Tooltip';
 import { trpc } from '@libs/trpc';
+import { useSharedMainState } from '@components/Layouts/Main/context';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 import { useId, useState, FormEvent, useEffect, Fragment } from 'react';
@@ -35,6 +36,8 @@ const CreateProduct = ({
 	removedProductOldId?: string;
 	handleCloseModalOnSuccessfulSubmission?: () => void;
 }) => {
+	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
+		useSharedMainState();
 	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const createProductMutation = trpc.useMutation([
 		'admin.products.createProduct',
@@ -170,6 +173,9 @@ const CreateProduct = ({
 		removedProductOldId,
 	]);
 
+	const buttonClassName =
+		'transition-shadow duration-75 ease-in px-4 py-2 rounded-md hover:filter hover:brightness-95 focus:ring-2';
+
 	return (
 		<form
 			// action="" method="post"
@@ -178,10 +184,13 @@ const CreateProduct = ({
 			<div className='flex'>
 				<button
 					type='reset'
-					className='duration-150 ease-in 
-		bg-gray-900 hover:bg-white hover:text-gray-900
-		dark:bg-gray-700 dark:hover:text-gray-700
-		 px-4 py-2 rounded-md'
+					className={buttonClassName}
+					style={{
+						color: currentFontColorMode,
+						backgroundColor: currentBgColorMode,
+					}}
+					//  bg-gray-900 hover:bg-white hover:text-gray-900
+					// dark:bg-gray-700 dark:hover:text-gray-700
 					disabled={createProductMutation.isLoading}
 					onClick={() => setValues(valuesInit())}
 				>
@@ -197,10 +206,13 @@ const CreateProduct = ({
 				>
 					<button
 						type='button'
-						className='duration-150 ease-in 
-					bg-gray-900 hover:bg-white hover:text-gray-900
-		dark:bg-gray-700 dark:hover:text-gray-700
-		 px-4 py-2 rounded-md'
+						className={buttonClassName}
+						style={{
+							color: currentFontColorMode,
+							backgroundColor: currentBgColorMode,
+						}}
+						//  bg-gray-900 hover:bg-white hover:text-gray-900
+						// dark:bg-gray-700 dark:hover:text-gray-700
 						disabled={createProductMutation.isLoading}
 						onClick={() =>
 							setValues({
@@ -312,10 +324,13 @@ const CreateProduct = ({
 			<div className='my-2'>
 				<button
 					type='submit'
-					className='duration-150 ease-in 
-				bg-gray-900 hover:bg-white hover:text-gray-900
-				dark:bg-gray-700 dark:hover:text-gray-700
-				 px-4 py-2 rounded-md'
+					className={buttonClassName}
+					style={{
+						color: currentFontColorMode,
+						backgroundColor: currentBgColorMode,
+					}}
+					//  bg-gray-900 hover:bg-white hover:text-gray-900
+					// dark:bg-gray-700 dark:hover:text-gray-700
 					disabled={createProductMutation.isLoading}
 				>
 					{createProductMutation.isLoading ? 'Loading...' : 'Submit'}

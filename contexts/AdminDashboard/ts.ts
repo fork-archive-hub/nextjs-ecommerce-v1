@@ -4,9 +4,6 @@ export type TInitialStateScreenSize = number;
 
 export interface IInitialState {
 	screenSize?: TInitialStateScreenSize;
-	currentColorMode: string;
-	currentThemeMode: 'light' | 'dark';
-	themeSettings: boolean;
 	isSideMenuActive: boolean;
 	isClicked: {
 		chat: boolean;
@@ -27,25 +24,6 @@ type TSetScreenSize = ISetReducerAction<
 		screenSize: number;
 	}
 >;
-
-type TSetCurrentColorMode = ISetReducerAction<
-	EAppContextConsts.SET_CURRENT_COLOR_MODE,
-	{
-		currentColorMode: string;
-	}
->;
-type TSetCurrentThemeMode = ISetReducerAction<
-	EAppContextConsts.SET_CURRENT_THEME_MODE,
-	{
-		currentThemeMode: IInitialState['currentThemeMode'];
-	}
->;
-type TSetThemeSettings = ISetReducerAction<
-	EAppContextConsts.SET_THEME_SETTINGS,
-	{
-		themeSettings: boolean;
-	}
->;
 type TSetIsSideMenuActive = ISetReducerAction<
 	EAppContextConsts.SET_IS_MENU_ACTIVE,
 	{
@@ -59,8 +37,5 @@ export type TSetIsClicked = ISetReducerAction<
 
 export type IReducerActions =
 	| TSetScreenSize
-	| TSetCurrentColorMode
-	| TSetCurrentThemeMode
-	| TSetThemeSettings
 	| TSetIsSideMenuActive
 	| TSetIsClicked;

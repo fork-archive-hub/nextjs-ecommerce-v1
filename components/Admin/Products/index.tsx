@@ -49,7 +49,8 @@ const AdminProducts = () => {
 	]);
 
 	return (
-		<div className='p-4 w-full h-full'>
+		<div className='p-4 overflow-auto'>
+			{/* w-full h-full */}
 			<header>
 				<h1>Products Page</h1>
 			</header>

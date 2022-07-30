@@ -5,6 +5,10 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import Tooltip from '@components/common/Tooltip';
 import { setIsSideMenuActive } from 'contexts/AdminDashboard/actions';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
+import { useSharedMainState } from '@components/Layouts/Main/context';
+import {
+	setThemeMode,
+} from '@components/Layouts/Main/context/actions';
 
 const NavButton = ({
 	title,
@@ -37,22 +41,39 @@ const NavButton = ({
 
 const MainNavbar = () => {
 	const [
-		{ currentColorMode, isSideMenuActive, isClicked, screenSize },
-		dispatch,
+		{
+			isSideMenuActive,
+			// isClicked,
+			// screenSize,
+		},
+		adminDashboardDispatch,
 	] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentThemeMode }, mainDispatch] =
+		useSharedMainState();
 
 	const handleToggleIsMenuActive = () =>
-		setIsSideMenuActive(dispatch, !isSideMenuActive);
+		setIsSideMenuActive(adminDashboardDispatch, !isSideMenuActive);
+
 	return (
-		<header className='flex justify-between items-center w-full h-14 px-4'>
+		<header className='z-10 bg-slate-50 shadow-md shadow-slate-500 dark:bg-black dark:shadow-slate-800 fixed top-0 left-0 flex justify-between items-center w-full main-nav-page px-4'>
 			<Link href='/'>logo</Link>
+			<button
+				onClick={() =>
+					setThemeMode(
+						mainDispatch,
+						currentThemeMode === 'dark' ? 'light' : 'dark'
+					)
+				}
+			>
+				dark/light
+			</button>
 			<nav>
 				<ul className='flex items-center'>
 					<li className='mx-2'>
 						<NavButton
 							title='Menu'
 							customFunc={handleToggleIsMenuActive}
-							color={currentColorMode}
+							color={currentBgColorMode}
 							icon={<AiOutlineMenu />}
 						/>
 					</li>

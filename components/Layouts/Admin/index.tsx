@@ -4,10 +4,8 @@ import {
 	useSharedAdminDashboardState,
 } from 'contexts/AdminDashboard';
 import {
-	setColorMode,
 	setIsSideMenuActive,
 	setScreenSize,
-	setThemeMode,
 } from 'contexts/AdminDashboard/actions';
 import { SiShopware } from 'react-icons/si';
 import Link from 'next/link';
@@ -33,6 +31,7 @@ import {
 } from 'react-icons/fi';
 import MainNavbar from './MainNavbar';
 import SideNavbar from './SideNavbar';
+import { useSharedMainState } from '../Main/context';
 // import {
 // 	BsKanban,
 // 	BsBarChart,
@@ -57,12 +56,18 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const { data: session, status } = useSession();
 	const [
-		{ isSideMenuActive, currentThemeMode, screenSize, isClicked },
+		{
+			// isSideMenuActive,
+			// currentThemeMode,
+			screenSize,
+			// isClicked
+		},
 		dispatch,
 	] = useSharedAdminDashboardState();
+	const [{ mainNavHeight }] = useSharedMainState();
 
-	const handleToggleIsMenuActive = () =>
-		setIsSideMenuActive(dispatch, !isSideMenuActive);
+	// const handleToggleIsMenuActive = () =>
+	// 	setIsSideMenuActive(dispatch, !isSideMenuActive);
 
 	useEffect(() => {
 		if (status === 'loading') return;
@@ -74,21 +79,6 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 			router.push('/');
 		}
 	}, [router, session?.user, session?.user.role, status]);
-
-	useEffect(() => {
-		document.getElementById('js-licensing')?.remove();
-		const currentColorMode = localStorage.getItem('colorMode');
-		const currentThemeMode = localStorage.getItem('themeMode');
-		if (
-			currentColorMode &&
-			currentThemeMode &&
-			// ['light', 'dark'].indexOf(currentThemeMode) !== -1
-			(currentThemeMode == 'light' || currentThemeMode == 'dark')
-		) {
-			setThemeMode(dispatch, currentThemeMode);
-			setColorMode(dispatch, currentColorMode);
-		}
-	}, [dispatch]);
 
 	useEffect(() => {
 		const handleResize = () => setScreenSize(dispatch, window.innerWidth);
@@ -113,7 +103,10 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<MainNavbar />
-			<div className='flex w-full h-full'>
+			<div
+				className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'
+				style={{ marginTop: mainNavHeight }}
+			>
 				<SideNavbar />
 				{children}
 			</div>

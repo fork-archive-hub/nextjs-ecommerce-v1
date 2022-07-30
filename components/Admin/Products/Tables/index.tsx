@@ -1,6 +1,5 @@
+import { useSharedMainState } from '@components/Layouts/Main/context';
 import { flexRender, Table } from '@tanstack/react-table';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
 import { TCreateColumnHelper } from '../utils';
 
 interface IProps {
@@ -8,12 +7,16 @@ interface IProps {
 }
 
 const Table = ({ table }: IProps) => {
-	const [{ currentColorMode }] = useSharedAdminDashboardState();
+	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 
 	return (
 		<table
 			className='border border-solid border-collapse'
-			style={{ borderColor: currentColorMode }}
+			style={
+				{
+					/*borderColor: currentBgColorMode, color: currentFontColorMode*/
+				}
+			}
 		>
 			<thead>
 				{table.getHeaderGroups().map((headerGroup) => (
@@ -26,8 +29,9 @@ const Table = ({ table }: IProps) => {
 								key={header.id}
 								className='border border-solid p-2 text-center'
 								style={{
-									backgroundColor: currentColorMode,
-									borderColor: currentColorMode,
+									backgroundColor: currentBgColorMode,
+									color: currentFontColorMode,
+									borderColor: currentBgColorMode,
 								}}
 							>
 								{header.isPlaceholder
@@ -51,7 +55,7 @@ const Table = ({ table }: IProps) => {
 							<td
 								key={cell.id}
 								className='border border-solid p-2 text-center'
-								style={{ borderColor: currentColorMode }}
+								style={{ borderColor: currentBgColorMode }}
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
 							</td>

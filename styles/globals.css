@@ -3,7 +3,14 @@ body,
 #__next,
 main {
 	width: 100%;
+}
+
+#__next,
+main {
 	height: 100%;
+}
+body {
+	overflow-x: hidden;
 }
 
 @tailwind base;
