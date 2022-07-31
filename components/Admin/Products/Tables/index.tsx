@@ -1,4 +1,4 @@
-import { useSharedMainState } from '@components/Layouts/Main/context';
+import { useSharedMainState } from '@components/layouts/Main/context';
 import { flexRender, Table } from '@tanstack/react-table';
 import { TCreateColumnHelper } from '../utils';
 

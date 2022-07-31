@@ -1,6 +1,6 @@
 import CustomNextImage from '@components/common/CustomNextImage';
 import DynamicModal from '@components/common/Modal/Dynamic';
-import { useSharedMainState } from '@components/Layouts/Main/context';
+import { useSharedMainState } from '@components/layouts/Main/context';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';

@@ -6,7 +6,7 @@ import superjson from 'superjson';
 import { SessionProvider } from 'next-auth/react';
 import '../styles/globals.css';
 import Head from 'next/head';
-import MainLayout from '@components/Layouts/Main';
+import MainLayout from '@components/layouts/Main';
 
 const MyApp: AppType = ({
 	Component,

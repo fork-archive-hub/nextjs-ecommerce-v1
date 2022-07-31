@@ -1,5 +1,5 @@
 import DynamicModal from '@components/common/Modal/Dynamic';
-import { useSharedMainState } from '@components/Layouts/Main/context';
+import { useSharedMainState } from '@components/layouts/Main/context';
 import { useState, Fragment } from 'react';
 import CreateProduct from '.';
 

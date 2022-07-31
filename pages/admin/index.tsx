@@ -1,4 +1,4 @@
-import AdminLayout from 'components/Layouts/Admin';
+import AdminLayout from 'components/layouts/Admin';
 
 const AdminHome = () => {
 	return (

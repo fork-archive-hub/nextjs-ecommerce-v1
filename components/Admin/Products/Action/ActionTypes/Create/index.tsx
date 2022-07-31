@@ -1,6 +1,6 @@
 import Tooltip from '@components/common/Tooltip';
 import { trpc } from '@libs/trpc';
-import { useSharedMainState } from '@components/Layouts/Main/context';
+import { useSharedMainState } from '@components/layouts/Main/context';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 import { useId, useState, FormEvent, useEffect, Fragment } from 'react';
