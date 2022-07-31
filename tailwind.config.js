@@ -11,7 +11,7 @@ module.exports = {
 			display: ['sans-serif', 'system-ui', 'monospace'],
 			body: ['sans-serif', 'system-ui', 'monospace'],
 			spacing: {
-				'content-page': 'var(--nav-height, 3.5rem) auto 0',
+				'content-page': 'var(--nav-height) auto 0',
 			},
 		},
 		extend: {
@@ -31,13 +31,14 @@ module.exports = {
 				48: '12rem',
 			},
 			height: {
-				'main-nav-page': 'var(--nav-height, 3.5rem)',
+				'main-nav-page': 'var(--nav-height)',
+				'full-content-page': 'calc(100vh - var(--nav-height) + 1.25rem)',
 			},
 			maxHeight: {
-				'full-content-page': 'calc(100vh - var(--nav-height, 3.5rem))',
+				'full-content-page': 'calc(100vh - var(--nav-height) + 1.25rem)',
 			},
 			spacing: {
-				'content-page': 'var(--nav-height, 3.5rem)',
+				'content-page': 'calc(var(--nav-height) - 1.25rem)',
 			},
 		},
 	},

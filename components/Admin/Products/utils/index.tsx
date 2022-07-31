@@ -35,16 +35,20 @@ export const productTableDefaultColumns = [
 
 			if (!data) return <></>;
 
-			return data.map((item) => (
-				<CustomNextImage
-					key={item.image.id}
-					src={item.image.src}
-					alt={item.image.alt || ''}
-					className='w-20 h-20 object-contain'
-					width={80}
-					height={80}
-				/>
-			));
+			return (
+				<div className='grid grid-cols-3 w-96 justify-center items-center gap-1'>
+					{data.map((item) => (
+						<CustomNextImage
+							src={item.image.src}
+							alt={item.image.alt || ''}
+							key={item.image.id}
+							className='w-full h-full object-contain'
+							width={150}
+							height={150}
+						/>
+					))}
+				</div>
+			);
 		},
 	}),
 	columnHelper.accessor('title', {

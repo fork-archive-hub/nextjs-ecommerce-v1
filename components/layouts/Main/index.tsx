@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { SharedMainStateProvider, useSharedMainState } from './context';
 import {
 	setCurrentBgColorMode,
@@ -29,11 +29,9 @@ const Layout = ({ children }: IProps) => {
 		if (lsFontColorMode) setCurrentFontColorMode(dispatch, lsFontColorMode);
 		if (lsThemeMode && (lsThemeMode == 'light' || lsThemeMode == 'dark')) {
 			setThemeMode(dispatch, lsThemeMode);
-			return;
 		}
-
 		// Check to see if Media-Queries are supported
-		if (window.matchMedia) {
+		else if (window.matchMedia) {
 			// Check if the dark-mode Media-Query matches
 			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
 				// Dark

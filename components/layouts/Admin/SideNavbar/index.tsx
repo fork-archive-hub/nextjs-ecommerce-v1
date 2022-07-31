@@ -32,7 +32,7 @@ import {
 	RiContactsLine,
 	// RiStockLine
 } from 'react-icons/ri';
-import { useSharedMainState } from '@components/Layouts/Main/context';
+import { useSharedMainState } from '@components/layouts/Main/context';
 
 const SideNavbar = () => {
 	const router = useRouter();
@@ -108,7 +108,9 @@ const SideNavbar = () => {
 
 	return (
 		<>
-			<div className='pb-10 h-screen overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto sidebar min-w-48'> {/* w-72 min-w-max */}
+			<div className='pb-10 h-screen overflow-auto md:overflow-hidden md:hover:overflow-auto md:focus-within:overflow-auto md:focus:overflow-auto sidebar min-w-48'>
+				{' '}
+				{/* w-72 min-w-max */}
 				{/* <div className='w-72 sidebar'> */}
 				{/* fixed dark:bg-secondary-dark-bg bg-white */}
 				{/* {isSideMenuActive && (
@@ -141,7 +143,7 @@ const SideNavbar = () => {
 					{links.map((item) => (
 						<div key={item.title}>
 							<p className='text-gray-400 dark:text-gray-400 m-3 mt-4 uppercase'>
-								{item.title}
+								<strong className='font-bold'>{item.title}</strong>
 							</p>
 							{item.links.map((link) => {
 								const linkName = link.path ? link.path : `/admin/${link.name}`;

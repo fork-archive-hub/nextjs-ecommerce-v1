@@ -1,4 +1,4 @@
-import Tooltip from '@components/common/Tooltip';
+// import Tooltip from '@components/common/Tooltip';
 import {
 	SharedAdminDashboardStateProvider,
 	useSharedAdminDashboardState,
@@ -7,28 +7,27 @@ import {
 	setIsSideMenuActive,
 	setScreenSize,
 } from 'contexts/AdminDashboard/actions';
-import { SiShopware } from 'react-icons/si';
-import Link from 'next/link';
+// import { SiShopware } from 'react-icons/si';
 import { useRouter } from 'next/router';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { MdOutlineCancel } from 'react-icons/md';
+import { ReactNode, useEffect } from 'react';
+// import { MdOutlineCancel } from 'react-icons/md';
 import { useSession } from 'next-auth/react';
-import {
-	// AiOutlineCalendar,
-	AiOutlineShoppingCart,
-	// AiOutlineAreaChart,
-	// AiOutlineBarChart,
-	// AiOutlineStock,
-} from 'react-icons/ai';
-import {
-	FiShoppingBag,
-	// FiEdit,
-	// FiPieChart,
-	// FiBarChart,
-	// FiCreditCard,
-	// FiStar,
-	// FiShoppingCart,
-} from 'react-icons/fi';
+// import {
+// 	// AiOutlineCalendar,
+// 	AiOutlineShoppingCart,
+// 	// AiOutlineAreaChart,
+// 	// AiOutlineBarChart,
+// 	// AiOutlineStock,
+// } from 'react-icons/ai';
+// import {
+// 	FiShoppingBag,
+// 	// FiEdit,
+// 	// FiPieChart,
+// 	// FiBarChart,
+// 	// FiCreditCard,
+// 	// FiStar,
+// 	// FiShoppingCart,
+// } from 'react-icons/fi';
 import MainNavbar from './MainNavbar';
 import SideNavbar from './SideNavbar';
 import { useSharedMainState } from '../Main/context';
@@ -102,9 +101,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<MainNavbar />
-			<div
-				className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'
-			>
+			<div className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'>
 				<SideNavbar />
 				{children}
 			</div>

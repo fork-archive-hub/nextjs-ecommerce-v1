@@ -1,12 +1,12 @@
+import Tooltip from '@components/common/Tooltip';
+import { useSharedMainState } from '@components/layouts/Main/context';
+import { setThemeMode } from '@components/layouts/Main/context/actions';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
-
-import Tooltip from '@components/common/Tooltip';
-import { setIsSideMenuActive } from 'contexts/AdminDashboard/actions';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-import { useSharedMainState } from '@components/layouts/Main/context';
-import { setThemeMode } from '@components/layouts/Main/context/actions';
+import { useSharedCustomerState } from '../context';
+import { customerGlobalActions } from '../context/actions';
 
 const NavButton = ({
 	title,
@@ -37,23 +37,15 @@ const NavButton = ({
 	</Tooltip>
 );
 
-const MainNavbar = () => {
-	const [
-		{
-			isSideMenuActive,
-			// isClicked,
-			// screenSize,
-		},
-		adminDashboardDispatch,
-	] = useSharedAdminDashboardState();
+const MainNav = () => {
+	const { data: session, status } = useSession();
 	const [{ currentBgColorMode, currentThemeMode }, mainDispatch] =
 		useSharedMainState();
 
-	const handleToggleIsMenuActive = () =>
-		setIsSideMenuActive(adminDashboardDispatch, !isSideMenuActive);
+	const [, customerDispatch] = useSharedCustomerState();
 
 	return (
-		<header className='z-20 bg-slate-50 shadow-md shadow-slate-500 dark:bg-black dark:shadow-slate-800 fixed top-0 left-0 flex justify-between items-center w-full main-nav-page px-4'>
+		<header className='z-10 bg-slate-50 shadow-md shadow-slate-500 dark:bg-black dark:shadow-slate-800 fixed top-0 left-0 flex justify-between items-center w-full main-nav-page px-4'>
 			<Link href='/'>logo</Link>
 			<button
 				onClick={() =>
@@ -70,7 +62,12 @@ const MainNavbar = () => {
 					<li className='mx-2'>
 						<NavButton
 							title='Menu'
-							customFunc={handleToggleIsMenuActive}
+							customFunc={() =>
+								customerGlobalActions.setIsVisibleOnly(
+									customerDispatch,
+									'sideNav'
+								)
+							}
 							color={currentBgColorMode}
 							icon={<AiOutlineMenu />}
 						/>
@@ -83,4 +80,4 @@ const MainNavbar = () => {
 	);
 };
 
-export default MainNavbar;
+export default MainNav;

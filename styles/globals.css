@@ -11,6 +11,16 @@ main {
 }
 body {
 	overflow-x: hidden;
+	--nav-height: 4rem;
+}
+body,
+body.light {
+	color: #000;
+	background-color: #fff;
+}
+body.dark {
+	color: #fff;
+	background-color: #000;
 }
 
 @tailwind base;
