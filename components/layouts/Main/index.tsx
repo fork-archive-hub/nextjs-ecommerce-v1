@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { SharedMainStateProvider, useSharedMainState } from './context';
 import {
 	setCurrentBgColorMode,

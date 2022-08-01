@@ -1,4 +1,5 @@
 import Tooltip from '@components/common/Tooltip';
+import { useSharedMainState } from '@components/layouts/Main/context';
 import { trpc } from '@libs/trpc';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
@@ -13,6 +14,7 @@ import {
 	useMemo,
 } from 'react';
 import { arrRemovedAndAdded } from 'utils/arrays';
+import { buildButtonClassName } from 'utils/tailwind';
 import { InferMutationInput } from 'utils/trpc/types';
 
 type TUpdateProductMutationInput =
@@ -52,6 +54,8 @@ const UpdateProduct = ({
 	};
 }) => {
 	const [, productsDispatch] = useSharedAdminDashboardProductsListState();
+	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
+		useSharedMainState();
 	const updateProductMutation = trpc.useMutation([
 		'admin.products.updateProduct',
 	]);
@@ -93,6 +97,8 @@ const UpdateProduct = ({
 
 	const fields1Id = useId();
 	const [values, setValues] = useState<IValues>(initValues);
+
+	const buttonClassName = buildButtonClassName();
 
 	const fields1 = [
 		{
@@ -327,10 +333,11 @@ const UpdateProduct = ({
 			<div className='flex'>
 				<button
 					type='reset'
-					className='duration-150 ease-in 
-		bg-gray-900 hover:bg-white hover:text-gray-900
-		dark:bg-gray-700 dark:hover:text-gray-700
-		 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					style={{
+						backgroundColor: currentBgColorMode,
+						color: currentFontColorMode,
+					}}
 					disabled={updateProductMutation.isLoading}
 					onClick={() => setValues(valuesInit())}
 				>
@@ -346,10 +353,11 @@ const UpdateProduct = ({
 				>
 					<button
 						type='button'
-						className='duration-150 ease-in 
-					bg-gray-900 hover:bg-white hover:text-gray-900
-		dark:bg-gray-700 dark:hover:text-gray-700
-		 px-4 py-2 rounded-md'
+						className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+						style={{
+							backgroundColor: currentBgColorMode,
+							color: currentFontColorMode,
+						}}
 						disabled={updateProductMutation.isLoading}
 						onClick={() =>
 							setValues({
@@ -461,10 +469,11 @@ const UpdateProduct = ({
 			<div className='my-2'>
 				<button
 					type='submit'
-					className='duration-150 ease-in 
-				bg-gray-900 hover:bg-white hover:text-gray-900
-				dark:bg-gray-700 dark:hover:text-gray-700
-				 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					style={{
+						backgroundColor: currentBgColorMode,
+						color: currentFontColorMode,
+					}}
 					disabled={updateProductMutation.isLoading}
 				>
 					{updateProductMutation.isLoading ? 'Loading...' : 'Submit'}

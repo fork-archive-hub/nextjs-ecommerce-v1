@@ -9,6 +9,7 @@ import {
 	checkProductObjStatusOrThrow,
 	checkProductStatusOrThrow,
 } from 'utils/core/product';
+import { buildButtonClassName } from 'utils/tailwind';
 import CreateProductButton from '../Action/ActionTypes/Create/Button';
 import DeleteProduct from '../Action/ActionTypes/Delete';
 import UpdateProduct from '../Action/ActionTypes/Update';
@@ -155,7 +156,7 @@ const UpdateProductButton = ({
 	return (
 		<>
 			<button
-				className='px-2 py-1 m-1 rounded'
+				className={buildButtonClassName({ px: 'px-2', py: 'py-1' })}
 				style={{
 					backgroundColor: currentBgColorMode,
 					color: currentFontColorMode,
@@ -195,7 +196,7 @@ const DeleteProductButton = ({
 	return (
 		<>
 			<button
-				className='px-2 py-1 m-1 rounded'
+				className={buildButtonClassName({ px: 'px-2', py: 'py-1' })}
 				style={{
 					backgroundColor: currentBgColorMode,
 					color: currentFontColorMode,

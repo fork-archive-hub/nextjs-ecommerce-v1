@@ -4,6 +4,7 @@ import { useSharedMainState } from '@components/layouts/Main/context';
 import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
 import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
 import { useId, useState, FormEvent, useEffect, Fragment } from 'react';
+import { buildButtonClassName } from 'utils/tailwind';
 
 const valuesInit: () => {
 	title: string;
@@ -173,8 +174,7 @@ const CreateProduct = ({
 		removedProductOldId,
 	]);
 
-	const buttonClassName =
-		'transition-shadow duration-75 ease-in px-4 py-2 rounded-md hover:filter hover:brightness-95 focus:ring-2';
+	const buttonClassName = buildButtonClassName();
 
 	return (
 		<form
