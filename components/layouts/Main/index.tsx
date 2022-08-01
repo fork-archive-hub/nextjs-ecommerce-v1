@@ -7,18 +7,11 @@ import {
 } from './context/actions';
 
 interface IProps {
-	children: ReactNode;
+	children: JSX.Element;
 }
 
 const Layout = ({ children }: IProps) => {
-	const [
-		{
-			// isSideMenuActive,
-			currentThemeMode,
-			// isClicked
-		},
-		dispatch,
-	] = useSharedMainState();
+	const [, dispatch] = useSharedMainState();
 
 	useEffect(() => {
 		const lsBgColorMode = localStorage.getItem('currentBgColorMode');
@@ -27,56 +20,12 @@ const Layout = ({ children }: IProps) => {
 
 		if (lsBgColorMode) setCurrentBgColorMode(dispatch, lsBgColorMode);
 		if (lsFontColorMode) setCurrentFontColorMode(dispatch, lsFontColorMode);
-		if (lsThemeMode && (lsThemeMode == 'light' || lsThemeMode == 'dark')) {
+		if (lsThemeMode && (lsThemeMode == 'light' || lsThemeMode == 'dark'))
 			setThemeMode(dispatch, lsThemeMode);
-		}
-		// Check to see if Media-Queries are supported
-		else if (window.matchMedia) {
-			// Check if the dark-mode Media-Query matches
-			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				// Dark
-				document.body.classList.add('dark');
-				document.body.classList.remove('light');
-				setThemeMode(dispatch, 'dark');
-			} else {
-				// Light
-				setThemeMode(dispatch, 'light');
-				document.body.classList.remove('dark');
-				document.body.classList.add('light');
-			}
-		} else {
-			// Default (when Media-Queries are not supported)
-			setThemeMode(dispatch, 'light');
-			document.body.classList.remove('dark');
-			document.body.classList.add('light');
-		}
+		else setThemeMode(dispatch, 'dark');
 	}, [dispatch]);
-	useEffect(() => {
-		const currentMetaColorScheme = document.querySelector(
-			'meta[name=color-scheme]'
-		);
-		if (currentMetaColorScheme) {
-			currentMetaColorScheme.setAttribute('content', currentThemeMode);
-		} else {
-			const newMetaColorScheme = document.createElement('meta');
 
-			newMetaColorScheme.name = 'color-scheme';
-
-			newMetaColorScheme.content = currentThemeMode;
-
-			document.head.appendChild(newMetaColorScheme);
-		}
-
-		if (currentThemeMode === 'dark') {
-			document.body.classList.add('dark');
-			document.body.classList.remove('light');
-		} else {
-			document.body.classList.add('light');
-			document.body.classList.remove('dark');
-		}
-	}, [currentThemeMode]);
-
-	return <>{children}</>;
+	return children;
 };
 
 const MainLayout = ({ children }: IProps) => {

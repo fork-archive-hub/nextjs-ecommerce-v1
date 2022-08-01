@@ -18,7 +18,7 @@ const MyApp: AppType = ({
 	return (
 		/*getLayout*/ <SessionProvider session={session}>
 			<Head>
-				<meta name='color-scheme' content='light dark' />
+				{/* <meta name='color-scheme' content='light dark' /> */}
 				<meta name='supported-color-schemes' content='light dark' />
 			</Head>
 			<MainLayout>

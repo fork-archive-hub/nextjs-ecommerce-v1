@@ -1,6 +1,6 @@
 import { EMainContextConsts } from './constants';
 
-export type TInitialStateScreenSize = number;
+// export type TInitialStateScreenSize = number;
 
 export interface IInitialState {
 	currentBgColorMode: string;

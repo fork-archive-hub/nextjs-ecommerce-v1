@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { EMainContextConsts } from './constants';
-import { IInitialState, IReducerActions, TInitialStateScreenSize } from './ts';
+import { IInitialState, IReducerActions } from './ts';
 
 export const setThemeMode = (
 	dispatch: Dispatch<IReducerActions>,
@@ -15,13 +15,35 @@ export const setThemeMode = (
 
 	if (localStorage.getItem('currentThemeMode') !== currentThemeMode)
 		localStorage.setItem('currentThemeMode', currentThemeMode);
+
+	const currentMetaColorScheme = document.querySelector(
+		'meta[name=color-scheme]'
+	);
+	if (currentMetaColorScheme) {
+		currentMetaColorScheme.setAttribute('content', currentThemeMode);
+	} else {
+		const newMetaColorScheme = document.createElement('meta');
+
+		newMetaColorScheme.name = 'color-scheme';
+
+		newMetaColorScheme.content = currentThemeMode;
+
+		document.head.appendChild(newMetaColorScheme);
+	}
+
+	if (currentThemeMode === 'dark') {
+		document.body.classList.add('dark');
+		document.body.classList.remove('light');
+	} else {
+		document.body.classList.add('light');
+		document.body.classList.remove('dark');
+	}
 };
 
 export const setCurrentBgColorMode = (
 	dispatch: Dispatch<IReducerActions>,
 	currentBgColorMode: IInitialState['currentBgColorMode']
 ) => {
-	// setCurrentColor(currentBgColorMode);
 	dispatch({
 		type: EMainContextConsts.SET_CURRENT_COLOR_MODE,
 		payload: {
@@ -37,7 +59,6 @@ export const setCurrentFontColorMode = (
 	dispatch: Dispatch<IReducerActions>,
 	currentFontColorMode: IInitialState['currentFontColorMode']
 ) => {
-	// setCurrentColor(currentFontColorMode);
 	dispatch({
 		type: EMainContextConsts.SET_CURRENT_COLOR_MODE,
 		payload: {
