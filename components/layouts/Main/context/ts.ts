@@ -7,6 +7,7 @@ export interface IInitialState {
 	currentFontColorMode: string;
 	currentThemeMode: 'light' | 'dark';
 	themeSettings: boolean;
+	isMobileOrTablet: boolean;
 }
 
 interface ISetReducerAction<Type, Payload = undefined> {
@@ -45,10 +46,17 @@ type TSetThemeSettings = ISetReducerAction<
 		themeSettings: boolean;
 	}
 >;
+type TSetIsMobileOrTablet = ISetReducerAction<
+	EMainContextConsts.SET_IS_MOBILE_OR_TABLET,
+	{
+		isMobileOrTablet: boolean;
+	}
+>;
 
 export type IReducerActions =
 	// | TSetScreenSize
 	| TSetCurrentBgColorMode
 	| TSetCurrentFontColorMode
 	| TSetCurrentThemeMode
-	| TSetThemeSettings;
+	| TSetThemeSettings
+	| TSetIsMobileOrTablet;

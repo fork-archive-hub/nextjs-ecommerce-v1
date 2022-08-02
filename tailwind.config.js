@@ -26,6 +26,7 @@ module.exports = {
 				'secondary-dark-bg': '#33373E',
 				'light-gray': '#F7F7F7',
 				'half-transparent': 'rgba(0, 0, 0, 0.5)',
+				'75-transparent': 'rgba(0, 0, 0, 0.75)',
 			},
 			minWidth: {
 				48: '12rem',

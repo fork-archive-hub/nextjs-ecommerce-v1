@@ -6,4 +6,5 @@ export const initialState: IInitialState = {
 	currentThemeMode: 'dark',
 	themeSettings: false,
 	// screenSize: number,
+	isMobileOrTablet: false,
 };

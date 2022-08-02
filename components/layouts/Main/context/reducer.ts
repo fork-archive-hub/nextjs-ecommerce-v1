@@ -13,7 +13,8 @@ export const reducer = (state: IInitialState, action: IReducerActions) => {
 	switch (action.type) {
 		case EMainContextConsts.SET_CURRENT_COLOR_MODE:
 		case EMainContextConsts.SET_CURRENT_THEME_MODE:
-		case EMainContextConsts.SET_THEME_SETTINGS: {
+		case EMainContextConsts.SET_THEME_SETTINGS:
+		case EMainContextConsts.SET_IS_MOBILE_OR_TABLET: {
 			return {
 				...state,
 				...action.payload,

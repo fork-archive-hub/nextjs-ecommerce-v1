@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
+import { isMobileOrTablet } from 'utils/device';
 import { SharedMainStateProvider, useSharedMainState } from './context';
 import {
 	setCurrentBgColorMode,
 	setCurrentFontColorMode,
+	setIsMobileOrTablet,
 	setThemeMode,
 } from './context/actions';
 
@@ -23,6 +25,7 @@ const Layout = ({ children }: IProps) => {
 		if (lsThemeMode && (lsThemeMode == 'light' || lsThemeMode == 'dark'))
 			setThemeMode(dispatch, lsThemeMode);
 		else setThemeMode(dispatch, 'dark');
+		setIsMobileOrTablet(dispatch, isMobileOrTablet());
 	}, [dispatch]);
 
 	return children;

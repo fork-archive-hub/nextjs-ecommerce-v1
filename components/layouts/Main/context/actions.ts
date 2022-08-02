@@ -82,6 +82,18 @@ export const setThemeSettings = (
 	});
 };
 
+export const setIsMobileOrTablet = (
+	dispatch: Dispatch<IReducerActions>,
+	isMobileOrTablet: IInitialState['isMobileOrTablet']
+) => {
+	dispatch({
+		type: EMainContextConsts.SET_IS_MOBILE_OR_TABLET,
+		payload: {
+			isMobileOrTablet,
+		},
+	});
+};
+
 // export const setScreenSize = (
 // 	dispatch: Dispatch<IReducerActions>,
 // 	screenSize: TInitialStateScreenSize

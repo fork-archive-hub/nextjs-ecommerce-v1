@@ -15,6 +15,7 @@
 		"@trpc/next": "^9.26.2",
 		"@trpc/react": "^9.26.2",
 		"@trpc/server": "^9.26.2",
+		"by": "file:tanstack/react-table@latest",
 		"next": "^12.2.3",
 		"next-auth": "^4.10.3",
 		"next-superjson": "^0.0.4",
