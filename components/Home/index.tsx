@@ -243,8 +243,10 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 					`}
 					ref={productDetailsRef}
 				>
-					<h1 className='title text-4xl mb-4'>{neededProductsData[0].title}</h1>
-					<p className='description'>{neededProductsData[0].description}</p>
+					<h1 className='title text-4xl mb-4'>
+						{neededProductsData[0]?.title}
+					</h1>
+					<p className='description'>{neededProductsData[0]?.description}</p>
 				</div>
 			</div>
 		</CustomerLayout>
