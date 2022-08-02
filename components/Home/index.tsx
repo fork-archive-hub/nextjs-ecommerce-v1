@@ -1,15 +1,92 @@
+import CustomNextImage from '@components/common/CustomNextImage';
 import CustomerLayout from '@components/layouts/Customer';
-import { trpc } from '@libs/trpc';
+// import { trpc } from '@libs/trpc';
 import { IHomeProps } from '@pages/index';
-import { useSession, signOut, signIn } from 'next-auth/react';
+// import { useSession, signOut, signIn } from 'next-auth/react';
 import Head from 'next/head';
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
-	const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-	const { data: session, status } = useSession();
+	const neededProductsDataRef = useRef(
+		(() => {
+			const productsImages = starredProductsInCollection1.map(
+				(product, productIndex, productsArr) => ({
+					id: product.id,
+					zIndex: productIndex === 1 ? 1 : -1, //productsArr.length - productIndex - 1, // -1
+					images: product.images.map(({ image }, imageIndex, imagesArr) => ({
+						zIndex: imageIndex === 1 ? 1 : -1, // -1, // imagesArr.length - imageIndex - 1
+						id: image.id,
+						src: image.src,
+						alt: image.alt,
+					})),
+				})
+			);
 
-	console.log('starredProductsInCollection1', starredProductsInCollection1);
+			return productsImages;
+		})()
+	);
+	const neededProductsData = neededProductsDataRef.current;
+	const neededProductsDataContainerRef = useRef<HTMLDivElement>(null);
+	const config = useRef({
+		indexes: {
+			currentProduct: 0,
+			currentProductImage: 0,
+		},
+	});
+
+	useEffect(() => {
+		const containerElem = neededProductsDataContainerRef.current;
+		if (
+			config.current.indexes.currentProduct !== 0 ||
+			config.current.indexes.currentProductImage !== 0 ||
+			!containerElem
+		)
+			return;
+
+		const intervalId = setInterval(() => {
+			const heroProducts = containerElem.querySelectorAll(
+				'.hero-product'
+			) as NodeListOf<HTMLDivElement>;
+
+			const currentHeroProducts =
+				heroProducts[config.current.indexes.currentProduct];
+			const currProductImgs = currentHeroProducts.querySelectorAll(
+				'.hero-product-img-wrapper'
+			) as NodeListOf<HTMLDivElement>;
+
+			const prevImg =
+				currProductImgs[config.current.indexes.currentProductImage - 1];
+			if (prevImg) prevImg.style.zIndex = `${-1}`;
+
+			currProductImgs[
+				config.current.indexes.currentProductImage
+			].style.zIndex = `${config.current.indexes.currentProductImage}`;
+
+			if (!currProductImgs[config.current.indexes.currentProductImage + 1]) {
+				config.current.indexes.currentProductImage = 0;
+				currProductImgs.forEach(
+					(image, index, arr) =>
+						(image.style.zIndex = `${arr.length - index - 1 || 0}`)
+				);
+				heroProducts.forEach(
+					(elem, index, arr) =>
+						(elem.style.zIndex = `${arr.length - index - 1 || 0}`)
+				);
+
+				if (!heroProducts[config.current.indexes.currentProduct + 1]) {
+					config.current.indexes.currentProduct = 0;
+				} else config.current.indexes.currentProduct++;
+
+				heroProducts[config.current.indexes.currentProduct].style.zIndex = `${
+					parseInt(
+						heroProducts[config.current.indexes.currentProduct].style.zIndex
+					) + 1 || 0
+				}`;
+			} else config.current.indexes.currentProductImage++;
+		}, 1500);
+
+		() => clearInterval(intervalId);
+	}, [neededProductsData]);
 
 	return (
 		<CustomerLayout>
@@ -19,7 +96,58 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<div>
+			<div className='w-full p-2 flex'>
+				<div className='w-1/2'>
+					<div
+						className='relative w-96 h-[36rem]'
+						ref={neededProductsDataContainerRef}
+					>
+						{neededProductsData.map((product) => (
+							<div
+								key={product.id}
+								className='absolute w-full h-full top-0 left-0 hero-product'
+								style={{ zIndex: product.zIndex }}
+							>
+								<div key={product.id} className='relative w-full h-full'>
+									{product.images.map((image) => (
+										<div
+											key={image.src}
+											className='w-full h-full absolute top-0 left-0 flex items-center justify-center bg-slate-900 hero-product-img-wrapper'
+											style={{ zIndex: image.zIndex }}
+										>
+											<CustomNextImage
+												src={image.src}
+												alt={image.alt || ''}
+												width={600}
+												height={1200}
+												className='object-contain w-full'
+											/>
+										</div>
+									))}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+				<div className='w-1/2 p-2'>
+					<h1>Hello</h1>
+					<p>
+						Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+						Dignissimos officia repellendus beatae eveniet perferendis vitae
+						cupiditate eaque praesentium, autem, voluptas eos rem, maxime rerum
+						a modi ullam nemo facere quas?
+					</p>
+				</div>
+			</div>
+		</CustomerLayout>
+	);
+};
+
+export default HomePage;
+
+/*
+
+			<div className='w-full h-fit'>
 				{status === 'loading' && <h1>Loading...</h1>}
 
 				{session ? (
@@ -39,8 +167,4 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 					</>
 				)}
 			</div>
-		</CustomerLayout>
-	);
-};
-
-export default HomePage;
+*/

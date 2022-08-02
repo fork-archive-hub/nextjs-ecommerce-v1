@@ -1,10 +1,10 @@
 import type { GetStaticPropsContext, NextPage } from 'next';
 import prisma from '@libs/prisma';
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { IAdminDashboardProducts } from 'contexts/AdminDashboard/Products/List/ts';
 import HomePage from '@components/Home';
 
 export interface IHomeProps {
-	starredProductsInCollection1: IAdminDashboardProduct;
+	starredProductsInCollection1: IAdminDashboardProducts;
 }
 
 const Home: NextPage<IHomeProps> = ({ starredProductsInCollection1 }) => {

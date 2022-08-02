@@ -66,3 +66,24 @@ export const arrRemovedAndAdded = <T>(
 		added,
 	};
 };
+
+class CustomArray<T> {
+	data: T[];
+
+	constructor(data: T[]) {
+		this.data = data;
+	}
+
+	reverseMap<U>(
+		callbackfn: (value: T, index: number, array: T[]) => U,
+		thisArg?: any
+	): U[] {
+		const arrReverse: U[] = [];
+
+		let i = this.data.length - 1;
+
+		for (; i >= 0; i--) arrReverse.push(callbackfn(this.data[i], i, this.data));
+
+		return arrReverse;
+	}
+}
