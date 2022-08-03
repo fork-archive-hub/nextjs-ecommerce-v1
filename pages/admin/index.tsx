@@ -3,7 +3,9 @@ import AdminLayout from 'components/layouts/Admin';
 const AdminHome = () => {
 	return (
 		<AdminLayout>
-			<h1>AdminHome</h1>
+			<div className='p-4'>
+				<h1>AdminHome</h1>
+			</div>
 		</AdminLayout>
 	);
 };
