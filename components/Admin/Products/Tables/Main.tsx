@@ -1,5 +1,5 @@
 import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
 import { useMemo } from 'react';
 import Table from '.';
 import { productTableDefaultColumns } from '../utils';
@@ -33,7 +33,7 @@ const ProductsMainTable = () => {
 
 	return (
 		<div className='max-w-full'>
-			<div className="overflow-x-auto max-w-full">
+			<div className='overflow-x-auto max-w-full'>
 				<Table table={table} />
 			</div>
 		</div>

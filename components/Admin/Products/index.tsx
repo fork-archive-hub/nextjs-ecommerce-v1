@@ -1,7 +1,7 @@
 import { trpc } from '@libs/trpc';
 import { useEffect, useState } from 'react';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
-import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
+import { EAdminDashboardProductsListContextConsts } from '@components/layouts/Admin/context/Products/List/constants';
 
 import ProductsAddedTable from './Tables/Added';
 import ProductsMainTable from './Tables/Main';

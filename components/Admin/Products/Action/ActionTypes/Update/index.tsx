@@ -1,9 +1,9 @@
 import Tooltip from '@components/common/Tooltip';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { trpc } from '@libs/trpc';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
-import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
+import { EAdminDashboardProductsListContextConsts } from '@components/layouts/Admin/context/Products/List/constants';
+import { IAdminDashboardProduct } from '@components/layouts/Admin/context/Products/List/ts';
 import {
 	useId,
 	useState,
@@ -13,9 +13,9 @@ import {
 	useRef,
 	useMemo,
 } from 'react';
-import { arrRemovedAndAdded } from 'utils/arrays';
-import { buildButtonClassName } from 'utils/tailwind';
-import { InferMutationInput } from 'utils/trpc/types';
+import { arrRemovedAndAdded } from '@utils/arrays';
+import { buildButtonClassName } from '@utils/tailwind';
+import { InferMutationInput } from '@utils/trpc/types';
 
 type TUpdateProductMutationInput =
 	InferMutationInput<'admin.products.updateProduct'>;

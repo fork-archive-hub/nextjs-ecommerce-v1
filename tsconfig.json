@@ -20,7 +20,8 @@
 			"@context/*": ["context/*"],
 			"@libs/*": ["libs/*"],
 			"@pages/*": ["pages/*"],
-			"@server/*": ["server/*"]
+			"@server/*": ["server/*"],
+			"@utils/*": ["utils/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "types/auth.d.ts", "**/*.ts", "**/*.tsx"],

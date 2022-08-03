@@ -2,11 +2,8 @@
 import {
 	SharedAdminDashboardStateProvider,
 	useSharedAdminDashboardState,
-} from 'contexts/AdminDashboard';
-import {
-	setIsSideMenuActive,
-	setScreenSize,
-} from 'contexts/AdminDashboard/actions';
+} from './context';
+import { setIsSideMenuActive, setScreenSize } from './context/actions';
 // import { SiShopware } from 'react-icons/si';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';

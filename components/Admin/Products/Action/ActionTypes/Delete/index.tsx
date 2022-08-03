@@ -1,10 +1,10 @@
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { trpc } from '@libs/trpc';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
-import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
+import { EAdminDashboardProductsListContextConsts } from '@components/layouts/Admin/context/Products/List/constants';
+import { IAdminDashboardProduct } from '@components/layouts/Admin/context/Products/List/ts';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { buildButtonClassName } from 'utils/tailwind';
+import { buildButtonClassName } from '@utils/tailwind';
 
 interface IProps {
 	productData: Omit<IAdminDashboardProduct, 'status'> & {

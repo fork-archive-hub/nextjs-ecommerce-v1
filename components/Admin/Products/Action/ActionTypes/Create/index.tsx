@@ -1,10 +1,10 @@
 import Tooltip from '@components/common/Tooltip';
 import { trpc } from '@libs/trpc';
 import { useSharedMainState } from '@components/layouts/Main/context';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
-import { EAdminDashboardProductsListContextConsts } from 'contexts/AdminDashboard/Products/List/constants';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
+import { EAdminDashboardProductsListContextConsts } from '@components/layouts/Admin/context/Products/List/constants';
 import { useId, useState, FormEvent, useEffect, Fragment } from 'react';
-import { buildButtonClassName } from 'utils/tailwind';
+import { buildButtonClassName } from '@utils/tailwind';
 
 const valuesInit: () => {
 	title: string;

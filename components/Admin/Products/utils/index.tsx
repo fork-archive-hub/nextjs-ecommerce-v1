@@ -2,14 +2,14 @@ import CustomNextImage from '@components/common/CustomNextImage';
 import DynamicModal from '@components/common/Modal/Dynamic';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { createColumnHelper } from '@tanstack/react-table';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { useSharedAdminDashboardState } from '@components/layouts/Admin/context';
+import { IAdminDashboardProduct } from '@components/layouts/Admin/context/Products/List/ts';
 import { useState, Fragment } from 'react';
 import {
 	checkProductObjStatusOrThrow,
 	checkProductStatusOrThrow,
-} from 'utils/core/product';
-import { buildButtonClassName } from 'utils/tailwind';
+} from '@utils/core/product';
+import { buildButtonClassName } from '@utils/tailwind';
 import CreateProductButton from '../Action/ActionTypes/Create/Button';
 import DeleteProduct from '../Action/ActionTypes/Delete';
 import UpdateProduct from '../Action/ActionTypes/Update';

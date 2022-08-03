@@ -1,6 +1,6 @@
 import type { GetStaticPropsContext, NextPage } from 'next';
 import prisma from '@libs/prisma';
-import { IAdminDashboardProducts } from 'contexts/AdminDashboard/Products/List/ts';
+import { IAdminDashboardProducts } from '@components/layouts/Admin/context/Products/List/ts';
 import HomePage from '@components/Home';
 
 export interface IHomeProps {

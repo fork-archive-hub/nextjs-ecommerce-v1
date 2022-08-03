@@ -3,8 +3,8 @@ import { ReactNode } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 
 import Tooltip from '@components/common/Tooltip';
-import { setIsSideMenuActive } from 'contexts/AdminDashboard/actions';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
+import { setIsSideMenuActive } from '@components/layouts/Admin/context/actions';
+import { useSharedAdminDashboardState } from '@components/layouts/Admin/context';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { setThemeMode } from '@components/layouts/Main/context/actions';
 import { useSession, signOut, signIn } from 'next-auth/react';

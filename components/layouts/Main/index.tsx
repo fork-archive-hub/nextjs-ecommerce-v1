@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { isMobileOrTablet } from 'utils/device';
+import { isMobileOrTablet } from '@utils/device';
 import { SharedMainStateProvider, useSharedMainState } from './context';
 import {
 	setCurrentBgColorMode,

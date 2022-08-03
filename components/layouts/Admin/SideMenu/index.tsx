@@ -1,6 +1,6 @@
 import Tooltip from '@components/common/Tooltip';
-import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
-import { setIsSideMenuActive } from 'contexts/AdminDashboard/actions';
+import { useSharedAdminDashboardState } from '@components/layouts/Admin/context';
+import { setIsSideMenuActive } from '@components/layouts/Admin/context/actions';
 import { SiShopware } from 'react-icons/si';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

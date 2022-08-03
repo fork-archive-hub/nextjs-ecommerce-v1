@@ -1,4 +1,4 @@
-import { IAdminDashboardProduct } from 'contexts/AdminDashboard/Products/List/ts';
+import { IAdminDashboardProduct } from '@components/layouts/Admin/context/Products/List/ts';
 
 export const checkProductStatusOrThrow = (status: string) => {
 	if (status === 'VISIBLE' || status === 'HIDDEN') return status;

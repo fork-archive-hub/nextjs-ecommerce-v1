@@ -1,4 +1,4 @@
-import { SharedAdminDashboardProductsListStateProvider } from 'contexts/AdminDashboard/Products/List';
+import { SharedAdminDashboardProductsListStateProvider } from '@components/layouts/Admin/context/Products/List';
 
 import AdminLayout from 'components/layouts/Admin';
 import AdminProducts from '@components/Admin/Products';

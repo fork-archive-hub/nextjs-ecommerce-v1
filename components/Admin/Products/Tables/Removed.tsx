@@ -1,5 +1,5 @@
 import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
-import { useSharedAdminDashboardProductsListState } from 'contexts/AdminDashboard/Products/List';
+import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
 import { useMemo } from 'react';
 import Table from '.';
 import { productTableDefaultColumns } from '../utils';
@@ -39,7 +39,7 @@ const ProductsRemovedTable = () => {
 			<header>
 				<h2 className='text-4xl font-bold mb-2'>Removed Products</h2>
 			</header>
-			<div className="overflow-x-auto max-w-full">
+			<div className='overflow-x-auto max-w-full'>
 				<Table table={table} />
 			</div>
 		</div>
