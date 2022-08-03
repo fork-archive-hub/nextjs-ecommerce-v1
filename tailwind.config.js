@@ -33,13 +33,13 @@ module.exports = {
 			},
 			height: {
 				'main-nav-page': 'var(--nav-height)',
-				'full-content-page': 'calc(100vh - var(--nav-height) + 1.25rem)',
+				'full-content-page': 'calc(100vh - var(--nav-height))',
 			},
 			maxHeight: {
-				'full-content-page': 'calc(100vh - var(--nav-height) + 1.25rem)',
+				'full-content-page': 'calc(100vh - var(--nav-height))',
 			},
 			spacing: {
-				'content-page': 'calc(var(--nav-height) - 1.25rem)',
+				'content-page': 'calc(var(--nav-height))',
 			},
 		},
 	},
