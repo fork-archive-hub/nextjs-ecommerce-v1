@@ -7,6 +7,7 @@ import { setIsSideMenuActive } from 'contexts/AdminDashboard/actions';
 import { useSharedAdminDashboardState } from 'contexts/AdminDashboard';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { setThemeMode } from '@components/layouts/Main/context/actions';
+import { useSession, signOut, signIn } from 'next-auth/react';
 
 const NavButton = ({
 	title,
@@ -38,6 +39,7 @@ const NavButton = ({
 );
 
 const MainNavbar = () => {
+	const { data: session, status } = useSession();
 	const [
 		{
 			isSideMenuActive,
@@ -75,8 +77,25 @@ const MainNavbar = () => {
 							icon={<AiOutlineMenu />}
 						/>
 					</li>
-					<li className='mx-2'>2</li>
-					<li className='mx-2'>3</li>
+					<li className='mx-2'>
+						{session ? (
+							<button
+								disabled={status !== 'authenticated'}
+								type='button'
+								onClick={() => status === 'authenticated' && signOut()}
+							>
+								Sign out
+							</button>
+						) : (
+							<button
+								disabled={status === 'loading'}
+								type='button'
+								onClick={() => status !== 'loading' && signIn()}
+							>
+								Sign in
+							</button>
+						)}
+					</li>
 				</ul>
 			</nav>
 		</header>

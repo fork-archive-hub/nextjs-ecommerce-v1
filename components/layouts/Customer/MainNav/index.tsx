@@ -26,7 +26,7 @@ const NavButton = ({
 			type='button'
 			onClick={() => customFunc()}
 			style={{ color }}
-			className='relative text-xl rounded-full p-3 hover:bg-light-gray'
+			className='relative text-xl rounded-full p-1 hover:bg-light-gray'
 		>
 			<span
 				style={{ background: dotColor }}
@@ -61,7 +61,7 @@ const MainNav = () => {
 				<ul className='flex items-center'>
 					<li className='mx-2'>
 						<NavButton
-							title='Menu'
+							title='Side Menu'
 							customFunc={() =>
 								customerGlobalActions.setIsVisibleOnly(
 									customerDispatch,
@@ -72,8 +72,25 @@ const MainNav = () => {
 							icon={<AiOutlineMenu />}
 						/>
 					</li>
-					<li className='mx-2'>2</li>
-					<li className='mx-2'>3</li>
+					<li className='mx-2'>
+						{session ? (
+							<button
+								disabled={status !== 'authenticated'}
+								type='button'
+								onClick={() => status === 'authenticated' && signOut()}
+							>
+								Sign out
+							</button>
+						) : (
+							<button
+								disabled={status === 'loading'}
+								type='button'
+								onClick={() => status !== 'loading' && signIn()}
+							>
+								Sign in
+							</button>
+						)}
+					</li>
 				</ul>
 			</nav>
 		</header>
@@ -81,3 +98,27 @@ const MainNav = () => {
 };
 
 export default MainNav;
+
+/*
+
+			<div className='w-full h-fit'>
+				{status === 'loading' && <h1>Loading...</h1>}
+
+				{session ? (
+					<>
+						Signed in as {session.user?.name} <br />
+						{JSON.stringify(session, null, 2)} <br />
+						<button type='button' onClick={() => signOut()}>
+							Sign out
+						</button>
+					</>
+				) : (
+					<>
+						Not signed in <br />
+						<button type='button' onClick={() => signIn()}>
+							Sign in
+						</button>
+					</>
+				)}
+			</div>
+*/

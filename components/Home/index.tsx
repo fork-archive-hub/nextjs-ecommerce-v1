@@ -254,27 +254,3 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 };
 
 export default HomePage;
-
-/*
-
-			<div className='w-full h-fit'>
-				{status === 'loading' && <h1>Loading...</h1>}
-
-				{session ? (
-					<>
-						Signed in as {session.user?.name} <br />
-						{JSON.stringify(session, null, 2)} <br />
-						<button type='button' onClick={() => signOut()}>
-							Sign out
-						</button>
-					</>
-				) : (
-					<>
-						Not signed in <br />
-						<button type='button' onClick={() => signIn()}>
-							Sign in
-						</button>
-					</>
-				)}
-			</div>
-*/

@@ -29,7 +29,7 @@ import { useSession } from 'next-auth/react';
 // 	// FiShoppingCart,
 // } from 'react-icons/fi';
 import MainNavbar from './MainNavbar';
-import SideNavbar from './SideNavbar';
+import SideMenu from './SideMenu';
 import { useSharedMainState } from '../Main/context';
 // import {
 // 	BsKanban,
@@ -102,7 +102,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 		<>
 			<MainNavbar />
 			<div className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'>
-				<SideNavbar />
+				<SideMenu />
 				{children}
 			</div>
 		</>

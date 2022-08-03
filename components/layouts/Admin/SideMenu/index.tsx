@@ -34,7 +34,7 @@ import {
 } from 'react-icons/ri';
 import { useSharedMainState } from '@components/layouts/Main/context';
 
-const SideNavbar = () => {
+const SideMenu = () => {
 	const router = useRouter();
 	const [{ isSideMenuActive, screenSize }, dispatch] =
 		useSharedAdminDashboardState();
@@ -59,6 +59,7 @@ const SideNavbar = () => {
 			links: [
 				{
 					name: 'ecommerce',
+					path: '/admin',
 					icon: <></>,
 				},
 			],
@@ -69,14 +70,17 @@ const SideNavbar = () => {
 			links: [
 				{
 					name: 'customers',
+					path: '/admin/customers',
 					icon: <RiContactsLine />,
 				},
 				{
 					name: 'orders',
+					path: '/admin/orders',
 					icon: <AiOutlineShoppingCart />,
 				},
 				{
 					name: 'products',
+					path: '/admin/products',
 					icon: <FiShoppingBag />,
 				},
 				// {
@@ -176,4 +180,4 @@ const SideNavbar = () => {
 	);
 };
 
-export default SideNavbar;
+export default SideMenu;

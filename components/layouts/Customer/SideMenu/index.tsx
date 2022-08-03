@@ -7,7 +7,7 @@ import React from 'react';
 import { useSharedCustomerState } from '../context';
 import { customerGlobalActions } from '../context/actions';
 
-const SideNav = () => {
+const SideMenu = () => {
 	const router = useRouter();
 	const { data: session, status } = useSession();
 	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
@@ -81,4 +81,4 @@ const SideNav = () => {
 	);
 };
 
-export default SideNav;
+export default SideMenu;
