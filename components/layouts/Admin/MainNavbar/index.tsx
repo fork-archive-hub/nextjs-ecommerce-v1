@@ -71,7 +71,7 @@ const MainNavbar = () => {
 				<ul className='flex items-center'>
 					<li className='mx-2'>
 						<NavButton
-							title='Menu'
+							title='Side Menu'
 							customFunc={handleToggleIsMenuActive}
 							color={currentBgColorMode}
 							icon={<AiOutlineMenu />}
