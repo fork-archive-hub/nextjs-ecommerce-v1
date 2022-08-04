@@ -1,3 +1,154 @@
+const HomePageComingSoon = () => {
+	return (
+		<div>
+			<div
+				style={{
+					// rgb(60, 56, 129, 0.9), rgb(141, 122, 59, 0.9)
+					background:
+						'linear-gradient(270deg, hsl(243deg 39% 18% / 90%), hsl(46deg 41% 20% / 90%)), url(./pexels-evgeniy-grozev-814830.jpg)',
+					backgroundSize: 'cover',
+					backgroundRepeat: 'no-repeat',
+				}}
+				className='flex min-w-[100vw] min-h-[100vh] flex-col justify-center items-center lg:flex-row'
+			>
+				<div
+					className='
+					w-full p-4 text-center flex flex-col justify-center items-center min-h-[50vh]
+					lg:w-2/5
+				'
+				>
+					<img src='./favicon.ico' alt='' className='w-40 h-40' />
+					<p className='my-8'>
+						Lorem ipsum dolor sit amet consectetur adipisicing elit.
+					</p>
+					<button
+						className='border-2 border-white font-bold rounded-full px-6 py-3 text-xl
+						transition-all duration-75 ease-in hover:filter hover:brightness-75 focus:ring-4'
+					>
+						Visit Now
+					</button>
+				</div>
+				<div
+					className='
+						w-full text-center flex flex-col justify-center items-center max-w-full
+						lg:w-3/5
+					'
+				>
+					<div
+						className='flex justify-center items-center flex-wrap bg-half-white-transparent
+						lg:flex-nowrap lg:bg-transparent'
+					>
+						{/* <div className='bg-white p-4 flex flex-col justify-center items-start w-1/3'>
+							<img src='./pexels-diego-pontes-2323398.jpg' alt='' />
+							<small className='my-1 text-slate-400'>Lorem ipsum</small>
+							<h2 className='my-1 text-black text-3xl'>Product 1</h2>
+							<p className='my-1 text-slate-400 font-bold text-xl'>$14.95</p>
+							<button className='border-2 bg-black font-bold rounded-full px-4 py-2 text-lg'>
+								Order Now
+							</button>
+						</div> */}
+						{[
+							{
+								img: { src: './pexels-diego-pontes-2323398.jpg', alt: '' },
+								small: { text: 'Lorem ipsum' },
+								headerText: 'Product 1',
+								price: '$14.95',
+								button: { text: 'Order Now' },
+							},
+							{
+								img: { src: './pexels-diego-pontes-2323398.jpg', alt: '' },
+								small: { text: 'Lorem ipsum' },
+								headerText: 'Product 1',
+								price: '$14.95',
+								button: { text: 'Order Now' },
+							},
+							{
+								img: { src: './pexels-diego-pontes-2323398.jpg', alt: '' },
+								small: { text: 'Lorem ipsum' },
+								headerText: 'Product 1',
+								price: '$14.95',
+								button: { text: 'Order Now' },
+							},
+						].map(({ img, small, headerText, price, button }, index, arr) => (
+							<div
+								key={index}
+								className={`
+								bg-white p-4 flex flex-col justify-center items-start m-2 rounded-lg w-[30%] min-w-[10rem]
+									lg:min-w-[12rem]
+									md:min-w-[12rem]
+								`}
+							>
+								<img
+									className='w- object-contain'
+									src={img.src}
+									alt={img.alt}
+								/>
+								<small className='my-1 text-slate-400'>{small.text}</small>
+								<h2 className='my-1 text-black text-xl lg:text-3xl font-bold'>
+									{headerText}
+								</h2>
+								<p className='my-1 text-slate-400 font-bold text-l lg:text-xl '>
+									{price}
+								</p>
+								<button
+									className='border-2 bg-black font-bold  px-4 py-2 rounded-3xl
+									lg:rounded-full lg:text-lg
+									transition-all duration-75 ease-in hover:filter hover:brightness-90 focus:ring-2'
+								>
+									{button.text}
+								</button>
+							</div>
+						))}
+					</div>
+					<div className='my-4 px-2'>
+						<h2 className='text-2xl font-bold'>Lorem</h2>
+						<h2 className='text-2xl font-bold'>
+							Lorem ipsum dolor sit amet consectetur adipisicing elit
+						</h2>
+						<p className='m-4'>
+							Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+							Reiciendis quia, beatae dolores illum atque sit quasi eum
+							obcaecati, sapiente officiis mollitia eveniet accusantium
+							voluptatum molestiae quos natus minus, odit labore.
+						</p>
+						<div>
+							<button
+								className='max-w-[10rem]
+									sm:max-w-[12rem]'
+							>
+								<a href='#'>
+									<img
+										className='max-w-full'
+										src='./imgbin_app-store-android-google-play.png'
+										alt=''
+										style={{ transform: 'translateY(3px)' }}
+									/>
+								</a>
+							</button>
+							<span
+								className='px-2
+								sm:px-4'
+							></span>
+							<button
+								className='max-w-[10rem]
+									sm:max-w-[12rem]'
+							>
+								<a href='#'>
+									<img
+										className='max-w-full'
+										src='http://wishah-alwatan.com/wp-content/uploads/2018/12/Marketing-Icons-with-Google-Play-Store-Download-Button-500x164-300x98.png'
+										alt=''
+									/>
+								</a>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
 import CustomNextImage from '@components/common/CustomNextImage';
 import CustomerLayout from '@components/layouts/Customer';
 import { useSharedMainState } from '@components/layouts/Main/context';
@@ -5,11 +156,13 @@ import { useSharedMainState } from '@components/layouts/Main/context';
 import { IHomeProps } from '@pages/index';
 
 import Head from 'next/head';
-import React, { CSSProperties, useEffect, useRef } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import classes from './index.module.css';
 
 const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 	const [{ isMobileOrTablet }] = useSharedMainState();
+	const [isHomePageComingSoonVisible, setIsHomePageComingSoonVisible] =
+		useState(true);
 
 	const neededProductsDataRef = useRef(
 		(() => {
@@ -42,6 +195,13 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 			currentProductImage: 0,
 		},
 	});
+
+	useEffect(() => {
+		if (localStorage.getItem('showActualPage'))
+			setIsHomePageComingSoonVisible(false);
+	}, []);
+
+	if (isHomePageComingSoonVisible) return <HomePageComingSoon />;
 
 	return (
 		<CustomerLayout>

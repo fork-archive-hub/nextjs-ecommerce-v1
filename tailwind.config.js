@@ -27,6 +27,8 @@ module.exports = {
 				'light-gray': '#F7F7F7',
 				'half-transparent': 'rgba(0, 0, 0, 0.5)',
 				'75-transparent': 'rgba(0, 0, 0, 0.75)',
+				'half-white-transparent': 'rgba(255, 255, 255, 0.5)',
+				'75-white-transparent': 'rgba(255, 255, 255, 0.75)',
 			},
 			minWidth: {
 				48: '12rem',
