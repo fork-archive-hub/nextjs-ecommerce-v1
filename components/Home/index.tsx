@@ -17,10 +17,12 @@ const HomePageComingSoon = () => {
 					lg:w-2/5
 				'
 				>
-					<img src='./favicon.ico' alt='' className='w-40 h-40' />
-					<p className='my-8'>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-					</p>
+					<img
+						src='./TREDA-GATE-02.png'
+						alt=''
+						className='w-[24rem] h-[12rem]'
+					/>
+					<p className='my-8'>We take Your Business To The Next Level</p>
 					<button
 						className='border-2 border-white font-bold rounded-full px-6 py-3 text-xl
 						transition-all duration-75 ease-in hover:filter hover:brightness-75 focus:ring-4'
@@ -79,7 +81,7 @@ const HomePageComingSoon = () => {
 								`}
 							>
 								<img
-									className='w- object-contain'
+									className='w-full object-contain'
 									src={img.src}
 									alt={img.alt}
 								/>
@@ -101,15 +103,13 @@ const HomePageComingSoon = () => {
 						))}
 					</div>
 					<div className='my-4 px-2'>
-						<h2 className='text-2xl font-bold'>Lorem</h2>
-						<h2 className='text-2xl font-bold'>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit
-						</h2>
+						<h2 className='text-2xl font-bold'>Treeda Gate</h2>
+						<h2 className='text-2xl font-bold'>The home for your Business</h2>
 						<p className='m-4'>
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-							Reiciendis quia, beatae dolores illum atque sit quasi eum
-							obcaecati, sapiente officiis mollitia eveniet accusantium
-							voluptatum molestiae quos natus minus, odit labore.
+							You can choose from over 400 business listing categories to find
+							or add a business, No matter what type of business or service you
+							are looking for, our directory will help you to easily locate a
+							business near you.
 						</p>
 						<div>
 							<button
