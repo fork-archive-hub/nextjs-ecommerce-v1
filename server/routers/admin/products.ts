@@ -34,75 +34,47 @@ export const adminProductsRouter = createRouter()
 			lastItemCreatedAt: z.string().optional(),
 		}),
 		async resolve({ ctx, input }) {
-			const data = await ctx.prisma.product.findMany({
-				select: {
-					id: true,
-					title: true,
-					price: true,
+			return await ctx.prisma.product.findMany({
+				take: input.limit,
+				include: {
 					images: {
 						select: {
-							image: {
-								select: {
-									id: true,
-									src: true,
-									alt: true,
+							createdAt: true,
+							image: true,
+						},
+					},
+					brand: {
+						select: {
+							createdAt: true,
+							brand: {
+								include: {
+									images: {
+										select: {
+											createdAt: true,
+											image: true,
+										},
+									},
 								},
 							},
 						},
 					},
 					categories: {
 						select: {
+							createdAt: true,
 							category: {
-								select: {
-									name: true,
-									count: true,
-									createdAt: true,
+								include: {
 									images: {
 										select: {
-											image: {
-												select: {
-													id: true,
-													src: true,
-													alt: true,
-												},
-											},
+											createdAt: true,
+											image: true,
 										},
 									},
 								},
 							},
 						},
 					},
-					brand: {
-						select: {
-							brand: {
-								select: {
-									name: true,
-									createdAt: true,
-									images: {
-										select: {
-											image: {
-												select: {
-													id: true,
-													src: true,
-													alt: true,
-												},
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-					description: true,
-					status: true,
-					countInStock: true,
-					createdAt: true,
-					updatedAt: true,
 				},
-				take: input.limit,
 			});
-
-			return data;
 		},
 	})
 	.mutation('createProduct', {
@@ -460,12 +432,6 @@ export const adminProductsRouter = createRouter()
 			productId: z.string(),
 		}),
 		resolve: async ({ ctx, input }) => {
-			/*
-			Invalid `prisma.product.delete()` invocation:
-
-
-  Foreign key constraint failed on the field: `ImagesOnProduct_productId_fkey (index)`
-			*/
 			const productBrandAndCategories =
 				await ctx.prisma.product.findFirstOrThrow({
 					select: {
@@ -512,3 +478,71 @@ export const adminProductsRouter = createRouter()
 			return { deletedId: productId };
 		},
 	});
+
+// let data = await ctx.prisma.product.findMany({
+// 	select: {
+// 		id: true,
+// 		title: true,
+// 		price: true,
+// 		images: {
+// 			select: {
+// 				image: {
+// 					select: {
+// 						id: true,
+// 						src: true,
+// 						alt: true,
+// 					},
+// 				},
+// 			},
+// 		},
+// 		categories: {
+// 			select: {
+// 				category: {
+// 					select: {
+// 						name: true,
+// 						count: true,
+// 						createdAt: true,
+// 						images: {
+// 							select: {
+// 								image: {
+// 									select: {
+// 										id: true,
+// 										src: true,
+// 										alt: true,
+// 									},
+// 								},
+// 							},
+// 						},
+// 					},
+// 				},
+// 			},
+// 		},
+// 		brand: {
+// 			select: {
+// 				brand: {
+// 					select: {
+// 						name: true,
+// 						createdAt: true,
+// 						images: {
+// 							select: {
+// 								image: {
+// 									select: {
+// 										id: true,
+// 										src: true,
+// 										alt: true,
+// 									},
+// 								},
+// 							},
+// 						},
+// 					},
+// 				},
+// 			},
+// 		},
+// 		description: true,
+// 		status: true,
+// 		countInStock: true,
+// 		createdAt: true,
+// 		updatedAt: true,
+// 	},
+// 	take: input.limit,
+// });

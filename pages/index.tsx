@@ -30,69 +30,43 @@ export async function getStaticProps(
 	// // ssg.queryClient.prisma()
 
 	const data = await prisma.product.findMany({
-		select: {
-			id: true,
-			title: true,
-			price: true,
+		include: {
 			images: {
 				select: {
-					image: {
-						select: {
-							id: true,
-							src: true,
-							alt: true,
+					createdAt: true,
+					image: true,
+				},
+			},
+			brand: {
+				select: {
+					createdAt: true,
+					brand: {
+						include: {
+							images: {
+								select: {
+									createdAt: true,
+									image: true,
+								},
+							},
 						},
 					},
 				},
 			},
 			categories: {
 				select: {
+					createdAt: true,
 					category: {
-						select: {
-							name: true,
-							count: true,
-							createdAt: true,
+						include: {
 							images: {
 								select: {
-									image: {
-										select: {
-											id: true,
-											src: true,
-											alt: true,
-										},
-									},
+									createdAt: true,
+									image: true,
 								},
 							},
 						},
 					},
 				},
 			},
-			brand: {
-				select: {
-					brand: {
-						select: {
-							name: true,
-							createdAt: true,
-							images: {
-								select: {
-									image: {
-										select: {
-											id: true,
-											src: true,
-											alt: true,
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			description: true,
-			status: true,
-			countInStock: true,
-			createdAt: true,
-			updatedAt: true,
 		},
 		where: {
 			categories: {

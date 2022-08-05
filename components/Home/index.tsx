@@ -17,10 +17,13 @@ const HomePageComingSoon = () => {
 					lg:w-2/5
 				'
 				>
-					<img
+					<CustomNextImage
 						src='./TREDA-GATE-02.png'
 						alt=''
 						className='w-[24rem] h-[12rem]'
+						width={384}
+						height={192}
+						priority
 					/>
 					<p className='my-8'>We take Your Business To The Next Level</p>
 					<button
@@ -40,15 +43,6 @@ const HomePageComingSoon = () => {
 						className='flex justify-center items-center flex-wrap bg-half-white-transparent
 						lg:flex-nowrap lg:bg-transparent'
 					>
-						{/* <div className='bg-white p-4 flex flex-col justify-center items-start w-1/3'>
-							<img src='./pexels-diego-pontes-2323398.jpg' alt='' />
-							<small className='my-1 text-slate-400'>Lorem ipsum</small>
-							<h2 className='my-1 text-black text-3xl'>Product 1</h2>
-							<p className='my-1 text-slate-400 font-bold text-xl'>$14.95</p>
-							<button className='border-2 bg-black font-bold rounded-full px-4 py-2 text-lg'>
-								Order Now
-							</button>
-						</div> */}
 						{[
 							{
 								img: { src: './pexels-diego-pontes-2323398.jpg', alt: '' },
@@ -80,10 +74,13 @@ const HomePageComingSoon = () => {
 									md:min-w-[12rem]
 								`}
 							>
-								<img
+								<CustomNextImage
 									className='w-full object-contain'
 									src={img.src}
 									alt={img.alt}
+									width={400}
+									height={250}
+									priority
 								/>
 								<small className='my-1 text-slate-400'>{small.text}</small>
 								<h2 className='my-1 text-black text-xl lg:text-3xl font-bold'>
@@ -117,10 +114,13 @@ const HomePageComingSoon = () => {
 									sm:max-w-[12rem]'
 							>
 								<a href='#'>
-									<img
+									<CustomNextImage
 										className='max-w-full'
 										src='./imgbin_app-store-android-google-play.png'
 										alt=''
+										width={160}
+										height={192}
+										priority
 										style={{ transform: 'translateY(3px)' }}
 									/>
 								</a>
@@ -134,10 +134,13 @@ const HomePageComingSoon = () => {
 									sm:max-w-[12rem]'
 							>
 								<a href='#'>
-									<img
+									<CustomNextImage
 										className='max-w-full'
 										src='http://wishah-alwatan.com/wp-content/uploads/2018/12/Marketing-Icons-with-Google-Play-Store-Download-Button-500x164-300x98.png'
 										alt=''
+										width={160}
+										height={192}
+										priority
 									/>
 								</a>
 							</button>
