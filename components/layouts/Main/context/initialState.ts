@@ -7,4 +7,7 @@ export const initialState: IInitialState = {
 	themeSettings: false,
 	// screenSize: number,
 	isMobileOrTablet: false,
+	dynamicallyImportedLibs: {
+		gsap: undefined,
+	},
 };

@@ -9,7 +9,10 @@ const initialStateIsClicked = {
 	clicked: false,
 };
 
-export const reducer = (state: IInitialState, action: IReducerActions) => {
+export const reducer = (
+	state: IInitialState,
+	action: IReducerActions
+): IInitialState => {
 	switch (action.type) {
 		case EMainContextConsts.SET_CURRENT_COLOR_MODE:
 		case EMainContextConsts.SET_CURRENT_THEME_MODE:
@@ -18,6 +21,16 @@ export const reducer = (state: IInitialState, action: IReducerActions) => {
 			return {
 				...state,
 				...action.payload,
+			};
+		}
+
+		case EMainContextConsts.SET_DYNAMICALLY_IMPORTED_LIB: {
+			return {
+				...state,
+				dynamicallyImportedLibs: {
+					...state.dynamicallyImportedLibs,
+					...action.payload,
+				},
 			};
 		}
 		// case EMainContextConsts.SET_IS_CLICKED: {

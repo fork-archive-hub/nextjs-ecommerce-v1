@@ -155,6 +155,7 @@ const HomePageComingSoon = () => {
 import CustomNextImage from '@components/common/CustomNextImage';
 import CustomerLayout from '@components/layouts/Customer';
 import { useSharedMainState } from '@components/layouts/Main/context';
+import { useDynamicallyImportedGSAP } from '@components/layouts/Main/context/hooks';
 
 import { IHomeProps } from '@pages/index';
 
@@ -166,6 +167,7 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 	const [{ isMobileOrTablet }] = useSharedMainState();
 	const [isHomePageComingSoonVisible, setIsHomePageComingSoonVisible] =
 		useState(true);
+	const { gsap } = useDynamicallyImportedGSAP();
 
 	const neededProductsDataRef = useRef(
 		(() => {
@@ -189,6 +191,9 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 	);
 	const neededProductsData = neededProductsDataRef.current;
 
+	const gsapProductsImagesRef = useRef<HTMLDivElement>(null);
+	const gsapProductDetailsRef = useRef<HTMLDivElement>(null);
+
 	const neededProductsDataContainerRef = useRef<HTMLDivElement>(null);
 	const productDetailsRef = useRef<HTMLDivElement>(null);
 
@@ -204,7 +209,31 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 			setIsHomePageComingSoonVisible(false);
 	}, []);
 
-	if (isHomePageComingSoonVisible) return <HomePageComingSoon />;
+	useEffect(() => {
+		if (
+			!gsapProductsImagesRef.current ||
+			!gsapProductDetailsRef.current ||
+			!gsap
+		)
+			return;
+
+		const isBodyRTL = document.body.dir === 'rtl';
+		const directionFixer = isBodyRTL ? -1 : 1;
+
+		gsap.fromTo(
+			gsapProductsImagesRef.current,
+			{ x: `${directionFixer * -100}%`, opacity: 0 },
+			{ x: 0, opacity: 1 }
+		);
+
+		gsap.fromTo(
+			gsapProductDetailsRef.current,
+			{ x: `${directionFixer * 100}%`, opacity: 0 },
+			{ x: 0, opacity: 1 }
+		);
+	}, [gsap]);
+
+	// if (isHomePageComingSoonVisible) return <HomePageComingSoon />;
 
 	return (
 		<CustomerLayout>
@@ -215,11 +244,15 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 			</Head>
 			<div className='w-full p-4 md:p-8 flex justify-evenly items-center text-slate-100 bg-neutral-900 relative'>
 				<div
+					ref={gsapProductsImagesRef}
 					className='
-				absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1] max-w-[90%]
+					gsap-products-images opacity-0
+				absolute top-1/2 left-1/2 -translate-y-1/2 z-[1] max-w-[90%]
 				// 
 				lg:relative lg:top-auto lg:left-auto lg:-translate-x-0 lg:-translate-y-0
-				'
+				-translate-x-1/2'
+					// -translate-x-1/2
+					// -translate-x-full
 				>
 					<div
 						className='relative w-96 h-[36rem]'
@@ -392,7 +425,9 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 					</div>
 				</div>
 				<div
+					ref={gsapProductDetailsRef}
 					className={`
+					gsap-product-details opacity-0
 					w-full
 					bg-75-transparent z-[2] p-8 rounded-lg max-h-[48rem] ${
 						isMobileOrTablet
@@ -404,7 +439,6 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 					//
 					lg:bg-neutral-800 lg:w-1/2
 					`}
-					ref={productDetailsRef}
 				>
 					<h1 className='title text-4xl mb-4'>
 						{neededProductsData[0]?.title}

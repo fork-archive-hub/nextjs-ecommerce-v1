@@ -1,6 +1,10 @@
 import { Dispatch } from 'react';
 import { EMainContextConsts } from './constants';
-import { IInitialState, IReducerActions } from './ts';
+import {
+	IInitialState,
+	IReducerActions,
+	ISetDynamicallyImportedLibs,
+} from './ts';
 
 export const setThemeMode = (
 	dispatch: Dispatch<IReducerActions>,
@@ -91,6 +95,16 @@ export const setIsMobileOrTablet = (
 		payload: {
 			isMobileOrTablet,
 		},
+	});
+};
+
+export const setDynamicallyImportedLibs = (
+	dispatch: Dispatch<IReducerActions>,
+	libState: ISetDynamicallyImportedLibs['payload']
+) => {
+	dispatch({
+		type: EMainContextConsts.SET_DYNAMICALLY_IMPORTED_LIB,
+		payload: libState,
 	});
 };
 

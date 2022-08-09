@@ -1,5 +1,10 @@
 import { createRouter } from './context';
 import { z } from 'zod';
+import {
+	productsBrandsAndCategoriesNames,
+	productsFilteredByController,
+} from '@utils/core/products/controllers';
+import { productsFilteredByZodInputs } from '@utils/core/products/controllers/validate';
 
 export const productsRouter = createRouter()
 	.query('byId', {
@@ -7,36 +12,7 @@ export const productsRouter = createRouter()
 			id: z.string(),
 		}),
 		async resolve({ ctx, input }) {
-			return await ctx.prisma.product.findUnique({
-				where: {
-					id: input.id,
-				},
-			});
-		},
-	})
-	.query('filterBy', {
-		input: z.object({
-			limit: z.number(),
-			countInStock: z
-				.object({
-					gt: z.number().min(1).optional(),
-					lt: z.number().min(1).optional(),
-				})
-				.optional(),
-			price: z
-				.object({
-					gt: z.number().min(1).optional(),
-					lt: z.number().min(1).optional(),
-				})
-				.optional(),
-			brandName: z.string().optional(),
-			title: z.string().optional(),
-			createdAt: z.date().optional(),
-			categoriesName: z.array(z.string()).min(1).optional(),
-		}),
-		resolve: async ({ ctx, input }) => {
-			console.log(input);
-			return await ctx.prisma.product.findMany({
+			return await ctx.prisma.product.findFirstOrThrow({
 				include: {
 					images: {
 						select: {
@@ -76,25 +52,39 @@ export const productsRouter = createRouter()
 					},
 				},
 				where: {
-					AND: {
-						brand: input.brandName ? { brandName: input.brandName } : undefined,
-						categories: input.categoriesName
-							? { some: { categoryName: { in: input.categoriesName } } }
-							: undefined,
-						title: input.title ? { contains: input.title } : undefined,
-						status: { equals: 'VISIBLE' },
-						createdAt: input.createdAt ? input.createdAt : undefined,
-						countInStock: {
-							gt: input.countInStock?.gt ? input.countInStock?.gt : 0,
-							lt: input.countInStock?.lt ? input.countInStock?.lt : undefined,
-						},
-						price: {
-							gt: input.price?.gt ? input.price?.gt : undefined,
-							lt: input.price?.lt ? input.price?.lt : undefined,
-						},
-					},
+					id: input.id,
 				},
-				take: input.limit,
 			});
 		},
+	})
+	.query('filteredBy', {
+		input: productsFilteredByZodInputs,
+		resolve: async ({ ctx, input }) => {
+			console.log(input);
+			const data = await productsFilteredByController({
+				prisma: ctx.prisma,
+				input,
+			});
+
+			return data;
+		},
+	})
+	.query('brandsAndCategoriesNames', {
+		resolve: async ({ ctx }) => {
+			return productsBrandsAndCategoriesNames({ prisma: ctx.prisma });
+		},
 	});
+// .query('brandsNames', {
+// 	resolve: async ({ ctx }) => {
+// 		return await ctx.prisma.brand.findMany({
+// 			select: { name: true },
+// 		});
+// 	},
+// })
+// .query('categoriesNames', {
+// 	resolve: async ({ ctx }) => {
+// 		return await ctx.prisma.category.findMany({
+// 			select: { name: true },
+// 		});
+// 	},
+// });

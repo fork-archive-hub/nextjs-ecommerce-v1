@@ -7,6 +7,8 @@ import {
 	setIsMobileOrTablet,
 	setThemeMode,
 } from './context/actions';
+import { IInitialState } from '../Customer/context/ts';
+import { useDynamicallyImportedGSAP } from './context/hooks';
 
 interface IProps {
 	children: JSX.Element;
@@ -15,6 +17,16 @@ interface IProps {
 const Layout = ({ children }: IProps) => {
 	const [, dispatch] = useSharedMainState();
 
+	// const { gsap } =
+	useDynamicallyImportedGSAP();
+	// console.log('gsap', gsap);
+
+	// useEffect(() => {
+	// 	// console.log('gsap', gsap);
+	// 	if (gsap) {
+	// 		(window as any).gsap = gsap;
+	// 	}
+	// }, [gsap]);
 	useEffect(() => {
 		const lsBgColorMode = localStorage.getItem('currentBgColorMode');
 		const lsFontColorMode = localStorage.getItem('currentFontColorMode');

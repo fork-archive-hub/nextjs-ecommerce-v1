@@ -1,3 +1,4 @@
+import { default as gsap } from 'gsap';
 import { EMainContextConsts } from './constants';
 
 // export type TInitialStateScreenSize = number;
@@ -8,6 +9,9 @@ export interface IInitialState {
 	currentThemeMode: 'light' | 'dark';
 	themeSettings: boolean;
 	isMobileOrTablet: boolean;
+	dynamicallyImportedLibs: {
+		gsap?: typeof gsap;
+	};
 }
 
 interface ISetReducerAction<Type, Payload = undefined> {
@@ -52,6 +56,13 @@ type TSetIsMobileOrTablet = ISetReducerAction<
 		isMobileOrTablet: boolean;
 	}
 >;
+export interface ISetDynamicallyImportedLibs
+	extends ISetReducerAction<
+		EMainContextConsts.SET_DYNAMICALLY_IMPORTED_LIB,
+		{
+			[key in keyof IInitialState['dynamicallyImportedLibs']]: IInitialState['dynamicallyImportedLibs'][key];
+		}
+	> {}
 
 export type IReducerActions =
 	// | TSetScreenSize
@@ -59,4 +70,5 @@ export type IReducerActions =
 	| TSetCurrentFontColorMode
 	| TSetCurrentThemeMode
 	| TSetThemeSettings
-	| TSetIsMobileOrTablet;
+	| TSetIsMobileOrTablet
+	| ISetDynamicallyImportedLibs;

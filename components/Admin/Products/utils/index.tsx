@@ -8,7 +8,7 @@ import { useState, Fragment } from 'react';
 import {
 	checkProductObjStatusOrThrow,
 	checkProductStatusOrThrow,
-} from '@utils/core/product';
+} from '@utils/core/products';
 import { buildButtonClassName } from '@utils/tailwind';
 import CreateProductButton from '../Action/ActionTypes/Create/Button';
 import DeleteProduct from '../Action/ActionTypes/Delete';
