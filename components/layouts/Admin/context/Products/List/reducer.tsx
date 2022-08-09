@@ -106,14 +106,15 @@ export const reducer = (
 			}
 
 			if (newData.brandUpserted) {
-				const brand = (targetedProduct.brand || { brand: { images: [] } })
-					.brand;
+				const brand = targetedProduct.brand || { brand: { images: [] } };
 
 				targetedProduct = {
 					...targetedProduct,
 					brand: {
+						createdAt: new Date(),
+						...brand,
 						brand: {
-							...brand,
+							...brand.brand,
 							...newData.brandUpserted,
 						},
 					},
@@ -134,7 +135,10 @@ export const reducer = (
 					...targetedProduct,
 					images: [
 						...images,
-						...newData.imagesCreated.map((item) => ({ image: item })),
+						...newData.imagesCreated.map((item) => ({
+							createdAt: new Date(),
+							image: item,
+						})),
 					],
 				};
 			}
@@ -157,6 +161,7 @@ export const reducer = (
 					categories: [
 						...categories,
 						...newData.categoriesUpserted.map((item) => ({
+							createdAt: new Date(),
 							category: { ...item, images: [] },
 						})),
 					],

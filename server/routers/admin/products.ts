@@ -47,6 +47,7 @@ export const adminProductsRouter = createRouter()
 						select: {
 							createdAt: true,
 							brand: {
+								select: { name: true, count: true },
 								include: {
 									images: {
 										select: {
@@ -145,6 +146,7 @@ export const adminProductsRouter = createRouter()
 					// id: true,
 					createdAt: true,
 					name: true,
+					count: true,
 				},
 			});
 
@@ -161,6 +163,8 @@ export const adminProductsRouter = createRouter()
 					imageId: item.id,
 				})),
 			});
+
+			// categoriesCreated[0].
 
 			const categoriesOnProduct =
 				await ctx.prisma.categoriesOnProducts.createMany({
@@ -260,6 +264,7 @@ export const adminProductsRouter = createRouter()
 				| {
 						createdAt: Date;
 						name: string;
+						count: number;
 				  }
 				| undefined;
 
@@ -379,6 +384,7 @@ export const adminProductsRouter = createRouter()
 						// id: true,
 						createdAt: true,
 						name: true,
+						count: true,
 					},
 				});
 				const brandOnProductsUpdated = await ctx.prisma.brandOnProducts.update({

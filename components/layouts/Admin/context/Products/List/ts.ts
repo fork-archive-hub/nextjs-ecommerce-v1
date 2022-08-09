@@ -1,5 +1,9 @@
 import { Dispatch } from 'react';
-import { InferMutationInput, InferMutationOutput, InferQueryOutput } from '@utils/trpc/types';
+import {
+	InferMutationInput,
+	InferMutationOutput,
+	InferQueryOutput,
+} from '@utils/trpc/types';
 import { EAdminDashboardProductsListContextConsts } from './constants';
 
 export type TInitialStateScreenSize = number;
@@ -101,6 +105,9 @@ interface ISetReducerAction<Type, Payload = undefined> {
 	type: Type;
 	payload: Payload;
 }
+
+type ttt = IAdminDashboardProduct['brand'];
+// ttt
 
 type IActionAdd = ISetReducerAction<
 	EAdminDashboardProductsListContextConsts.ADD,

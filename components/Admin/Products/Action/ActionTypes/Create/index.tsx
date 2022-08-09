@@ -138,22 +138,26 @@ const CreateProduct = ({
 					type: 'ONE',
 					product: {
 						...createProductMutation.data,
-						// images: [],
-						categories: createProductMutation.data.categories.map(
-							(item: { category: any }) => ({
-								...item,
-								category: {
-									// images: [],
-									...item.category,
-								},
-							})
-						),
+						categories: createProductMutation.data.categories.map((item) => ({
+							...item,
+							createdAt: new Date(),
+							category: {
+								images: [],
+								...item.category,
+							},
+						})),
 						brand: {
+							createdAt: new Date(),
 							brand: {
+								// images: [],
 								images: [],
 								...createProductMutation.data.brand,
 							},
 						},
+						images: createProductMutation.data.images.map((img) => ({
+							...img,
+							createdAt: new Date(),
+						})),
 					},
 					options: {
 						type: 'ADDED',

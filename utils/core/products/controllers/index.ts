@@ -10,7 +10,6 @@ export const productsFilteredByController = async ({
 	prisma: TPrisma;
 	input: ReturnType<typeof productsFilteredByZodInputs['parse']>;
 }) => {
-	console.log('--------------------input', input);
 	const limit = input.limit || 10;
 
 	return await prisma.product.findMany({
