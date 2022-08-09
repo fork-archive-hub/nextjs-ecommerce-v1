@@ -58,7 +58,9 @@ export const productsFilteredByController = async ({
 				categories: input.categoriesNames
 					? { some: { categoryName: { in: input.categoriesNames } } }
 					: undefined,
-				title: input.title ? { contains: input.title } : undefined,
+				title: input.title
+					? { contains: input.title, mode: 'insensitive' }
+					: undefined,
 				status: { equals: 'VISIBLE' },
 				// createdAt: input.createdAt ? { gte: input.createdAt } : undefined,
 				countInStock: {
