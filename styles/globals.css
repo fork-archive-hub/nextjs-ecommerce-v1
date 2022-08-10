@@ -23,6 +23,11 @@ body.dark {
 	background-color: #000;
 }
 
+#__next {
+	max-width: 200rem;
+	margin: auto;
+}
+
 button[disabled] {
 	cursor: not-allowed;
 	filter: brightness(1.5) grayscale(2);

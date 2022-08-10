@@ -1,6 +1,6 @@
 const HomePageComingSoon = () => {
 	return (
-		<div>
+		<main className='w-full'>
 			<div
 				style={{
 					// rgb(60, 56, 129, 0.9), rgb(141, 122, 59, 0.9)
@@ -9,7 +9,7 @@ const HomePageComingSoon = () => {
 					backgroundSize: 'cover',
 					backgroundRepeat: 'no-repeat',
 				}}
-				className='flex min-w-[100vw] min-h-[100vh] flex-col justify-center items-center lg:flex-row'
+				className='flex w-full min-h-[100vh] flex-col justify-center items-center lg:flex-row'
 			>
 				<div
 					className='
@@ -30,7 +30,7 @@ const HomePageComingSoon = () => {
 						className='border-2 border-white font-bold rounded-full px-6 py-3 text-xl
 						transition-all duration-75 ease-in hover:filter hover:brightness-75 focus:ring-4'
 					>
-						Visit Now
+						Coming Soon
 					</button>
 				</div>
 				<div
@@ -40,10 +40,10 @@ const HomePageComingSoon = () => {
 					'
 				>
 					<div
-						className='flex justify-center items-center flex-wrap bg-half-white-transparent
+						className='w-full flex justify-center items-center flex-wrap bg-half-white-transparent
 						lg:flex-nowrap lg:bg-transparent'
 					>
-						{[
+						{/* {[
 							{
 								img: { src: './pexels-diego-pontes-2323398.jpg', alt: '' },
 								small: { text: 'Lorem ipsum' },
@@ -97,7 +97,32 @@ const HomePageComingSoon = () => {
 									{button.text}
 								</button>
 							</div>
-						))}
+						))} */}
+						<div
+							className='w-full
+							max-h-[50rem]
+							h-[45vh]'
+							style={{
+								// padding: '75% 0 0 0',
+								position: 'relative',
+							}}
+						>
+							<iframe
+								src='https://player.vimeo.com/video/738307693?h=57579be359&amp;autopause=0&amp;autoplay=1&amp;muted=true&amp;loop=true&amp;portrait=0&amp;player_id=0&amp;app_id=58479' // badge=0&amp;
+								frameBorder='0'
+								allow='autoplay; fullscreen; loop;'
+								allowFullScreen
+								style={{
+									position: 'absolute',
+									top: 0,
+									left: 0,
+									width: '100%',
+									height: '100%',
+								}}
+								title='0b0f2dcb8e1544b81ecf172f0f4b6525.mp4'
+							/>
+						</div>
+						<Script src='https://player.vimeo.com/api/player.js' />
 					</div>
 					<div className='my-4 px-2'>
 						<h2 className='text-2xl font-bold'>Treeda Gate</h2>
@@ -148,7 +173,7 @@ const HomePageComingSoon = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 };
 
@@ -160,6 +185,7 @@ import { useDynamicallyImportedGSAP } from '@components/layouts/Main/context/hoo
 import { IHomeProps } from '@pages/index';
 
 import Head from 'next/head';
+import Script from 'next/script';
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import classes from './index.module.css';
 
