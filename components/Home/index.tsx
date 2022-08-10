@@ -233,7 +233,7 @@ const HomePage = ({ starredProductsInCollection1 }: IHomeProps) => {
 		);
 	}, [gsap]);
 
-	// if (isHomePageComingSoonVisible) return <HomePageComingSoon />;
+	if (isHomePageComingSoonVisible) return <HomePageComingSoon />;
 
 	return (
 		<CustomerLayout>
