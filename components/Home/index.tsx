@@ -108,7 +108,11 @@ const HomePageComingSoon = () => {
 							}}
 						>
 							<iframe
-								src='https://player.vimeo.com/video/738307693?h=57579be359&amp;autopause=0&amp;autoplay=1&amp;muted=true&amp;loop=true&amp;portrait=0&amp;player_id=0&amp;app_id=58479' // badge=0&amp;
+								src='https://player.vimeo.com/video/738307693?h=57579be359&amp;title=0&amp;byline=0&amp;portrait=0&amp;transparent=0&amp;player_id=0&amp;app_id=58479&amp;loop=true&amp;muted=true&amp;autoplay=1&amp;controls=0'
+								//&amp;autoplay=1'
+								// &amp;transparent=0'
+								// &amp;title=0&amp;byline=0&amp;portrait=0'
+								// &amp;background=1&amp;controls=0&amp;portrait=0' // badge=0&amp;
 								frameBorder='0'
 								allow='autoplay; fullscreen; loop;'
 								allowFullScreen
@@ -121,8 +125,11 @@ const HomePageComingSoon = () => {
 								}}
 								title='0b0f2dcb8e1544b81ecf172f0f4b6525.mp4'
 							/>
+							<Script
+								src='https://player.vimeo.com/api/player.js'
+								strategy='afterInteractive'
+							/>
 						</div>
-						<Script src='https://player.vimeo.com/api/player.js' />
 					</div>
 					<div className='my-4 px-2'>
 						<h2 className='text-2xl font-bold'>Treeda Gate</h2>
