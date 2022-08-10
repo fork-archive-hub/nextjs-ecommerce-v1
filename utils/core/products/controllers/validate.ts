@@ -17,5 +17,5 @@ export const productsFilteredByZodInputs = z.object({
 	brandName: z.string().optional(),
 	title: z.string().optional(),
 	createdAt: z.date().optional(),
-	categoriesNames: z.array(z.string()).min(1).optional(),
+	categoriesNames: z.array(z.string()).optional(), // .min(1)
 });

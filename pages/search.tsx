@@ -8,13 +8,7 @@ import {
 import { InferQueryInput, InferQueryOutput } from '@utils/trpc/types';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import {
-	FormEvent,
-	InputHTMLAttributes,
-	useEffect,
-	useId,
-	useState,
-} from 'react';
+import { FormEvent, InputHTMLAttributes, useId, useState } from 'react';
 import superjson from 'superjson';
 
 type TProductsFilteredByInputs = InferQueryInput<'products.filteredBy'>;
@@ -52,42 +46,52 @@ interface Props {
 }
 
 const Search: NextPage<Props> = (props) => {
-	useEffect(() => {}, []);
 	const formFieldsId = useId();
 	const router = useRouter();
-	const [isProductsFilteredByEnabled, sertIsProductsFilteredByEnabled] =
+	const [isProductsFilteredByEnabled, setIsProductsFilteredByEnabled] =
 		useState(false);
-	const [isBrandsAndCategoriesNames, sertIsBrandsAndCategoriesNames] =
-		useState(false);
+	const [
+		isBrandsAndCategoriesNamesEnabled,
+		setIsBrandsAndCategoriesNamesEnabled,
+	] = useState(false);
 	const [inputs, setInputs] = useState<
-		Omit<TProductsFilteredByInputs, 'price' | 'countInStock'> & {
-			price: Required<TProductsFilteredByInputs>['price'];
-			countInStock: Required<TProductsFilteredByInputs>['countInStock'];
+		// Omit<TProductsFilteredByInputs, 'price' | 'countInStock'> & {
+		// 	price: Required<TProductsFilteredByInputs>['price'];
+		// 	countInStock: Required<TProductsFilteredByInputs>['countInStock'];
+		Required<Omit<TProductsFilteredByInputs, 'createdAt'>> & {
+			createdAt?: Date;
 		}
 	>({
-		price: {},
+		brandName: '',
+		categoriesNames: [],
 		countInStock: {},
+		price: {},
+		// createdAt: undefined,
+		limit: 10,
+		title: '',
 		...(props.input || {}),
 	});
 
-	const productsFilteredByQuery = trpc.useQuery(
-		['products.filteredBy', inputs],
-		{
-			initialData: props.brandsAndCategoriesNames.data,
-			enabled: isProductsFilteredByEnabled,
-		}
-	);
+	// const productsFilteredByQuery = trpc.useQuery(
+	// 	['products.filteredBy', inputs],
+	// 	{
+	// 		initialData: props.products.data,
+	// 		enabled: isProductsFilteredByEnabled,
+	// 	}
+	// );
+	const productsFilteredByQuery = {
+		data: props.products.data,
+		isLoading: false,
+		isSuccess: true,
+	};
 
 	const brandsAndCategoriesNames = trpc.useQuery(
 		['products.brandsAndCategoriesNames'],
 		{
-			initialData: props.products.status,
-			enabled: isBrandsAndCategoriesNames,
+			initialData: props.brandsAndCategoriesNames.data,
+			enabled: isBrandsAndCategoriesNamesEnabled,
 		}
 	);
-
-	console.log('props.products', props.products);
-	console.log('props.input', props.input);
 
 	const formFields: (
 		| IBasicFormField
@@ -184,33 +188,98 @@ const Search: NextPage<Props> = (props) => {
 	const handleSubmission = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const inputsSynth = (() => {
-			const inputsSynth: { [key: string]: any } = {};
+		const synthObjFromFalsy = (obj: any) => {
+			const itemSynth: { [key: string]: any } = {};
+			if (!obj && typeof obj !== 'object') return {};
 
-			let key: keyof typeof inputs;
-			for (key in inputs) {
-				const item = inputs[key];
+			let key: keyof typeof obj;
+			for (key in obj) {
+				const item = obj[key];
+
 				if (
 					!item ||
 					typeof item === 'undefined' ||
-					(typeof item === 'object' && Object.keys(item).length === 0)
+					(typeof item === 'object' && Object.keys(item).length === 0) ||
+					((Array.isArray(item) || typeof item === 'string') &&
+						item.length === 0)
 				) {
 					continue;
 				}
 
-				inputsSynth[key] = inputs[key];
+				itemSynth[key] = obj[key];
 			}
 
-			return inputsSynth;
-		})();
+			return itemSynth;
+		};
 
-		// console.log('inputsSynth', inputsSynth);
-		router.push({
-			query: { input: superjson.stringify(inputsSynth) },
-		});
+		const defaultInputsSynth = synthObjFromFalsy(props.input);
+		// 	(() => {
+		// 	const inputsSynth: { [key: string]: any } = {};
+		// 	if (!props.input) return {};
 
-		// productsFilteredBy.refetch();
+		// 	let key: keyof typeof props.input;
+		// 	for (key in props.input) {
+		// 		const item = props.input[key];
+
+		// 		if (
+		// 			!item ||
+		// 			typeof item === 'undefined' ||
+		// 			(typeof item === 'object' && Object.keys(item).length === 0) ||
+		// 			((Array.isArray(item) || typeof item === 'string') &&
+		// 				item.length === 0)
+		// 		) {
+		// 			continue;
+		// 		}
+
+		// 		inputsSynth[key] = props.input[key];
+		// 	}
+
+		// 	return inputsSynth;
+		// })();
+
+		const inputsSynth = synthObjFromFalsy(inputs);
+		// 	(() => {
+		// 	const inputsSynth: { [key: string]: any } = {};
+
+		// 	let key: keyof typeof inputs;
+		// 	for (key in inputs) {
+		// 		const item = inputs[key];
+
+		// 		if (
+		// 			!item ||
+		// 			typeof item === 'undefined' ||
+		// 			(typeof item === 'object' && Object.keys(item).length === 0) ||
+		// 			((Array.isArray(item) || typeof item === 'string') &&
+		// 				item.length === 0)
+		// 		) {
+		// 			continue;
+		// 		}
+
+		// 		inputsSynth[key] = inputs[key];
+		// 	}
+
+		// 	return inputsSynth;
+		// })();
+
+		if (
+			superjson.stringify(inputsSynth) !==
+			superjson.stringify(defaultInputsSynth)
+		) {
+			router.push({
+				query: { input: superjson.stringify(inputsSynth) },
+			});
+			// productsFilteredByQuery.refetch();
+		}
 	};
+
+	if (productsFilteredByQuery.data)
+		console.log('productsFilteredByQuery.data', productsFilteredByQuery.data);
+
+	console.log(
+		'productsFilteredByQuery.isLoading',
+		productsFilteredByQuery.isLoading
+	);
+	console.log('router.isReady', router.isReady);
 
 	return (
 		<CustomerLayout>
@@ -218,16 +287,18 @@ const Search: NextPage<Props> = (props) => {
 				<h1>Hello</h1>
 				<form onSubmit={handleSubmission}>
 					{formFields.map((field) => {
+						const fieldName = field.name;
+
 						if (field.__type === 'BASIC_FORM_FIELD')
 							return (
-								<label key={field.name} id={field.id}>
+								<label key={fieldName} id={field.id}>
 									<span>{field.title}</span>
 									<input
 										type={field.type || 'text'}
-										name={field.name}
+										name={fieldName}
 										id={field.id}
 										value={(() => {
-											const inputField = inputs[field.name];
+											const inputField = inputs[fieldName];
 
 											if (typeof inputField === 'object') {
 												if ('toDateString' in inputField) {
@@ -249,7 +320,7 @@ const Search: NextPage<Props> = (props) => {
 
 						if (field.__type === 'GT_LT_NUMBER_RANGE')
 							return (
-								<fieldset key={field.name}>
+								<fieldset key={fieldName}>
 									<legend>{field.title}</legend>
 									<div>
 										{field.fields.map((subField) => (
@@ -261,7 +332,7 @@ const Search: NextPage<Props> = (props) => {
 													id={subField.id}
 													onChange={(event) => {
 														setInputs((prev) => {
-															const prevFieldName = prev[field.name];
+															const prevFieldName = prev[fieldName];
 															const targetedInput =
 																prevFieldName &&
 																typeof prevFieldName === 'object' &&
@@ -274,7 +345,7 @@ const Search: NextPage<Props> = (props) => {
 															// typeof
 															return {
 																...prev,
-																[field.name]: {
+																[fieldName]: {
 																	...targetedInput,
 																	[event.target.name]: event.target.value,
 																},
@@ -288,14 +359,106 @@ const Search: NextPage<Props> = (props) => {
 								</fieldset>
 							);
 
-						// if (field.type === 'radio')
-						// 	return (
-						// 		<fieldset key={field.name}>
-						// 			<legend>{field.name}</legend>
-						// 			<div>{field.dataQueryResult.isLoading && <p>Loading</p>}</div>
-						// 			{field.dataQueryResult.}
-						// 		</fieldset>
-						// 	);
+						if (field.type === 'radio') {
+							return (
+								<fieldset key={fieldName}>
+									<legend>{fieldName}</legend>
+									<div>{field.dataQueryResult.isLoading && <p>Loading</p>}</div>
+									<div className=''>
+										<button
+											onClick={() =>
+												setInputs((prev) => ({
+													...prev,
+													[fieldName]: '',
+												}))
+											}
+										>
+											Clear
+										</button>
+									</div>
+									{field.dataQueryResult.isSuccess &&
+										field.dataQueryResult.data.brands.map((item) => (
+											<label
+												key={item.name}
+												htmlFor={`${field.id}-${fieldName}-${item.name}`}
+											>
+												<input
+													type={field.type}
+													name={fieldName}
+													id={`${field.id}-${fieldName}-${item.name}`}
+													value={item.name}
+													checked={inputs[fieldName] === item.name}
+													onChange={(event) =>
+														setInputs((prev) => ({
+															...prev,
+															[event.target.name]: event.target.value,
+														}))
+													}
+												/>
+												<span>{item.name}</span>
+											</label>
+										))}
+								</fieldset>
+							);
+						}
+
+						if (
+							field.type === 'checkbox' &&
+							fieldName === 'categoriesNames' &&
+							Array.isArray(inputs[fieldName])
+						) {
+							return (
+								<fieldset key={fieldName}>
+									<legend>{fieldName}</legend>
+									<div>{field.dataQueryResult.isLoading && <p>Loading</p>}</div>
+									<div className=''>
+										<button
+											onClick={() =>
+												setInputs((prev) => ({
+													...prev,
+													[fieldName]: [],
+												}))
+											}
+										>
+											Clear
+										</button>
+									</div>
+									{field.dataQueryResult.isSuccess &&
+										field.dataQueryResult.data.categories.map((item) => (
+											<label
+												key={item.name}
+												htmlFor={`${field.id}-${fieldName}-${item.name}`}
+											>
+												<input
+													type={field.type}
+													name={fieldName}
+													id={`${field.id}-${fieldName}-${item.name}`}
+													value={item.name}
+													checked={inputs[fieldName].includes(item.name)}
+													onChange={(event) => {
+														if (event.target.checked)
+															return setInputs((prev) => ({
+																...prev,
+																[event.target.name]: [
+																	...prev[fieldName],
+																	event.target.value,
+																],
+															}));
+
+														setInputs((prev) => ({
+															...prev,
+															[event.target.name]: prev[fieldName].filter(
+																(item) => item !== event.target.value
+															),
+														}));
+													}}
+												/>
+												<span>{item.name}</span>
+											</label>
+										))}
+								</fieldset>
+							);
+						}
 
 						// // if (field.type === 'checkbox')
 						// return (
@@ -311,6 +474,16 @@ const Search: NextPage<Props> = (props) => {
 						<button type='submit'>Submit</button>
 					</div>
 				</form>
+
+				<div>
+					{productsFilteredByQuery.isSuccess &&
+						!productsFilteredByQuery.isLoading &&
+						productsFilteredByQuery.data.map((product) => (
+							<div key={product.id} className='border border-gray-600 p-4 my-4'>
+								<p>{product.title}</p>
+							</div>
+						))}
+				</div>
 			</main>
 		</CustomerLayout>
 	);
@@ -328,6 +501,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 					return {};
 			  })()
 			: {};
+
+	console.log('Component ---------------------');
+	console.log('input', input);
+	console.log('--------------------- Component');
 
 	return {
 		props: {

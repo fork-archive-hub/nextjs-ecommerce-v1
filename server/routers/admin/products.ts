@@ -47,7 +47,7 @@ export const adminProductsRouter = createRouter()
 						select: {
 							createdAt: true,
 							brand: {
-								select: { name: true, count: true },
+								// select: { name: true, count: true },
 								include: {
 									images: {
 										select: {

@@ -12,6 +12,15 @@ export const productsFilteredByController = async ({
 }) => {
 	const limit = input.limit || 10;
 
+	// console.log('input.categoriesNames', input.categoriesNames);
+	console.log(
+		'productsFilteredByController ----------------------------------'
+	);
+	console.log('input', input);
+	console.log(
+		'---------------------------------- productsFilteredByController'
+	);
+
 	return await prisma.product.findMany({
 		include: {
 			images: {

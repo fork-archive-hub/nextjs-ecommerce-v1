@@ -60,7 +60,9 @@ export const productsRouter = createRouter()
 	.query('filteredBy', {
 		input: productsFilteredByZodInputs,
 		resolve: async ({ ctx, input }) => {
-			console.log(input);
+			console.log('filteredBy route ------------------');
+			console.log('input', input);
+			console.log('------------------ filteredBy route');
 			const data = await productsFilteredByController({
 				prisma: ctx.prisma,
 				input,
