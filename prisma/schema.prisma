@@ -25,7 +25,8 @@ datasource db {
 // be generated for each migration run.
 
 enum Role {
-  USER
+  CUSTOMER
+  SELLER
   ADMIN
 }
 
@@ -60,7 +61,7 @@ model Session {
 
 model User {
   id                    String                 @id @default(cuid())
-  role                  Role                   @default(USER)
+  role                  Role                   // @default(USER)
   name                  String?
   email                 String?                @unique
   emailVerified         DateTime?
@@ -69,11 +70,56 @@ model User {
   accounts              Account[]
   sessions              Session[]
   profile               Profile?
-  shippingAddress       ShippingAddress[]
+  seller                Seller?
 }
 
+model Address {
+  id                           String    @id @default(cuid())
+	country                      String
+	city                         String
+	address                      String
+	postalCode                   String
+  createdAt                    DateTime  @default(now())
+  ordersAddress                Order[]
+  storesAddress                AddressOnStore[]
+}
+
+model Seller {
+  id                       String                 @id @default(cuid())
+  user                     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String                 @unique
+  storesCounter            Int                    @default(0)
+  stores                   Store[]
+}
+
+model AddressOnStore {
+  store           Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId         String    @unique
+  address         Address    @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  addressId       String
+  createdAt       DateTime    @default(now())
+
+  @@id([storeId, addressId])
+}
+
+model Store {
+  id                     String                    @id @default(cuid())
+  seller                 Seller                    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId               String                 
+  title                  String
+  description            String
+  address                AddressOnStore?
+  createdAt              DateTime                  @default(now())
+  updatedAt              DateTime                  @default(now())
+}
+
+// model Customer {
+//   id                    String                 @id @default(cuid())
+//   // shippingAddress       Address[]
+// }
+
 model Profile {
-  id                    Int                    @id @default(autoincrement())
+  id                    String                 @id @default(cuid())
   bio                   String?
   sex                   String
   user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -88,18 +134,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model ShippingAddress {
-  id                           String    @id @default(cuid())
-	country                      String
-	city                         String
-	address                      String
-	postalCode                   String
-  createdAt                    DateTime  @default(now())
-  user                         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                       String
-  orderShippingAddress         Order[]
 }
 
 model Brand {
@@ -214,7 +248,7 @@ model Order {
 	deliveredAt           DateTime?
 	paymentMethod         String
   products              ProductsOnOrder[]
-  shippingAddress       ShippingAddress      @relation(fields: [shippingAddressId], references: [id])
+  shippingAddress       Address      @relation(fields: [shippingAddressId], references: [id])
   shippingAddressId     String
   paymentResult         PaymentResult?
 }

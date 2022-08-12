@@ -7,7 +7,6 @@ import {
 	setIsMobileOrTablet,
 	setThemeMode,
 } from './context/actions';
-import { IInitialState } from '../Customer/context/ts';
 import { useDynamicallyImportedGSAP } from './context/hooks';
 
 interface IProps {

@@ -25,9 +25,11 @@ const HomePageComingSoon = () => {
 						height={192}
 						priority
 					/>
-					<p className='my-8'>We take Your Business To The Next Level</p>
+					<h1 className='my-8 font-medium text-zinc-300'>
+						We take Your Business To The Next Level
+					</h1>
 					<button
-						className='border-2 border-white font-bold rounded-full px-6 py-3 text-xl
+						className='border-2 border-zinc-300 text-zinc-300 font-bold rounded-full px-6 py-3 text-xl
 						transition-all duration-75 ease-in hover:filter hover:brightness-75 focus:ring-4'
 					>
 						Coming Soon
@@ -132,16 +134,18 @@ const HomePageComingSoon = () => {
 						</div>
 					</div>
 					<div className='my-4 px-2'>
-						<h2 className='text-2xl font-bold'>Treeda Gate</h2>
-						<h2 className='text-2xl font-bold'>The home for your Business</h2>
-						<p className='m-4'>
+						<h2 className='text-2xl font-bold text-zinc-300'>Treeda Gate</h2>
+						<h2 className='text-2xl font-bold text-zinc-300'>
+							The home for your Business
+						</h2>
+						<p className='m-4 font-medium text-zinc-300'>
 							You can choose from over 400 business listing categories to find
 							or add a business, No matter what type of business or service you
 							are looking for, our directory will help you to easily locate a
 							business near you.
 						</p>
 						<div>
-							<button
+							{/* <button
 								className='max-w-[10rem]
 									sm:max-w-[12rem]'
 							>
@@ -175,7 +179,17 @@ const HomePageComingSoon = () => {
 										priority
 									/>
 								</a>
-							</button>
+							</button> */}
+							<p className='font-medium text-zinc-200'>
+								For more information:
+								<span className='px-1'></span>
+								<a
+									href='mailto:info@gate.thetreeda.com'
+									className='transition-all duration-300 rounded text-sky-600 border-b border-b-sky-500 hover:border-b-transparent hover:text-sky-300 focus:ring-2 focus:ring-sky-800'
+								>
+									Info@gate.thetreeda.com
+								</a>
+							</p>
 						</div>
 					</div>
 				</div>
