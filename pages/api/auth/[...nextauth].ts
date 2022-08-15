@@ -74,11 +74,14 @@ export const authOptions: NextAuthOptions = {
 			// 	(session as unknown as any).user.bio = profileData?.bio;
 			// 	// (user as typeof user & { bio?: string | null })
 			// }
+			session.user.id = user.id;
 
 			if (
 				'createdAt' in user &&
 				'role' in user &&
-				(user.role === 'ADMIN' || user.role === 'USER')
+				(user.role === 'ADMIN' ||
+					user.role === 'SELLER' ||
+					user.role === 'CUSTOMER')
 			) {
 				session.user.role = user.role;
 				session.user.createdAt =
@@ -88,6 +91,7 @@ export const authOptions: NextAuthOptions = {
 			return session;
 		},
 		jwt: async ({ token, user, account, profile, isNewUser }) => {
+			user && (token.user = user);
 			return token;
 		},
 	},

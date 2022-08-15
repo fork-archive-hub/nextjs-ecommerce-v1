@@ -30,7 +30,9 @@ const SideMenu = () => {
   hover:bg-light-gray m-2
   `;
 
-	const customerLinks = initCustomerLinks(session?.user.role !== 'ADMIN');
+	const customerLinks = initCustomerLinks({
+		role: session?.user.role,
+	});
 
 	if (!isVisible.sideNav) return <> </>;
 

@@ -3,9 +3,8 @@ import { SharedAdminDashboardProductsListStateProvider } from '@components/layou
 import AdminLayout from 'components/layouts/Admin';
 import AdminProducts from '@components/Admin/Products';
 
-type Props = {};
 
-const AdminProductsScreen = (props: Props) => {
+const AdminProductsScreen = () => {
 	return (
 		<AdminLayout>
 			<SharedAdminDashboardProductsListStateProvider>

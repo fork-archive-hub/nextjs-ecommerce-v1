@@ -107,6 +107,9 @@ const HomePageComingSoon = () => {
 							style={{
 								// padding: '75% 0 0 0',
 								position: 'relative',
+								aspectRatio: '16/8',
+								width: '100%',
+								height: '100%',
 							}}
 						>
 							<iframe

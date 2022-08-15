@@ -61,71 +61,18 @@ model Session {
 
 model User {
   id                    String                 @id @default(cuid())
-  role                  Role                   // @default(USER)
+  role                  Role?                  // @default(null)
   name                  String?
   email                 String?                @unique
   emailVerified         DateTime?
   image                 String?
   createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @default(now())
   accounts              Account[]
   sessions              Session[]
-  profile               Profile?
-  seller                Seller?
-}
-
-model Address {
-  id                           String    @id @default(cuid())
-	country                      String
-	city                         String
-	address                      String
-	postalCode                   String
-  createdAt                    DateTime  @default(now())
-  ordersAddress                Order[]
-  storesAddress                AddressOnStore[]
-}
-
-model Seller {
-  id                       String                 @id @default(cuid())
-  user                     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                   String                 @unique
-  storesCounter            Int                    @default(0)
-  stores                   Store[]
-}
-
-model AddressOnStore {
-  store           Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId         String    @unique
-  address         Address    @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  addressId       String
-  createdAt       DateTime    @default(now())
-
-  @@id([storeId, addressId])
-}
-
-model Store {
-  id                     String                    @id @default(cuid())
-  seller                 Seller                    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  sellerId               String                 
-  title                  String
-  description            String
-  address                AddressOnStore?
-  createdAt              DateTime                  @default(now())
-  updatedAt              DateTime                  @default(now())
-}
-
-// model Customer {
-//   id                    String                 @id @default(cuid())
-//   // shippingAddress       Address[]
-// }
-
-model Profile {
-  id                    String                 @id @default(cuid())
-  bio                   String?
-  sex                   String
-  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                String                 @unique
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @default(now())
+  sellerData            Seller?
+  customer              Customer?
+  // profileData           Customer?
 }
 
 model VerificationToken {
@@ -136,6 +83,37 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Address {
+  id                           String    @id @default(cuid())
+	country                      String
+	city                         String
+	address                      String
+	postalCode                   String?
+  createdAt                    DateTime  @default(now())
+  ordersAddress                Order[]
+  storesAddress                Store[]
+
+  @@unique([country, city, address])
+}
+
+model Image {
+  id                          String                      @id @default(cuid())
+  src                         String
+  alt                         String?
+  categories                  ImagesOnCategory[]
+  products                    ImagesOnProduct[]
+  imagesOnBrand     ImagesOnBrand[]
+}
+
+model Category {
+  // id            String                  @id @default(cuid())
+  name          String                  @id
+  createdAt     DateTime                @default(now())
+  count         Int                     @default(1)
+  products      CategoriesOnProducts[]
+  images        ImagesOnCategory[]
+}
+
 model Brand {
   // id                String                       @id @default(cuid())
   name              String                       @id
@@ -143,6 +121,49 @@ model Brand {
   count             Int                          @default(1)
   createdAt         DateTime                     @default(now())
   brandOnProducts   BrandOnProducts[]
+}
+
+model Customer {
+  id                    String                 @id @default(cuid())
+  firstName             String
+  secondName            String
+  bio                   String?
+  sex                   String
+  dateOfBirth           DateTime
+  // shippingAddress       Address[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @default(now())
+
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String                 @unique
+}
+
+model Seller {
+  id                       String                 @id @default(cuid())
+  name                     String
+  bio                      String
+  storesCounter            Int                    @default(0)
+  stores                   Store[]
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @default(now())
+  // isCompany                Boolean                // @default(true)
+
+  user                     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String                 @unique
+}
+
+model Store {
+  id                     String                    @id @default(cuid())
+  seller                 Seller                    @relation(fields: [sellerId], references: [userId], onDelete: Cascade)
+  sellerId               String                 
+  title                  String
+  description            String
+  address                Address?                  @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  addressId              String                    @unique
+  productsCounter        Int                       @default(0)
+  createdAt              DateTime                  @default(now())
+  updatedAt              DateTime                  @default(now())
+  products               Product[]
 }
 
 model BrandOnProducts {
@@ -163,15 +184,6 @@ model ImagesOnBrand {
   createdAt         DateTime        @default(now())
 
   @@id([imageId, brandName])
-}
-
-model Image {
-  id                          String                      @id @default(cuid())
-  src                         String
-  alt                         String?
-  categories                  ImagesOnCategory[]
-  products                    ImagesOnProduct[]
-  imagesOnBrand     ImagesOnBrand[]
 }
 
 model Product {
@@ -197,7 +209,19 @@ model Product {
   categories        CategoriesOnProducts[]
   orders            ProductsOnOrder[]
   images            ImagesOnProduct[]
+  store         Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId       String
 }
+
+// model ProductOnStore {
+//   store         Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+//   storeId       String
+//   product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   productId     String
+//   createdAt     DateTime    @default(now())
+
+//   @@id([storeId, productId])
+// }
 
 model ImagesOnProduct {
   image         Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
@@ -207,15 +231,6 @@ model ImagesOnProduct {
   createdAt     DateTime    @default(now())
 
   @@id([imageId, productId])
-}
-
-model Category {
-  // id            String                  @id @default(cuid())
-  name          String                  @id
-  createdAt     DateTime                @default(now())
-  count         Int                     @default(1)
-  products      CategoriesOnProducts[]
-  images        ImagesOnCategory[]
 }
 
 model ImagesOnCategory {
@@ -248,7 +263,7 @@ model Order {
 	deliveredAt           DateTime?
 	paymentMethod         String
   products              ProductsOnOrder[]
-  shippingAddress       Address      @relation(fields: [shippingAddressId], references: [id])
+  shippingAddress       Address             @relation(fields: [shippingAddressId], references: [id])
   shippingAddressId     String
   paymentResult         PaymentResult?
 }
@@ -273,3 +288,27 @@ model ProductsOnOrder {
 
   @@id([productId, orderId])
 }
+
+
+
+// DELETE FROM "Account";
+// DELETE FROM "User";
+// DELETE FROM "Session";
+// DELETE FROM "Seller";
+// DELETE FROM "Address";
+// DELETE FROM "Customer";
+// DELETE FROM "Store";
+// DELETE FROM "VerificationToken";
+// DELETE FROM "Profile";
+// DELETE FROM "BrandOnProducts";
+// DELETE FROM "Brand";
+// DELETE FROM "Image";
+// DELETE FROM "ImagesOnBrand";
+// DELETE FROM "ImagesOnProduct";
+// DELETE FROM "Product";
+// DELETE FROM "ImagesOnCategory";
+// DELETE FROM "Category";
+// DELETE FROM "Order";
+// DELETE FROM "CategoriesOnProducts";
+// DELETE FROM "ProductsOnOrder";
+// DELETE FROM "PaymentResult";

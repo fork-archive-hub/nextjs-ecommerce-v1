@@ -1,27 +1,27 @@
 import DynamicModal from '@components/common/Modal/Dynamic';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { useState, Fragment } from 'react';
-import CreateProduct from '.';
+import CreateStore from '.';
 
-const CreateProductButton = ({
-	buttonText = 'Create A new product?',
-	CreateProductInitValues,
+const CreateStoreButton = ({
+	buttonText = 'Create A new store?',
+	CreateStoreInitValues,
 	originListType,
-	removedProductOldId,
+	removedStoreOldId,
 	closeModalOnSuccessfulSubmission,
 }: {
 	buttonText?: string;
-	CreateProductInitValues?: Parameters<typeof CreateProduct>['0']['initValues'];
-	originListType?: Parameters<typeof CreateProduct>['0']['originListType'];
-	removedProductOldId?: string;
+	CreateStoreInitValues?: Parameters<typeof CreateStore>['0']['initValues'];
+	originListType?: Parameters<typeof CreateStore>['0']['originListType'];
+	removedStoreOldId?: string;
 	closeModalOnSuccessfulSubmission?: boolean; //  | (() => void)
 }) => {
 	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
-	const [isCreateProductModalVisible, setIsCreateProductModalVisible] =
+	const [isCreateStoreModalVisible, setIsCreateStoreModalVisible] =
 		useState(false);
 	const handleCloseModalOnSuccessfulSubmission =
 		closeModalOnSuccessfulSubmission
-			? () => setIsCreateProductModalVisible((prev) => !prev)
+			? () => setIsCreateStoreModalVisible((prev) => !prev)
 			: undefined;
 
 	return (
@@ -32,13 +32,13 @@ const CreateProductButton = ({
 					backgroundColor: currentBgColorMode,
 					color: currentFontColorMode,
 				}}
-				onClick={() => setIsCreateProductModalVisible((prev) => !prev)}
+				onClick={() => setIsCreateStoreModalVisible((prev) => !prev)}
 			>
 				{buttonText}
 			</button>
 			<DynamicModal
-				isVisible={isCreateProductModalVisible}
-				handleIsVisible={() => setIsCreateProductModalVisible((prev) => !prev)}
+				isVisible={isCreateStoreModalVisible}
+				handleIsVisible={() => setIsCreateStoreModalVisible((prev) => !prev)}
 				containerElem={{
 					className: 'bg-gray-200 dark:bg-gray-800 p-4 max-w-lg m-auto',
 					style: {
@@ -47,11 +47,11 @@ const CreateProductButton = ({
 				}}
 			>
 				<Fragment key='body'>
-					<CreateProduct
+					<CreateStore
 						originListType={originListType}
-						removedProductOldId={removedProductOldId}
+						removedStoreOldId={removedStoreOldId}
 						initValues={
-							CreateProductInitValues
+							CreateStoreInitValues
 							// {
 							// 	title: '',
 							// 	price: 0,
@@ -73,4 +73,4 @@ const CreateProductButton = ({
 	);
 };
 
-export default CreateProductButton;
+export default CreateStoreButton;

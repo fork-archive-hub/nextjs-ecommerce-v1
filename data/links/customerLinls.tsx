@@ -1,11 +1,13 @@
-const initCustomerLinks = (isAdmin: boolean) => [
+const initCustomerLinks = ({ role }: { role?: string }) => [
 	{
-		title: 'Admin Dashboard',
-		isHidden: isAdmin,
+		title: `${
+			role && role[0].toUpperCase() + role.slice(1).toLowerCase()
+		} Dashboard`,
+		isHidden: typeof role !== 'string' || !['ADMIN', 'SELLER'].includes(role),
 		links: [
 			{
-				name: 'admin',
-				path: 'admin',
+				name: 'dashboard',
+				path: 'dashboard',
 				icon: null,
 			},
 		],
