@@ -1,7 +1,7 @@
 import { trpc } from '@libs/trpc';
 import type { TStoreByIdPageProps } from '@pages/dashboard/stores/[storeId]';
 import React, { useEffect, useRef, useState } from 'react';
-import CreateProductButton from './components/CreateOne/Button';
+import CreateProductButton from './components/Create/One/Button';
 import ProductsMainTable from './components/Tables/Main';
 
 const StoreByIdScreen = ({ store, storeId }: TStoreByIdPageProps) => {
@@ -10,7 +10,7 @@ const StoreByIdScreen = ({ store, storeId }: TStoreByIdPageProps) => {
 		useState(store.productsCounter !== 0);
 
 	const storesProductsGetMany = trpc.useInfiniteQuery(
-		['stores.products.getMany', { storeId: storeId, limit: 5 }],
+		['stores.products.getMany', { storeId: storeId }],
 		{
 			getNextPageParam: (productsDetails) =>
 				productsDetails

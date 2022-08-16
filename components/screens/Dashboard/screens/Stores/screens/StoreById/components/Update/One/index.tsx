@@ -46,16 +46,14 @@ const valuesInit: () => IValues = () => ({
 	countInStock: 0,
 });
 
-const UpdateProduct = ({
+const UpdateOneProduct = ({
 	productData,
 	currentPageIndex,
-	storeId,
 }: {
 	productData: Omit<IAdminDashboardProduct, 'status'> & {
 		status: 'VISIBLE' | 'HIDDEN';
 	};
 	currentPageIndex: number;
-	storeId: string;
 }) => {
 	// const [, productsDispatch] = useSharedAdminDashboardProductsListState();
 	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
@@ -66,7 +64,7 @@ const UpdateProduct = ({
 		{
 			onSuccess: (result) => {
 				trpcContext.setInfiniteQueryData(
-					['stores.products.getMany', { storeId: storeId, limit: 5 }],
+					['stores.products.getMany', { storeId: productData.storeId }],
 					(prevDataNullable) => {
 						console.log('prevDataNullable', prevDataNullable);
 						const prevData = prevDataNullable || {
@@ -640,4 +638,4 @@ const UpdateProduct = ({
 	);
 };
 
-export default UpdateProduct;
+export default UpdateOneProduct;

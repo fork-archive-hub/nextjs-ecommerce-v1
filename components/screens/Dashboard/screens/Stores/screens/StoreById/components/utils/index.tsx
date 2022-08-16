@@ -10,9 +10,9 @@ import {
 } from '@utils/core/products';
 import { buildButtonClassName } from '@utils/tailwind';
 // import CreateProductButton from '../Action/ActionTypes/Create/Button';
-import DeleteProduct from '../Action/ActionTypes/Delete';
-import UpdateProduct from '../Action/ActionTypes/Update';
-import CreateProductButton from '../CreateOne/Button';
+import DeleteProduct from '../Delete/One';
+import CreateProductButton from '../Create/One/Button';
+import UpdateOneProduct from '../Update/One';
 
 export type TCreateColumnHelper = IAdminDashboardProduct & {
 	mutate: {
@@ -64,7 +64,7 @@ export const productTableDefaultColumns = [
 		cell: (info) => <p>{info.renderValue()}</p>,
 	}),
 	columnHelper.accessor('description', {
-		cell: (info) => <p>{info.renderValue()}</p>,
+		cell: (info) => <p className='w-72'>{info.renderValue()}</p>,
 	}),
 	columnHelper.accessor('brand', {
 		cell: (info) => {
@@ -112,13 +112,12 @@ export const productTableDefaultColumns = [
 							<UpdateProductButton
 								currentPageIndex={data.currentPageIndex}
 								productData={checkProductObjStatusOrThrow(data.data)}
-								storeId={data.storeId}
 							/>
 						</>
 					)}
 					{data.type?.DELETE && (
 						<DeleteProductButton
-							// currentPageIndex={data.currentPageIndex}
+							currentPageIndex={data.currentPageIndex}
 							productData={checkProductObjStatusOrThrow(data.data)}
 						/>
 					)}
@@ -153,13 +152,11 @@ export const productTableDefaultColumns = [
 const UpdateProductButton = ({
 	productData,
 	currentPageIndex,
-	storeId,
 }: {
 	productData: Omit<IAdminDashboardProduct, 'status'> & {
 		status: 'VISIBLE' | 'HIDDEN';
 	};
 	currentPageIndex: number;
-	storeId: string;
 }) => {
 	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -187,10 +184,9 @@ const UpdateProductButton = ({
 				}}
 			>
 				<Fragment key='body'>
-					<UpdateProduct
+					<UpdateOneProduct
 						productData={productData}
 						currentPageIndex={currentPageIndex}
-						storeId={storeId}
 					/>
 				</Fragment>
 			</DynamicModal>
@@ -200,10 +196,12 @@ const UpdateProductButton = ({
 
 const DeleteProductButton = ({
 	productData,
+	currentPageIndex,
 }: {
 	productData: Omit<IAdminDashboardProduct, 'status'> & {
 		status: 'VISIBLE' | 'HIDDEN';
 	};
+	currentPageIndex: number;
 }) => {
 	const [{ currentBgColorMode, currentFontColorMode }] = useSharedMainState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -232,6 +230,7 @@ const DeleteProductButton = ({
 			>
 				<Fragment key='body'>
 					<DeleteProduct
+						currentPageIndex={currentPageIndex}
 						productData={productData}
 						setIsModalVisible={setIsModalVisible}
 					/>
