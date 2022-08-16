@@ -123,6 +123,7 @@ export const adminProductsRouter = createRouter()
 
 			const productCreated = await ctx.prisma.product.create({
 				data: {
+					storeId: 'lol',
 					title: input.title,
 					description: input.description,
 					status: input.status,

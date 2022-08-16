@@ -98,7 +98,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<MainNavbar />
-			<div className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'>
+			<div className='flex w-full min-h-full-content-page mt-content-page overflow-hidden'>
 				<SideMenu />
 				{children}
 			</div>

@@ -37,6 +37,7 @@ const CreateStore = ({
 	handleCloseModalOnSuccessfulSubmission?: () => void;
 }) => {
 	const formFieldsId = useId();
+	const trpcContext = trpc.useContext();
 	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
 		useSharedMainState();
 	// const [, storesDispatch] = useSharedAdminDashboardStoresListState();
@@ -86,7 +87,6 @@ const CreateStore = ({
 			*/
 		},
 	});
-	const trpcContext = trpc.useContext();
 
 	const [values, setValues] = useState({
 		...valuesInit(),

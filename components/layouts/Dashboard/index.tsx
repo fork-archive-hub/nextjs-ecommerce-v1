@@ -69,7 +69,9 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 		if (
 			status === 'unauthenticated' ||
 			!session?.user ||
-			!['ADMIN', 'SELLER'].includes(session?.user.role)
+			!session?.user.role ||
+			// typeof session?.user?.role !== 'srting' ||
+			!['ADMIN', 'SELLER'].includes(session.user.role)
 		) {
 			router.push('/');
 		}
@@ -98,7 +100,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<MainNavbar />
-			<div className='flex w-full max-h-full-content-page mt-content-page overflow-hidden'>
+			<div className='flex w-full min-h-full-content-page mt-content-page overflow-hidden'>
 				<SideMenu />
 				{children}
 			</div>

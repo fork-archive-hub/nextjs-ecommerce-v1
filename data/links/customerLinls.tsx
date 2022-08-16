@@ -1,4 +1,4 @@
-const initCustomerLinks = ({ role }: { role?: string }) => [
+const initCustomerLinks = ({ role }: { role?: string | null }) => [
 	{
 		title: `${
 			role && role[0].toUpperCase() + role.slice(1).toLowerCase()

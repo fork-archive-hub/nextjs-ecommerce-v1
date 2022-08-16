@@ -31,7 +31,7 @@ const SideMenu = () => {
   `;
 
 	const customerLinks = initCustomerLinks({
-		role: session?.user.role,
+		role: session?.user.role || null,
 	});
 
 	if (!isVisible.sideNav) return <> </>;

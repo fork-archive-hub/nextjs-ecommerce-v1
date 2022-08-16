@@ -22,24 +22,19 @@ const uniqueArrItems = (items: string[]) => {
 };
 
 export const storeProductsRouter = createRouter()
-	.middleware(async ({ ctx, next }) => {
-		if (
-			typeof ctx.session?.user.role !== 'string' ||
-			!['ADMIN', 'SELLER'].includes(ctx.session.user.role)
-		)
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
-
-		return next();
-	})
 	.query('getMany', {
 		input: z.object({
-			limit: z.number(),
+			limit: z.number().max(100).optional(),
 			storeId: z.string(),
 			lastItemCreatedAt: z.string().optional(),
+			cursor: z.date().nullish(),
 		}),
 		async resolve({ ctx, input }) {
-			return await ctx.prisma.product.findMany({
-				take: input.limit,
+			console.log('input', input);
+			const limit = input.limit || 100;
+
+			const data = await ctx.prisma.product.findMany({
+				take: limit + 1,
 				include: {
 					images: {
 						select: {
@@ -81,9 +76,33 @@ export const storeProductsRouter = createRouter()
 				},
 				where: {
 					storeId: input.storeId,
+					createdAt: {
+						gt: input.cursor || undefined,
+					},
 				},
 			});
+
+			const isLastPage = data.length < limit ? true : data.pop() && false;
+
+			console.log('isLastPage', isLastPage);
+
+			return {
+				data,
+				cursor: {
+					lastItemCreatedAt: data[data.length - 1].createdAt,
+				},
+				isLastPage,
+			};
 		},
+	})
+	.middleware(async ({ ctx, next }) => {
+		if (
+			typeof ctx.session?.user.role !== 'string' ||
+			!['ADMIN', 'SELLER'].includes(ctx.session.user.role)
+		)
+			throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+		return next();
 	})
 	.mutation('createOne', {
 		// validate input with Zod
@@ -184,6 +203,15 @@ export const storeProductsRouter = createRouter()
 						};
 					}),
 				});
+
+			await ctx.prisma.store.update({
+				data: {
+					productsCounter: { increment: 1 },
+				},
+				where: {
+					id: input.storeId,
+				},
+			});
 
 			return {
 				...productCreated,

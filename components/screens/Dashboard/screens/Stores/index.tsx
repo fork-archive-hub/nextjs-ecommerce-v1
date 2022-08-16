@@ -1,35 +1,7 @@
 import { trpc } from '@libs/trpc';
-import { InferQueryOutput } from '@utils/trpc/types';
-import { useState } from 'react';
+import Link from 'next/link';
+import { Fragment, useRef, useState } from 'react';
 import CreateStoreButton from './components/Create/Button';
-
-const StoreShowCase = ({
-	store,
-}: {
-	store: InferQueryOutput<'stores.getStores'>[0];
-}) => {
-	const [isSectionVisible, setIsSectionVisible] = useState(false);
-
-	return (
-		<div key={store.id} className='p-4'>
-			<header className='flex w-full items-center justify-between'>
-				<h3>{store.title}</h3>
-				<button onClick={() => setIsSectionVisible((prev) => !prev)}>x</button>
-			</header>
-			{isSectionVisible && (
-				<div>
-					<div className=''>
-						<p>
-							{store.description} /{' '}
-							{typeof store.productsCounter === 'number' &&
-								`${store.productsCounter}`}
-						</p>
-					</div>
-				</div>
-			)}
-		</div>
-	);
-};
 
 const DashboardStoresScreen = () => {
 	const [getStoresEnabled, setGetStoresEnabled] = useState(true);
@@ -39,16 +11,23 @@ const DashboardStoresScreen = () => {
 		onSuccess: () => setGetStoresEnabled(false),
 	});
 
-	console.log('getStores.data', getStores.data);
-
 	return (
-		<main>
+		<main className='p-8'>
 			<CreateStoreButton />
-			DashboardStoresScreen
-			<div className=''>
+			<div className='flex flex-wrap justify-evenly items-center'>
 				{getStores.isSuccess &&
-					getStores.data.map((store) => (
-						<StoreShowCase key={store.id} store={store} />
+					getStores.data.map((store, storeIndex, storesArr) => (
+						// <StoreShowCase key={store.id} store={store} />
+						<Fragment key={store.id}>
+							<Link href={`/dashboard/stores/${store.id}`}>
+								<a className='w-56 h-96 bg-gray-700 bg-opacity-90 my-4'>
+									<div className='flex w-full h-full p-4'>
+										<h4 className='text-2xl font-medium'>{store.title}</h4>
+									</div>
+								</a>
+							</Link>
+							{storeIndex !== storesArr.length - 1 && <span className='px-2' />}
+						</Fragment>
 					))}
 			</div>
 		</main>

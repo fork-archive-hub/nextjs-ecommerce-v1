@@ -40,6 +40,9 @@ module.exports = {
 			maxHeight: {
 				'full-content-page': 'calc(100vh - var(--nav-height))',
 			},
+			minHeight: {
+				'full-content-page': 'calc(100vh - var(--nav-height))',
+			},
 			spacing: {
 				'content-page': 'calc(var(--nav-height))',
 			},
