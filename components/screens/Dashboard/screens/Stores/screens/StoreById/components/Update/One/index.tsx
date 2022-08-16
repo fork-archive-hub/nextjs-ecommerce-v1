@@ -1,8 +1,6 @@
 import Tooltip from '@components/common/Tooltip';
 import { useSharedMainState } from '@components/layouts/Main/context';
 import { trpc } from '@libs/trpc';
-// import { useSharedAdminDashboardProductsListState } from '@components/layouts/Admin/context/Products/List';
-import { EAdminDashboardProductsListContextConsts } from '@components/layouts/Admin/context/Products/List/constants';
 import { IAdminDashboardProduct } from '@components/layouts/Admin/context/Products/List/ts';
 import {
 	useId,
@@ -202,6 +200,11 @@ const UpdateOneProduct = ({
 						};
 					}
 				);
+
+				removedRef.current = {
+					categoriesNames: undefined,
+					imagesIds: undefined,
+				};
 			},
 		}
 	);
@@ -439,36 +442,12 @@ const UpdateOneProduct = ({
 	};
 
 	useEffect(() => {
-		if (updateProductMutation.isSuccess /*&& updateProductMutation.is*/) {
-			// initValuesRef.current = {
-			// 	// ...initValuesRef.current,
-			// 	// updateProductMutation
-
-			// };
-			updateProductMutation.data;
-			// productsDispatch({
-			// 	type: EAdminDashboardProductsListContextConsts.UPDATE,
-			// 	payload: {
-			// 		isProductUpdated: updateProductMutation.data.isProductUpdated,
-			// 		newData: updateProductMutation.data.newData,
-			// 		productId: productData.id,
-			// 		removed: {
-			// 			categoriesNames: removedRef.current.categoriesNames,
-			// 			imagesIds: removedRef.current.imagesIds,
-			// 		},
-			// 	},
-			// });
-
-			removedRef.current = {
+		() =>
+			(removedRef.current = {
 				categoriesNames: undefined,
 				imagesIds: undefined,
-			};
-		}
-	}, [
-		updateProductMutation.data,
-		updateProductMutation.isSuccess,
-		productData.id,
-	]);
+			});
+	}, []);
 
 	return (
 		<form
