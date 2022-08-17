@@ -48,79 +48,10 @@ const CreateOneProduct = ({
 	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
 		useSharedMainState();
 	// const trpcContext = trpc.useContext();
-	const createOne = trpc.useMutation(['stores.products.createOne'], {
-		// onSuccess: (data) => {
-		// 	trpcContext.setInfiniteQueryData(
-		// 		['stores.products.getMany'],
-		// 		(prevData) => {
-		// 			if (!prevData) return { pages: [], pageParams: [] };
-		// 			const newData = {
-		// 				...prevData,
-		// 				pages: prevData.pages.map((page, pageIndex) => {
-		// 					if (currentPageIndex === pageIndex) {
-		// 						return {
-		// 							...page,
-		// 							data: [
-		// 								{
-		// 									...data,
-		// 									categories: data.categories.map((item) => ({
-		// 										...item,
-		// 										createdAt: new Date(),
-		// 										category: {
-		// 											images: [],
-		// 											...item.category,
-		// 										},
-		// 									})),
-		// 									brand: {
-		// 										createdAt: new Date(),
-		// 										brand: {
-		// 											// images: [],
-		// 											images: [],
-		// 											...data.brand,
-		// 										},
-		// 									},
-		// 									images: data.images.map((img) => ({
-		// 										...img,
-		// 										createdAt: new Date(),
-		// 									})),
-		// 								},
-		// 								...page.data,
-		// 							],
-		// 						};
-		// 					}
-		// 					return page;
-		// 				}),
-		// 			};
-		// 			console.log('data', data);
-		// 			console.log('newData', newData);
-		// 			// prevData.pages[currentPageIndex].data.push({
-		// 			// 	...data,
-		// 			// 	categories: data.categories.map((item) => ({
-		// 			// 		...item,
-		// 			// 		createdAt: new Date(),
-		// 			// 		category: {
-		// 			// 			images: [],
-		// 			// 			...item.category,
-		// 			// 		},
-		// 			// 	})),
-		// 			// 	brand: {
-		// 			// 		createdAt: new Date(),
-		// 			// 		brand: {
-		// 			// 			// images: [],
-		// 			// 			images: [],
-		// 			// 			...data.brand,
-		// 			// 		},
-		// 			// 	},
-		// 			// 	images: data.images.map((img) => ({
-		// 			// 		...img,
-		// 			// 		createdAt: new Date(),
-		// 			// 	})),
-		// 			// });
-		// 			return newData;
-		// 		}
-		// 	);
-		// },
-	});
+	const createOne = trpc.useMutation(
+		['stores.products.createOne']
+		// , { onSuccess: (result) => { } }
+	);
 
 	const fields1Id = useId();
 	const [values, setValues] = useState({

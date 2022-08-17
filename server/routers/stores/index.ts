@@ -40,6 +40,7 @@ export const storesRouter = createRouter()
 				},
 				include: {
 					address: true,
+					image: true,
 				},
 			});
 
@@ -53,18 +54,33 @@ export const storesRouter = createRouter()
 			address: z.object({
 				country: z.string(),
 				city: z.string(),
-				address: z.string(),
+				streetAddress: z.string(),
 				postalCode: z.string().optional(),
 			}),
+			image: z
+				.object({
+					src: z.string(),
+					alt: z.string().optional(),
+				})
+				.optional(),
 		}),
 		resolve: async ({ ctx, input }) => {
 			const userId = ctx.session?.user.id as string;
+
+			const imageCreatedNullable = input.image?.src
+				? await ctx.prisma.image.create({
+						data: {
+							src: input.image.src,
+							alt: input.image.alt || undefined,
+						},
+				  })
+				: { id: undefined };
 
 			const addressCreated = await ctx.prisma.address.create({
 				data: {
 					country: input.address.country,
 					city: input.address.city,
-					address: input.address.address,
+					streetAddress: input.address.streetAddress,
 					postalCode: input.address.postalCode,
 				},
 			});
@@ -75,10 +91,15 @@ export const storesRouter = createRouter()
 					title: input.title,
 					description: input.description,
 					addressId: addressCreated.id,
+					imageId: imageCreatedNullable.id,
 				},
 			});
 
-			return { store: storeCreated, address: addressCreated };
+			return {
+				store: storeCreated,
+				address: addressCreated,
+				image: imageCreatedNullable?.id ? imageCreatedNullable : null,
+			};
 		},
 	});
 

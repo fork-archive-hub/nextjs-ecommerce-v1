@@ -30,7 +30,6 @@ export const storeProductsRouter = createRouter()
 			cursor: z.date().nullish(),
 		}),
 		async resolve({ ctx, input }) {
-			console.log('input', input);
 			const limit = input.limit || 100;
 
 			const data = await ctx.prisma.product.findMany({
@@ -82,16 +81,12 @@ export const storeProductsRouter = createRouter()
 				},
 			});
 
-			const isLastPage = data.length < limit ? true : data.pop() && false;
-
-			console.log('isLastPage', isLastPage);
-
 			return {
 				data,
 				cursor: {
-					lastItemCreatedAt: data[data.length - 1].createdAt,
+					lastItemCreatedAt: data[data.length - 1]?.createdAt,
 				},
-				isLastPage,
+				isLastPage: data.length < limit ? true : data.pop() && false,
 			};
 		},
 	})

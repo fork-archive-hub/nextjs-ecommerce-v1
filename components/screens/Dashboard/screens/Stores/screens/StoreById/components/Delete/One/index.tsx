@@ -24,7 +24,6 @@ const DeleteOneProduct = ({
 			trpcContext.setInfiniteQueryData(
 				['stores.products.getMany', { storeId: productData.storeId }],
 				(prevDataNullable) => {
-					console.log('prevDataNullable', prevDataNullable);
 					const prevData = prevDataNullable || {
 						pages: [],
 						pageParams: [],

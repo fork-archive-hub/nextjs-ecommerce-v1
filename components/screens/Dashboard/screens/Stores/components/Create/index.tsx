@@ -12,10 +12,14 @@ const valuesInit: () => InferMutationInput<'stores.createOne'> = () => ({
 	title: '',
 	description: '',
 	address: {
-		address: '',
+		streetAddress: '',
 		city: '',
 		country: '',
 		postalCode: '',
+	},
+	image: {
+		src: '',
+		alt: '',
 	},
 });
 
@@ -46,45 +50,27 @@ const CreateStore = ({
 		onSuccess: (data) => {
 			trpcContext.setQueryData(
 				['stores.getStores'],
-				(prevData) =>
-					Array.isArray(prevData)
-						? [...prevData, { ...data.store, address: data.address }]
-						: [{ ...data.store, address: data.address }] // [] // prevData || []
+				(prevData) => {
+					// if (Array.isArray(prevData)) {
+					// 	let newData = {
+					// 		...data.store,
+					// 		// address: data.address || null,
+					// 		// image: data.image || null,
+					// 	};
+					// 	let item = prevData[0];
+					// 	newData = item;
+					// }
+					const newProduct = {
+						...data.store,
+						address: data.address || null,
+						image: data.image || null,
+					};
+
+					return Array.isArray(prevData)
+						? [...prevData, newProduct]
+						: [newProduct];
+				} // [] // prevData || []
 			);
-			/*
-			trpcContext.setQueryData(['stores.getStores', {}], (prevData) => {
-				const updatedData = prevData
-					? prevData.push({
-							...data.store,
-							address: data.address,
-					  })
-					: [
-							{
-								...data.store,
-								address: data.address,
-							},
-					  ];
-				// const updatedData = prevData
-				// 	? [
-				// 			...prevData,
-				// 			{
-				// 				...data.store,
-				// 				address: data.address,
-				// 			},
-				// 	  ]
-				// 	: [
-				// 			{
-				// 				...data.store,
-				// 				address: data.address,
-				// 			},
-				// 	  ];
-
-				// console.log('prevData', prevData);
-				// console.log('updatedData', updatedData);
-
-				return updatedData;
-			});
-			*/
 		},
 	});
 
@@ -107,6 +93,13 @@ const CreateStore = ({
 			title: 'Description',
 		},
 		{
+			__type: EFormFields.NORMAL_INPUT,
+			name: 'image',
+			id: `${formFieldsId}-image`,
+			title: 'Image',
+			pathMap: ['image', 'src'],
+		},
+		{
 			__type: EFormFields.INPUTS_FIELDSET,
 			legend: 'Address',
 			name: 'address',
@@ -114,8 +107,8 @@ const CreateStore = ({
 			list: [
 				{
 					__type: EFormFields.NORMAL_INPUT,
-					title: 'Address',
-					name: 'address',
+					title: 'Street address',
+					name: 'streetAddress',
 					id: `${formFieldsId}-address-address`,
 				},
 				{
@@ -232,12 +225,63 @@ const CreateStore = ({
 									name={field.name}
 									id={field.id}
 									onChange={(event) => {
+										if ('pathMap' in field) {
+											setValues((prev) => {
+												const paths: { [key: string]: any }[] = [];
+												let i = 0;
+												for (; i < field.pathMap.length; i++) {
+													let key = field.pathMap[i] as keyof typeof prev;
+													let value = prev[key];
+													if (!value || typeof value !== 'object')
+														throw new Error('');
+
+													if (i === field.pathMap.length - 2) {
+														paths[i] = {
+															...value,
+															[field.pathMap[i + 1] as keyof typeof prev]:
+																event.target.value,
+														};
+
+														break;
+													}
+													if (typeof key === 'string') {
+														paths[i] = value;
+													}
+												}
+
+												i = field.pathMap.length - 2;
+
+												let obj: { [key: string]: any } = paths[i];
+
+												for (; i >= 0; i--) {
+													let key = field.pathMap[i] as keyof typeof prev;
+
+													obj = {
+														...paths[i],
+														[key]: obj,
+													};
+												}
+
+												obj = {
+													...prev,
+													...obj,
+												};
+
+												return obj as typeof prev;
+											});
+											return;
+										}
+
 										setValues((prev) => ({
 											...prev,
 											[event.target.name]: event.target.value,
 										}));
 									}}
-									value={(values as any)[field.name]}
+									value={
+										field.name === 'image'
+											? (values as any)[field.name].src
+											: (values as any)[field.name]
+									}
 									className='px-2 py-1 rounded-sm w-full'
 								/>
 							)}
@@ -259,7 +303,7 @@ const CreateStore = ({
 										className='capitalize my-4 block  flex-col cursor-pointer'
 										key={subField.name}
 									>
-										<span className='my-2'>{subField.name}</span>
+										<span className='my-2'>{subField.title}</span>
 										{subField.__type === EFormFields.NORMAL_INPUT && (
 											<input
 												type='text'

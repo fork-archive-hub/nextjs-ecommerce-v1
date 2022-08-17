@@ -35,8 +35,6 @@ export const userProfileRouter = createRouter()
 				},
 			});
 
-			console.log('userRoleUpdated', userRoleUpdated);
-			console.log('sellerProfileCreate', sellerProfileCreate);
 			return { role: 'SELLER' };
 		},
 	})
@@ -73,8 +71,6 @@ export const userProfileRouter = createRouter()
 				},
 			});
 
-			console.log('userRoleUpdated', userRoleUpdated);
-			console.log('customerProfileCreate', customerProfileCreate);
 			return { role: 'CUSTOMER' };
 		},
 	});

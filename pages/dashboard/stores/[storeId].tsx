@@ -53,7 +53,6 @@ const StoreShowCase = ({
 			'stores.products.getMany',
 			{
 				storeId: store.id,
-				limit: 5,
 			},
 		],
 		{
@@ -62,7 +61,7 @@ const StoreShowCase = ({
 				pageParams: [],
 			},
 			getNextPageParam: (productsDetails) =>
-				productsDetails
+				productsDetails?.cursor?.lastItemCreatedAt
 					? new Date(productsDetails.cursor.lastItemCreatedAt)
 					: undefined,
 
@@ -167,7 +166,6 @@ export const getStaticProps = async (
 		'stores.products.getMany',
 		{
 			storeId: storeId,
-			limit: 5,
 		}
 	);
 

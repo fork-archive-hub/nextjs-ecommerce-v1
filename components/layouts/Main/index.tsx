@@ -153,7 +153,7 @@ const CustomerInputs = ({ userEmail }: ICompleteProfileFormProps) => {
 								{item.list.map((subItem) => {
 									return (
 										<label
-											key={subItem.name}
+											key={`${subItem.title}-${subItem.title.toLowerCase()}`}
 											htmlFor={subItem.id}
 											className='flex flex-col items-center justify-center cursor-pointer w-full m-2'
 										>

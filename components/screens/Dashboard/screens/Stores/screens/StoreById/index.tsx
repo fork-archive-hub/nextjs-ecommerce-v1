@@ -41,11 +41,6 @@ const StoreByIdScreen = ({ store, storeId }: TStoreByIdPageProps) => {
 		}
 	}, [isStoresProductsGetManyEnabled, storesProductsGetMany.isSuccess]);
 
-	console.log('isStoresProductsGetManyEnabled', isStoresProductsGetManyEnabled);
-	console.log('storesProductsGetMany.data', storesProductsGetMany.data);
-	// console.log('store', store);
-	// console.log('storeId', storeId);
-
 	return (
 		<main className='p-8'>
 			<header></header>

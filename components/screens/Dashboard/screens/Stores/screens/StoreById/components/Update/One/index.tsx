@@ -64,7 +64,6 @@ const UpdateOneProduct = ({
 				trpcContext.setInfiniteQueryData(
 					['stores.products.getMany', { storeId: productData.storeId }],
 					(prevDataNullable) => {
-						console.log('prevDataNullable', prevDataNullable);
 						const prevData = prevDataNullable || {
 							pages: [],
 							pageParams: [],
@@ -91,8 +90,6 @@ const UpdateOneProduct = ({
 
 							return false;
 						});
-
-						console.log('targetedPage', targetedPage);
 
 						if (productCoordinates.dataIndex === -1 || !targetedProduct)
 							return prevData;

@@ -272,15 +272,6 @@ const Search: NextPage<Props> = (props) => {
 		}
 	};
 
-	if (productsFilteredByQuery.data)
-		console.log('productsFilteredByQuery.data', productsFilteredByQuery.data);
-
-	console.log(
-		'productsFilteredByQuery.isLoading',
-		productsFilteredByQuery.isLoading
-	);
-	console.log('router.isReady', router.isReady);
-
 	return (
 		<CustomerLayout>
 			<main>
@@ -501,10 +492,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 					return {};
 			  })()
 			: {};
-
-	console.log('Component ---------------------');
-	console.log('input', input);
-	console.log('--------------------- Component');
 
 	return {
 		props: {
