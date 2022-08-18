@@ -30,10 +30,10 @@ export const storeProductsRouter = createRouter()
 			cursor: z.date().nullish(),
 		}),
 		async resolve({ ctx, input }) {
-			const limit = input.limit || 100;
+			const limit = input.limit || 10;
 
 			const data = await ctx.prisma.product.findMany({
-				take: limit + 1,
+				take: limit, // + 1,
 				include: {
 					images: {
 						select: {
@@ -76,8 +76,11 @@ export const storeProductsRouter = createRouter()
 				where: {
 					storeId: input.storeId,
 					createdAt: {
-						gt: input.cursor || undefined,
+						lt: input.cursor || undefined,
 					},
+				},
+				orderBy: {
+					createdAt: 'desc',
 				},
 			});
 
@@ -86,7 +89,7 @@ export const storeProductsRouter = createRouter()
 				cursor: {
 					lastItemCreatedAt: data[data.length - 1]?.createdAt,
 				},
-				isLastPage: data.length < limit ? true : data.pop() && false,
+				isLastPage: data.length < limit, // ? true : data.pop() && false,
 			};
 		},
 	})
@@ -272,7 +275,7 @@ export const storeProductsRouter = createRouter()
 						price: number;
 						description: string;
 						countInStock: number;
-						updatedAt: Date;
+						updatedAt: Date | null;
 				  }
 				| undefined = undefined;
 
@@ -516,6 +519,15 @@ export const storeProductsRouter = createRouter()
 					where: { id: productId },
 				});
 			}
+
+			await ctx.prisma.store.update({
+				data: {
+					productsCounter: { decrement: 1 },
+				},
+				where: {
+					id: input.storeId,
+				},
+			});
 
 			return { deletedId: productId };
 		},

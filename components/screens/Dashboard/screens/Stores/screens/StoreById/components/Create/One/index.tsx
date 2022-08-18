@@ -51,7 +51,6 @@ const CreateOneProduct = ({
 	// const trpcContext = trpc.useContext();
 	const createOne = trpc.useMutation(['stores.products.createOne'], {
 		onSuccess: (result) => {
-			console.log('storeId', storeId);
 			trpcContext.setInfiniteQueryData(
 				['stores.products.getMany', { storeId }],
 				(prevDataNullable) => {

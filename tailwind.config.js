@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const calcContentPage = 'calc(100vh - var(--nav-height))';
+
 module.exports = {
 	content: [
 		'./pages/**/*.{js,ts,jsx,tsx}',
@@ -35,13 +38,13 @@ module.exports = {
 			},
 			height: {
 				'main-nav-page': 'var(--nav-height)',
-				'full-content-page': 'calc(100vh - var(--nav-height))',
+				'full-content-page': calcContentPage,
 			},
 			maxHeight: {
-				'full-content-page': 'calc(100vh - var(--nav-height))',
+				'full-content-page': calcContentPage,
 			},
 			minHeight: {
-				'full-content-page': 'calc(100vh - var(--nav-height))',
+				'full-content-page': calcContentPage,
 			},
 			spacing: {
 				'content-page': 'calc(var(--nav-height))',
