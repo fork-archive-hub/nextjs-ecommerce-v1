@@ -47,11 +47,65 @@ const CreateOneProduct = ({
 }) => {
 	const [{ currentBgColorMode, currentFontColorMode }, mainDispatch] =
 		useSharedMainState();
+	const trpcContext = trpc.useContext();
 	// const trpcContext = trpc.useContext();
-	const createOne = trpc.useMutation(
-		['stores.products.createOne']
-		// , { onSuccess: (result) => { } }
-	);
+	const createOne = trpc.useMutation(['stores.products.createOne'], {
+		onSuccess: (result) => {
+			console.log('storeId', storeId);
+			trpcContext.setInfiniteQueryData(
+				['stores.products.getMany', { storeId }],
+				(prevDataNullable) => {
+					const prevData = prevDataNullable || {
+						pages: [],
+						pageParams: [],
+					};
+
+					const targetedPage = prevData.pages[currentPageIndex];
+
+					if (!targetedPage) return prevData;
+
+					return {
+						...prevData,
+						pages: prevData.pages.map((page, pageIndex) => {
+							if (pageIndex === currentPageIndex) {
+								return {
+									...page,
+									data: [
+										{
+											...result,
+											categories: result.categories.map((item) => ({
+												...item,
+												createdAt: new Date(),
+												category: {
+													images: [],
+													...item.category,
+												},
+											})),
+											brand: {
+												createdAt: new Date(),
+												brand: {
+													// images: [],
+													images: [],
+													...result.brand,
+												},
+											},
+											images: result.images.map((img) => ({
+												...img,
+												createdAt: new Date(),
+											})),
+										},
+										...page.data,
+									],
+								};
+							}
+
+							return page;
+						}),
+					};
+				}
+			);
+		},
+	});
 
 	const fields1Id = useId();
 	const [values, setValues] = useState({
@@ -138,6 +192,10 @@ const CreateOneProduct = ({
 		createOne.mutate({
 			...values,
 			storeId,
+			images: values.images.map((img) => img.trim()).filter((img) => img),
+			categories: values.categories
+				.map((category) => category.trim())
+				.filter((category) => category),
 		});
 	};
 
@@ -291,10 +349,20 @@ const CreateOneProduct = ({
 								onChange={(event) => {
 									setValues((prev) => ({
 										...prev,
-										[event.target.name]: event.target.value,
+										[event.target.name]:
+											field.label === 'images'
+												? event.target.value.split(/\s{1,}/g)
+												: event.target.value,
 									}));
 								}}
-								value={(values as any)[field.textarea.name || field.label]}
+								value={
+									field.label === 'images'
+										? (values as any)[
+												(field.textarea.name ||
+													field.label) as keyof typeof values
+										  ].join(/\n/)
+										: (values as any)[field.textarea.name || field.label]
+								}
 								className='px-2 py-1 rounded-sm w-full'
 							/>
 						</label>
@@ -317,13 +385,13 @@ const CreateOneProduct = ({
 									[event.target.name]:
 										event.target.type === 'number'
 											? parseFloat(event.target.value)
-											: field.label === 'images' || field.label === 'categories'
-											? event.target.value.split(/\s{1,}/g)
+											: field.label === 'categories'
+											? event.target.value.split(/\n{1,}/g)
 											: event.target.value,
 								}));
 							}}
 							value={
-								field.label === 'images' || field.label === 'categories'
+								field.label === 'categories'
 									? (values as any)[
 											(field.input.name || field.label) as keyof typeof values
 									  ].join(' ')

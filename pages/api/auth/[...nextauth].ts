@@ -1,6 +1,7 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 // import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 // import CredentialsProvider from 'next-auth/providers/credentials';
 
 // Prisma adapter for NextAuth, optional and can be removed
@@ -19,6 +20,10 @@ export const authOptions: NextAuthOptions = {
 		GoogleProvider({
 			clientId: process.env.GOOGLE_ID as string,
 			clientSecret: process.env.GOOGLE_SECRET as string,
+		}),
+		FacebookProvider({
+			clientId: process.env.FACEBOOK_ID as string,
+			clientSecret: process.env.FACEBOOK_SECRET as string,
 		}),
 		// // ...add more providers here
 		// CredentialsProvider({
@@ -79,6 +84,7 @@ export const authOptions: NextAuthOptions = {
 			if (
 				'createdAt' in user &&
 				'role' in user &&
+				// typeof user.role === 'string' &&
 				(user.role === 'ADMIN' ||
 					user.role === 'SELLER' ||
 					user.role === 'CUSTOMER')
