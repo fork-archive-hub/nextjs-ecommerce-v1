@@ -14,7 +14,7 @@ const SideMenu = () => {
 	const [{ isVisible }, customerDispatch] = useSharedCustomerState();
 
 	const activeLink =
-		'flex items-center gap-5 pl-4 pt-3 p-3 rounded-lg  text-white  text-md m-2';
+		'flex items-center gap-5 pl-4 pt-3 p-3 rounded-lg  text-zinc-100  text-md m-2';
 	const normalLink = `
   flex
   items-center
@@ -44,7 +44,7 @@ const SideMenu = () => {
 					customerGlobalActions.setIsVisibleOnly(customerDispatch, 'sideNav')
 				}
 			/>
-			<nav className='fixed z-10 top-0 left-0 h-full-content-page mt-content-page bg-white dark:bg-black'>
+			<nav className='fixed z-10 top-0 left-0 h-full-content-page mt-content-page bg-zinc-100 dark:bg-black'>
 				<ul>
 					{customerLinks.map((item) =>
 						!!item.isHidden ? (

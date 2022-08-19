@@ -35,7 +35,7 @@ const formClasses = {
 	form: 'flex flex-col items-start justify-center',
 	label: 'flex flex-col items-start justify-center my-2 cursor-pointer w-full',
 	span: 'py-1',
-	input: 'p-1 rounded-sm',
+	input: 'border border-b-gray-600 focus:border-gray-600 p-1 rounded-sm',
 	button:
 		'p-2 rounded-sm font-bold hover:filter hover:brightness-95 focus:ring focus:brightness-90 transition-all duration-300',
 };

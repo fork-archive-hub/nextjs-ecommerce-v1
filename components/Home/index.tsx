@@ -71,7 +71,7 @@ const HomePageComingSoon = () => {
 							<div
 								key={index}
 								className={`
-								bg-white p-4 flex flex-col justify-center items-start m-2 rounded-lg w-[30%] min-w-[10rem]
+								bg-zinc-100 p-4 flex flex-col justify-center items-start m-2 rounded-lg w-[30%] min-w-[10rem]
 									lg:min-w-[12rem]
 									md:min-w-[12rem]
 								`}

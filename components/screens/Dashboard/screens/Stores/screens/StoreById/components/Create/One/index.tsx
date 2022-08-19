@@ -261,7 +261,7 @@ const CreateOneProduct = ({
 						color: currentFontColorMode,
 						backgroundColor: currentBgColorMode,
 					}}
-					//  bg-gray-900 hover:bg-white hover:text-gray-900
+					//  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900
 					// dark:bg-gray-700 dark:hover:text-gray-700
 					disabled={createOne.isLoading}
 					onClick={() => setValues(valuesInit())}
@@ -283,7 +283,7 @@ const CreateOneProduct = ({
 							color: currentFontColorMode,
 							backgroundColor: currentBgColorMode,
 						}}
-						//  bg-gray-900 hover:bg-white hover:text-gray-900
+						//  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900
 						// dark:bg-gray-700 dark:hover:text-gray-700
 						disabled={createOne.isLoading}
 						onClick={() =>
@@ -411,7 +411,7 @@ const CreateOneProduct = ({
 						color: currentFontColorMode,
 						backgroundColor: currentBgColorMode,
 					}}
-					//  bg-gray-900 hover:bg-white hover:text-gray-900
+					//  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900
 					// dark:bg-gray-700 dark:hover:text-gray-700
 					disabled={createOne.isLoading}
 				>

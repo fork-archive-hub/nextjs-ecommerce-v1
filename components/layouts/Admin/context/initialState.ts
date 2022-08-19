@@ -2,7 +2,7 @@ import { IInitialState } from './ts';
 
 export const initialState: IInitialState = {
 	screenSize: undefined,
-	isSideMenuActive: true,
+	isSideMenuActive: false,
 	isClicked: {
 		chat: false,
 		cart: false,

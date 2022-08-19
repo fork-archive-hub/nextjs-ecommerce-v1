@@ -88,7 +88,7 @@ const DeleteOneProduct = ({
 			<h2 className='text-3xl'>Are you sure you want to delete it?</h2>
 			<div className='flex items-center justify-center'>
 				<button
-					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
 					style={{
 						backgroundColor: currentBgColorMode,
 						color: currentFontColorMode,
@@ -105,7 +105,7 @@ const DeleteOneProduct = ({
 				</button>
 				<span className='mx-1' />
 				<button
-					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
 					style={{
 						backgroundColor: currentBgColorMode,
 						color: currentFontColorMode,

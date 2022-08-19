@@ -92,7 +92,7 @@ const SideMenu = () => {
 	];
 
 	const activeLink =
-		'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2';
+		'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-zinc-100  text-md m-2';
 	const normalLink = `
   flex
   items-center
@@ -116,14 +116,14 @@ const SideMenu = () => {
 				{' '}
 				{/* w-72 min-w-max */}
 				{/* <div className='w-72 sidebar'> */}
-				{/* fixed dark:bg-secondary-dark-bg bg-white */}
+				{/* fixed dark:bg-secondary-dark-bg bg-zinc-100 */}
 				{/* {isSideMenuActive && (
 					<> */}
 				<div className='flex justify-between items-center'>
 					<Link href='/'>
 						<a
 							onClick={handleCloseSideBar}
-							className='items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900'
+							className='items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-zinc-100 text-slate-900'
 						>
 							<SiShopware /> <span>Shoppy</span>
 						</a>

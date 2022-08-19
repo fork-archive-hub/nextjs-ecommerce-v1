@@ -27,7 +27,7 @@ const CreateProductButton = ({
 	return (
 		<>
 			<button
-				className='text-xl px-4 py-2 my-1 font-bold hover:filter hover:brightness-95' // 'focus:bg-white focus:text-black'
+				className='text-xl px-4 py-2 my-1 font-bold hover:filter hover:brightness-95' // 'focus:bg-zinc-100 focus:text-black'
 				style={{
 					backgroundColor: currentBgColorMode,
 					color: currentFontColorMode,

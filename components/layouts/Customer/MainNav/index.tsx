@@ -45,7 +45,7 @@ const MainNav = () => {
 	const [, customerDispatch] = useSharedCustomerState();
 
 	return (
-		<header className='h-main-nav-page z-10 bg-slate-50 shadow-md shadow-slate-500 dark:bg-black dark:shadow-slate-800 fixed top-0 left-0 flex justify-between items-center w-full main-nav-page px-4'>
+		<header className='h-main-nav-page z-10 bg-zinc-100 shadow-md shadow-slate-500 dark:bg-black dark:shadow-slate-800 fixed top-0 left-0 flex justify-between items-center w-full main-nav-page px-4'>
 			<Link href='/'>logo</Link>
 			<button
 				className='hidden'

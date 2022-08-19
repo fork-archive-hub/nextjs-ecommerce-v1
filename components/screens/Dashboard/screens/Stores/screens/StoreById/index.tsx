@@ -51,7 +51,7 @@ const StoreByIdScreen = (props: TStoreByIdPageProps) => {
 	}, [isStoresProductsGetManyEnabled, storesProductsGetMany.isSuccess]);
 
 	return (
-		<main className='p-8 h-full-content-page overflow-auto'>
+		<main className='p-4 h-full-content-page overflow-auto'>
 			<header></header>
 			<section>
 				<div>
@@ -69,6 +69,7 @@ const StoreByIdScreen = (props: TStoreByIdPageProps) => {
 								storesProductsGetMany?.data?.pages[currentPageIndex]
 							}
 							paginationFooterParams={{
+								// productsCounter: store.productsCounter,
 								pagesLength: storesProductsGetMany.data.pages.length,
 								currentPageIndex,
 								setCurrentPageIndex,

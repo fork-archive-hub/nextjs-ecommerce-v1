@@ -454,7 +454,7 @@ const UpdateOneProduct = ({
 			<div className='flex'>
 				<button
 					type='reset'
-					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
 					style={{
 						backgroundColor: currentBgColorMode,
 						color: currentFontColorMode,
@@ -474,7 +474,7 @@ const UpdateOneProduct = ({
 				>
 					<button
 						type='button'
-						className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+						className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
 						style={{
 							backgroundColor: currentBgColorMode,
 							color: currentFontColorMode,
@@ -590,7 +590,7 @@ const UpdateOneProduct = ({
 			<div className='my-2'>
 				<button
 					type='submit'
-					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-white hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
+					className={buttonClassName} // 'duration-150 ease-in  bg-gray-900 hover:bg-zinc-100 hover:text-gray-900 dark:bg-gray-700 dark:hover:text-gray-700 px-4 py-2 rounded-md'
 					style={{
 						backgroundColor: currentBgColorMode,
 						color: currentFontColorMode,

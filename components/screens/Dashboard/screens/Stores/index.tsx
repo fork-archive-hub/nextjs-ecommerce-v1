@@ -13,7 +13,7 @@ const DashboardStoresScreen = () => {
 	});
 
 	return (
-		<main className='p-8'>
+		<main className='p-4 h-full-content-page overflow-auto'>
 			<CreateStoreButton />
 			<div className='flex flex-wrap justify-evenly items-center'>
 				{getStores.isSuccess &&
@@ -21,7 +21,7 @@ const DashboardStoresScreen = () => {
 						// <StoreShowCase key={store.id} store={store} />
 						<Fragment key={store.id}>
 							<Link href={`/dashboard/stores/${store.id}`}>
-								<a className='w-56 h-96 bg-gray-700 bg-opacity-90 my-4'>
+								<a className='w-56 h-96 bg-gray-700 bg-opacity-90 my-4 text-zinc-100'>
 									<div className='flex flex-col w-full h-full p-4'>
 										<div className='w-full aspect-square bg-gray-900'>
 											<CustomNextImage
