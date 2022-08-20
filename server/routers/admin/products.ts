@@ -241,7 +241,7 @@ export const adminProductsRouter = createRouter()
 						price: number;
 						description: string;
 						countInStock: number;
-						updatedAt: Date;
+						updatedAt: Date | null;
 				  }
 				| undefined = undefined;
 
