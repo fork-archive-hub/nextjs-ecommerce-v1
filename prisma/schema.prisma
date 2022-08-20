@@ -341,6 +341,7 @@ model ProductsOnOrder {
 // DROP TABLE "payment_result" CASCADE;
 // DROP TABLE "products_on_order" CASCADE;
 
+
 // DELETE FROM "account" CASCADE;
 // DELETE FROM "session" CASCADE;
 // DELETE FROM "user" CASCADE;
