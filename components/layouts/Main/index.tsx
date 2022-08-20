@@ -218,7 +218,10 @@ const CustomerInputs = ({ userEmail }: ICompleteProfileFormProps) => {
 								onChange={(event) =>
 									setUserRoleData((prev) => ({
 										...prev,
-										[event.target.name]: event.target.value,
+										[event.target.name]:
+											item.name === 'dateOfBirth'
+												? new Date(event.target.value)
+												: event.target.value,
 									}))
 								}
 							/>
